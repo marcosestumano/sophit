@@ -49,7 +49,7 @@ export default async function AdminPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-normal text-foreground">Painel do Administrador</h1>
+        <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">Painel do Administrador</h1>
         <p className="text-muted-foreground mt-1">Visão geral da plataforma</p>
       </div>
 
@@ -70,8 +70,7 @@ export default async function AdminPage() {
         {/* Pending Anamneses */}
         <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-normal text-foreground flex items-center gap-2">
-              <Inbox className="h-4 w-4 text-rose-text" />
+            <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground">
               Anamneses Pendentes
             </h2>
             <Link

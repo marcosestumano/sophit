@@ -95,8 +95,7 @@ export default async function RelatoriosPage() {
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
-          <BarChart3 className="h-6 w-6" style={{color:'#e8799f'}} />
+        <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">
           Relatórios & Desempenho
         </h1>
         <p className="text-muted-foreground mt-1">Visão geral da plataforma e evolução dos alunos</p>
@@ -124,8 +123,7 @@ export default async function RelatoriosPage() {
 
       {/* Tabela de avaliações por aluno */}
       <div className="card p-6">
-        <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
-          <Scale className="h-4 w-4" style={{color:'#e8799f'}} />
+        <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-4">
           Dados de Avaliação Física por Aluno
         </h2>
         {alunosEngajamento.filter(a => a.ultimaMedidas).length === 0 ? (

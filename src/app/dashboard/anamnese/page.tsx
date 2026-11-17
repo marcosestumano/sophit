@@ -20,8 +20,7 @@ export default async function AnamnesePage() {
     <div className="max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
-            <ClipboardList className="h-6 w-6 text-rose-text" />
+          <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">
             Anamneses
           </h1>
           <p className="text-muted-foreground mt-1">

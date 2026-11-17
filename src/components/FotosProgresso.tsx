@@ -119,8 +119,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
 
       {/* Upload section */}
       <div className="card p-5">
-        <h3 className="font-medium text-foreground mb-4 flex items-center gap-2">
-          <Camera className="h-4 w-4" style={{ color: '#e8799f' }} />
+        <h3 className="text-lg font-medium text-foreground mb-4">
           {isAdmin ? 'Adicionar foto do aluno' : 'Adicionar nova foto'}
         </h3>
 
@@ -224,8 +223,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
           {/* Comparação lado a lado */}
           {fotosAntes.length > 0 && fotosDepois.length > 0 && (
             <div className="card p-5">
-              <h3 className="font-medium text-foreground mb-4 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full" style={{ background: '#e8799f' }} />
+              <h3 className="text-lg font-medium text-foreground mb-4">
                 Comparativo Antes × Depois
               </h3>
               <div className="grid grid-cols-2 gap-3">

@@ -48,25 +48,22 @@ export default function LoginPage() {
           <span className="font-medium text-2xl text-white">Sophit</span>
         </div>
         <div>
-          <h1 className="text-white text-4xl font-normal leading-tight mb-4">
+          <h1 className="text-white text-5xl font-normal leading-[1.05] tracking-[-0.035em] mb-5">
             Treine com<br />inteligência.<br />Evolua com<br />dados.
           </h1>
-          <p className="text-brand-200 text-lg leading-relaxed">
+          <p className="text-[#d9d0d0] text-lg leading-relaxed max-w-md">
             A plataforma completa para acompanhar anamneses, avaliações físicas e treinos dos seus alunos.
           </p>
         </div>
-        <div className="flex flex-col gap-3">
+        <ul className="max-w-md">
           {[
-            { icon: '🔥', frase: 'Cada treino registrado é um passo a mais na evolução do seu aluno.' },
-            { icon: '📊', frase: 'Dados reais, resultados reais. Acompanhe cada detalhe da jornada.' },
-            { icon: '🏆', frase: 'O bom profissional não adivinha — ele mede, analisa e prescreve.' },
-          ].map(s => (
-            <div key={s.frase} className="flex items-start gap-3 rounded-xl p-4" style={{background:'rgba(255,255,255,0.07)'}}>
-              <span className="text-xl flex-shrink-0 mt-0.5">{s.icon}</span>
-              <p className="text-brand-100 text-sm leading-relaxed">{s.frase}</p>
-            </div>
+            'Cada treino registrado é um passo a mais na evolução do seu aluno.',
+            'Dados reais, resultados reais. Acompanhe cada detalhe da jornada.',
+            'O bom profissional não adivinha: ele mede, analisa e prescreve.',
+          ].map(frase => (
+            <li key={frase} className="py-4 border-t border-white/10 text-[#d9d0d0] leading-relaxed">{frase}</li>
           ))}
-        </div>
+        </ul>
       </div>
 
       {/* Right: form */}

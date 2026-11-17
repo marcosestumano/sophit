@@ -21,8 +21,7 @@ export default async function UsuariosPage() {
     <div className="max-w-5xl mx-auto px-2 sm:px-0">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
         <div className="flex-1">
-          <h1 className="text-xl sm:text-2xl font-normal text-foreground flex items-center gap-2">
-            <Users className="h-5 w-5 flex-shrink-0" style={{ color: '#e8799f' }} />
+          <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">
             Alunos
           </h1>
           <p className="text-muted-foreground text-sm mt-0.5">

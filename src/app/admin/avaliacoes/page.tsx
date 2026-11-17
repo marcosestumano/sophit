@@ -26,8 +26,7 @@ export default async function AvaliacoesPage() {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
-            <Scale className="h-6 w-6 text-rose-text" />
+          <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">
             Avaliações Físicas
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -38,8 +37,7 @@ export default async function AvaliacoesPage() {
 
       {/* Quick access: select user to evaluate */}
       <div className="card p-5 mb-6">
-        <h2 className="font-normal text-foreground mb-3 flex items-center gap-2">
-          <Plus className="h-4 w-4 text-rose-text" />
+        <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-3">
           Nova Avaliação
         </h2>
         <div className="flex gap-3">

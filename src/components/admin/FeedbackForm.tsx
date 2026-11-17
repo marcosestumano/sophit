@@ -45,8 +45,7 @@ export function FeedbackForm({ anamneseId, existingFeedback, status }: FeedbackF
 
   return (
     <div className="card p-6">
-      <h2 className="font-normal text-foreground flex items-center gap-2 mb-4">
-        <MessageSquare className="h-4 w-4 text-rose-text" />
+      <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-4">
         {status === 'respondido' ? 'Editar Feedback' : 'Enviar Feedback'}
       </h2>
 

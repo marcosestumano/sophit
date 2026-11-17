@@ -22,8 +22,8 @@ export function DietaAdmin({ userId }: { userId: string }) {
   return (
     <div className="card p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4 gap-3">
-        <h2 className="font-normal text-foreground flex items-center gap-2">
-          <Utensils className="h-4 w-4 text-brand-500" /> Plano alimentar
+        <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground">
+          Plano alimentar
         </h2>
         {d.plano && (
           <button onClick={() => setPlanoOpen(true)} className="btn-secondary text-xs px-3 py-1.5"><Pencil className="h-3.5 w-3.5" /> Editar plano</button>

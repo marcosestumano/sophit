@@ -105,8 +105,7 @@ export default function GestorTreinosPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
-          <Dumbbell className="h-6 w-6" style={{ color: '#e8799f' }} />
+        <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">
           Gestor de Treinos
         </h1>
         <p className="text-muted-foreground mt-1">Crie, reutilize e atribua treinos personalizados</p>

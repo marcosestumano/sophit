@@ -43,7 +43,7 @@ export function CardioAdmin({ userId }: { userId: string }) {
   return (
     <div className="card p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-normal text-foreground flex items-center gap-2"><HeartPulse className="h-4 w-4 text-brand-500" /> Cardio</h2>
+        <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground">Cardio</h2>
         <button onClick={() => setEdit(null)} disabled={!!erro} className="btn-secondary text-xs px-3 py-1.5"><Plus className="h-3.5 w-3.5" /> Prescrever</button>
       </div>
 

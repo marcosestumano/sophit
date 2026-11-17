@@ -220,7 +220,7 @@ export default function NovaAnamnesePage() {
     <div className="max-w-2xl mx-auto pb-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-normal text-foreground">Anamnese</h1>
+        <h1 className="text-[28px] sm:text-[32px] leading-tight font-normal text-foreground">Anamnese</h1>
         <p className="text-muted-foreground mt-1">
           Preencha com atenção para receber um acompanhamento personalizado
         </p>

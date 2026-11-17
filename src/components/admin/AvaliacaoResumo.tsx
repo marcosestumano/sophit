@@ -206,7 +206,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
                   <div key={av.id} className="flex items-center justify-between text-xs p-2.5 rounded-lg bg-muted/40">
                     <span className="text-muted-foreground">
                       {new Date(av.created_at).toLocaleDateString('pt-BR')}
-                      {i === 0 && <span className="ml-2 text-rose-text font-medium">← mais recente</span>}
+                      {i === 0 && <span className="ml-2 text-rose-text font-medium">(mais recente)</span>}
                     </span>
                     <div className="flex gap-4">
                       {av.peso && <span className="text-foreground font-medium">{av.peso} kg</span>}

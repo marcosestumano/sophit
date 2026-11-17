@@ -84,7 +84,7 @@ export default function RegisterPage() {
           <h1 className="text-white text-4xl font-normal leading-tight mb-4">
             Comece sua jornada<br />de evolução hoje.
           </h1>
-          <p className="text-brand-200 text-lg leading-relaxed">
+          <p className="text-[#d9d0d0] text-lg leading-relaxed">
             Crie sua conta gratuitamente e tenha acesso ao acompanhamento personalizado de saúde e performance.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function RegisterPage() {
           ].map(s => (
             <div key={s.label} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.08)' }}>
               <p className="text-white text-2xl font-medium">{s.value}</p>
-              <p className="text-brand-200 text-sm mt-1">{s.label}</p>
+              <p className="text-[#d9d0d0] text-sm mt-1">{s.label}</p>
             </div>
           ))}
         </div>

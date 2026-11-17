@@ -130,8 +130,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
 
       {/* Medidores de KPI */}
       <div className="card p-6">
-        <h2 className="font-normal text-foreground mb-6 flex items-center gap-2">
-          <Target className="h-4 w-4" style={{ color: '#e8799f' }} />
+        <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-6">
           Medidores de desempenho geral
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
@@ -152,8 +151,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
 
       {/* Atividade mensal */}
       <div className="card p-6">
-        <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
-          <Zap className="h-4 w-4" style={{ color: '#e8799f' }} />
+        <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-4">
           Atividade mensal (últimos 6 meses)
         </h2>
         <ResponsiveContainer width="100%" height={220}>
@@ -173,8 +171,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Ranking de engajamento */}
         <div className="card p-6">
-          <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
-            <Trophy className="h-4 w-4" style={{ color: '#e8799f' }} />
+          <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-4">
             Ranking de engajamento
           </h2>
 
@@ -210,8 +207,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
 
         {/* Evolução dos alunos */}
         <div className="card p-6">
-          <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" style={{ color: '#e8799f' }} />
+          <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-4">
             Evolução corporal dos alunos
           </h2>
 
@@ -284,8 +280,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
       {/* Radar do top aluno */}
       {topAluno && radarData.length > 0 && (
         <div className="card p-6">
-          <h2 className="font-normal text-foreground mb-1 flex items-center gap-2">
-            <Trophy className="h-4 w-4 text-yellow-500" />
+          <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground mb-1">
             Perfil completo — {topAluno.nome}
             <span className="text-xs font-normal text-muted-foreground">(aluno mais engajado)</span>
           </h2>
