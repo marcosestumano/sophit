@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Dumbbell, Play, ChevronDown, ChevronRight, Check } from 'lucide-react'
+import { Dumbbell, Play, ChevronDown, ChevronRight, Check, Timer } from 'lucide-react'
+import { useDescanso } from '@/components/treinos/Descanso'
 import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
@@ -34,6 +35,7 @@ export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
 
   const ultimaData = (id: string) => progressoes.find(p => p.treino_id === id)?.data_registro
 
+  const descanso = useDescanso()
   const [aberto, setAberto] = useState<string | null>(abrirId)
   const [verHistorico, setVerHistorico] = useState(false)
   const refs = useRef<Record<string, HTMLDivElement | null>>({})
@@ -86,6 +88,8 @@ export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
           )}
         </div>
       )}
+      {/* folga para a barra flutuante do descanso não cobrir o último exercício */}
+      {descanso.ativo && <div className="h-24" aria-hidden="true" />}
     </AppScreen>
   )
 }
@@ -94,6 +98,7 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
   treino: Treino; letra: string; userId: string; destaque: boolean; feitoHoje: boolean
   ultima?: string; aberto: boolean; onToggle: () => void
 }) {
+  const descanso = useDescanso()
   const ex = treino.lista_exercicios ?? []
   const meta = `${ex.length} exercício${ex.length !== 1 ? 's' : ''} · ${ultima ? `último em ${format(parseKey(ultima), "d 'de' MMM", { locale: ptBR })}` : 'ainda não registrado'}`
 
@@ -134,7 +139,13 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
       {aberto && (
         <div className="border-t border-border p-3 space-y-3">
           {treino.descricao && <p className="text-muted-foreground px-1">{treino.descricao}</p>}
-          <p className="text-sm text-muted-foreground px-1">Toque em cada exercício para registrar a carga.</p>
+          <div className="flex items-center gap-3 px-1">
+            <p className="flex-1 text-sm text-muted-foreground">Toque em cada exercício para registrar a carga.</p>
+            <button onClick={() => descanso.abrir(treino.titulo)}
+              className="press flex-shrink-0 h-11 px-4 rounded-full border border-border flex items-center gap-2 text-sm font-medium text-foreground hover:bg-muted">
+              <Timer className="h-4 w-4" strokeWidth={1.75} /> Descanso
+            </button>
+          </div>
           {ex.map((e: any, i: number) => (
             <ProgressaoExercicio key={i} exercicio={e} treinoId={treino.id} userId={userId} index={i} />
           ))}

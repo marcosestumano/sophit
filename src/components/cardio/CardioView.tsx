@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { addWeeks, format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ChevronLeft, ChevronRight, HeartPulse, Plus, Trash2, Timer, Route, Flame, Loader2, Check } from 'lucide-react'
+import { ChevronLeft, ChevronRight, HeartPulse, Plus, Trash2, Timer, Route, Flame, Loader2, Check, Play } from 'lucide-react'
+import { useCronometroCardio, CronometroCard, IniciarCardioSheet, minutosDe } from './CronometroCardio'
 import { createClient } from '@/lib/supabase/client'
 import { AppScreen, ScreenHeader, SectionTitle, ProgressBar, IconChip, CORES } from '@/components/app/AppShell'
 import { RegistroCardioSheet, type RegistroInput } from './RegistroCardioSheet'
@@ -21,6 +22,9 @@ export function CardioView({ userId }: { userId: string }) {
   const [loading, setLoading] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
   const [sheet, setSheet] = useState(false)
+  const [sheetIniciar, setSheetIniciar] = useState(false)
+  const [inicial, setInicial] = useState<{ tipo: string; prescricao_id: string | null; duracao_min: number } | null>(null)
+  const cr = useCronometroCardio()
 
   const dias = weekDays(ref)
   const ini = dateKey(dias[0]), fim = dateKey(dias[6])
@@ -50,9 +54,19 @@ export function CardioView({ userId }: { userId: string }) {
     setSelected(ks.includes(todayKey) ? todayKey : ks[0])
   }
 
+  function finalizarCronometro() {
+    if (!cr.crono) return
+    cr.pausar()
+    setInicial({ tipo: cr.crono.tipo, prescricao_id: cr.crono.prescricao_id, duracao_min: minutosDe(cr.decorridoMs) })
+    setSheet(true)
+  }
+
+  function fecharRegistro() { setSheet(false); setInicial(null) }
+
   async function salvar(r: RegistroInput) {
     const { error } = await supabase.from('cardio_registros').insert({ ...r, user_id: userId })
     if (error) throw error
+    if (inicial) cr.limpar()
     if (r.data < ini || r.data > fim) setRef(parseKey(r.data))
     setSelected(r.data)
     await carregar()
@@ -104,6 +118,12 @@ export function CardioView({ userId }: { userId: string }) {
         })}
       </div>
 
+      {cr.crono && (
+        <CronometroCard crono={cr.crono} decorridoMs={cr.decorridoMs} rodando={cr.rodando}
+          onPausar={cr.pausar} onRetomar={cr.retomar} onFinalizar={finalizarCronometro}
+          onDescartar={() => { if (confirm('Descartar o tempo cronometrado?')) cr.limpar() }} />
+      )}
+
       {erro && <div className="app-card p-4 mt-4 text-destructive">{erro}</div>}
 
       {prescricoes.length > 0 && (
@@ -125,6 +145,12 @@ export function CardioView({ userId }: { userId: string }) {
                     </div>
                   </div>
                   {p.observacoes && <p className="text-muted-foreground mt-3">{p.observacoes}</p>}
+                  {!cr.crono && !erro && (
+                    <button onClick={() => cr.iniciar({ tipo: p.tipo, prescricao_id: p.id, meta_min: p.duracao_min ?? null })}
+                      className="btn-secondary w-full h-11 mt-4">
+                      <Play className="h-4 w-4" strokeWidth={1.75} /> Iniciar com cronômetro
+                    </button>
+                  )}
                   {meta > 0 && (
                     <>
                       <div className="flex justify-between mt-4 mb-1.5 text-xs font-medium text-foreground">
@@ -169,11 +195,25 @@ export function CardioView({ userId }: { userId: string }) {
         </div>
       )}
 
-      <button onClick={() => setSheet(true)} disabled={!!erro} className="btn-primary w-full h-12 mt-6">
-        <Plus className="h-5 w-5" /> Registrar cardio
-      </button>
+      {cr.crono ? (
+        <button onClick={finalizarCronometro} className="btn-primary w-full h-12 mt-6">
+          <Timer className="h-5 w-5" strokeWidth={1.75} /> Finalizar e salvar cardio
+        </button>
+      ) : (
+        <div className="grid grid-cols-2 gap-2 mt-6">
+          <button onClick={() => setSheet(true)} disabled={!!erro} className="btn-secondary h-12">
+            <Plus className="h-5 w-5" /> Registrar
+          </button>
+          <button onClick={() => setSheetIniciar(true)} disabled={!!erro} className="btn-primary h-12">
+            <Timer className="h-5 w-5" strokeWidth={1.75} /> Iniciar cardio
+          </button>
+        </div>
+      )}
 
-      <RegistroCardioSheet open={sheet} onClose={() => setSheet(false)} data={selected} prescricoes={prescricoes} onSave={salvar} />
+      <RegistroCardioSheet open={sheet} onClose={fecharRegistro} data={inicial ? todayKey : selected}
+        prescricoes={prescricoes} onSave={salvar} inicial={inicial} />
+      <IniciarCardioSheet open={sheetIniciar} onClose={() => setSheetIniciar(false)} prescricoes={prescricoes}
+        onStart={d => { cr.iniciar(d); setSheetIniciar(false) }} />
     </AppScreen>
   )
 }

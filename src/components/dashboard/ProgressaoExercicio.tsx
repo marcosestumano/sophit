@@ -7,7 +7,8 @@ import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
   Tooltip, ResponsiveContainer, ReferenceLine
 } from 'recharts'
-import { TrendingUp, TrendingDown, Minus, Save, ChevronDown, ChevronUp, Loader2, CheckCircle2 } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Save, ChevronDown, ChevronUp, Loader2, CheckCircle2, Timer } from 'lucide-react'
+import { useDescanso } from '@/components/treinos/Descanso'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 
@@ -49,6 +50,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Props) {
   const supabase = createClient()
+  const descanso = useDescanso()
   const [expanded, setExpanded] = useState(false)
   const [historico, setHistorico] = useState<ProgressaoItem[]>([])
   const [loading, setLoading] = useState(false)
@@ -207,14 +209,23 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
               </div>
             </div>
 
-            <button
-              onClick={handleSave}
-              disabled={saving || !form.carga}
-              className="btn-primary mt-3 text-sm"
-            >
-              {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <CheckCircle2 className="h-4 w-4" /> : <Save className="h-4 w-4" />}
-              {saved ? 'Salvo!' : 'Salvar execução'}
-            </button>
+            <div className="grid grid-cols-2 gap-2 mt-3">
+              <button
+                type="button"
+                onClick={() => descanso.abrir(exercicio.nome)}
+                className="btn-secondary h-12 text-sm"
+              >
+                <Timer className="h-4 w-4" strokeWidth={1.75} /> Descanso
+              </button>
+              <button
+                onClick={handleSave}
+                disabled={saving || !form.carga}
+                className="btn-primary h-12 text-sm"
+              >
+                {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <CheckCircle2 className="h-4 w-4" /> : <Save className="h-4 w-4" />}
+                {saved ? 'Salvo!' : 'Salvar execução'}
+              </button>
+            </div>
             {erroSave && <p role="alert" className="form-error">{erroSave}</p>}
           </div>
 

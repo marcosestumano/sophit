@@ -17,8 +17,10 @@ export interface RegistroInput {
 
 const num = (v: string) => (v === '' ? null : Number(v.replace(',', '.')))
 
-export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave }: {
+export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave, inicial }: {
   open: boolean; onClose: () => void; data: string; prescricoes: CardioPrescricao[]; onSave: (r: RegistroInput) => Promise<void>
+  /** Valores vindos do cronômetro (tipo e duração já preenchidos). */
+  inicial?: { tipo: string; prescricao_id: string | null; duracao_min: number } | null
 }) {
   const [tipo, setTipo] = useState('')
   const [prescId, setPrescId] = useState<string | null>(null)
@@ -37,7 +39,12 @@ export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave }
     setDia(data); setErro(null); setObs(''); setDist(''); setCal('')
     setTipo(p?.tipo ?? ''); setPrescId(p?.id ?? null)
     setDur(p?.duracao_min ? String(p.duracao_min) : ''); setInt(p?.intensidade ?? '')
-  }, [open, data, prescricoes])
+    if (inicial) {
+      const pi = prescricoes.find(x => x.id === inicial.prescricao_id)
+      setTipo(inicial.tipo); setPrescId(inicial.prescricao_id)
+      setDur(String(inicial.duracao_min)); setInt(pi?.intensidade ?? '')
+    }
+  }, [open, data, prescricoes, inicial])
 
   function escolherPresc(p: CardioPrescricao) {
     setPrescId(p.id); setTipo(p.tipo)
@@ -56,7 +63,7 @@ export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave }
   }
 
   return (
-    <Sheet open={open} onClose={onClose} title="Registrar cardio"
+    <Sheet open={open} onClose={onClose} title={inicial ? 'Salvar cardio cronometrado' : 'Registrar cardio'}
       footer={<button onClick={salvar} disabled={saving} className="btn-primary w-full h-12">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar cardio</button>}>
       <div className="space-y-4">
         {prescricoes.length > 0 && (
