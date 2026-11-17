@@ -19,7 +19,7 @@ export default async function ProgressoPage() {
     <div className="max-w-2xl mx-auto">
       <div className="mb-8">
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <Camera className="h-6 w-6" style={{ color: '#f97316' }} />
+          <Camera className="h-6 w-6" style={{ color: '#e8799f' }} />
           Meu Progresso
         </h1>
         <p className="text-muted-foreground mt-1">

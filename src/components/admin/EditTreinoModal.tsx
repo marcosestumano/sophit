@@ -159,9 +159,9 @@ export function EditTreinoModal({ treino, onClose }: Props) {
                       onDragOver={onDragOver}
                       className="border rounded-lg overflow-hidden transition-all duration-150 select-none"
                       style={{
-                        borderColor: isOver ? '#f97316' : isDragging ? 'transparent' : 'hsl(var(--border))',
+                        borderColor: isOver ? '#e8799f' : isDragging ? 'transparent' : 'hsl(var(--border))',
                         opacity: isDragging ? 0.4 : 1,
-                        background: isOver ? 'rgba(249,115,22,0.06)' : undefined,
+                        background: isOver ? 'rgba(232,121,159,0.06)' : undefined,
                         transform: isOver ? 'scale(1.01)' : 'scale(1)',
                         cursor: 'grab',
                       }}
@@ -180,7 +180,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
                         </div>
 
                         <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                          style={{ background: 'rgba(249,115,22,0.15)', color: '#ea580c' }}>
+                          style={{ background: 'rgba(232,121,159,0.15)', color: '#d45f88' }}>
                           {index + 1}
                         </div>
 
@@ -254,7 +254,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
                 {/* Drop zone indicador quando arrastando */}
                 {dragActive !== null && (
                   <div className="h-1 rounded-full transition-all duration-150"
-                    style={{ background: 'rgba(249,115,22,0.3)' }} />
+                    style={{ background: 'rgba(232,121,159,0.3)' }} />
                 )}
               </div>
             </div>

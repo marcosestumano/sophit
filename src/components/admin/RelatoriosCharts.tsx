@@ -38,7 +38,7 @@ function GaugeMeter({ value, label, color }: { value: number; label: string; col
 
   const getColor = (v: number) => {
     if (v >= 70) return '#22c55e'
-    if (v >= 40) return '#f97316'
+    if (v >= 40) return '#e8799f'
     return '#ef4444'
   }
 
@@ -83,7 +83,7 @@ function GaugeMeter({ value, label, color }: { value: number; label: string; col
 
 function ScoreBar({ value, max = 100 }: { value: number; max?: number }) {
   const pct = Math.min(100, (value / max) * 100)
-  const color = pct >= 70 ? '#22c55e' : pct >= 40 ? '#f97316' : '#ef4444'
+  const color = pct >= 70 ? '#22c55e' : pct >= 40 ? '#e8799f' : '#ef4444'
   return (
     <div className="flex items-center gap-2">
       <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
@@ -131,12 +131,12 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
       {/* Medidores de KPI */}
       <div className="card p-6">
         <h2 className="font-semibold text-foreground mb-6 flex items-center gap-2">
-          <Target className="h-4 w-4" style={{ color: '#f97316' }} />
+          <Target className="h-4 w-4" style={{ color: '#e8799f' }} />
           Medidores de desempenho geral
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
           <div className="flex flex-col items-center">
-            <GaugeMeter value={taxaResposta} label="Taxa de resposta de anamneses" color="#f97316" />
+            <GaugeMeter value={taxaResposta} label="Taxa de resposta de anamneses" color="#e8799f" />
             <p className="text-xs text-muted-foreground mt-1">{respondidas} de {totalAnamneses} respondidas</p>
           </div>
           <div className="flex flex-col items-center">
@@ -153,7 +153,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
       {/* Atividade mensal */}
       <div className="card p-6">
         <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Zap className="h-4 w-4" style={{ color: '#f97316' }} />
+          <Zap className="h-4 w-4" style={{ color: '#e8799f' }} />
           Atividade mensal (últimos 6 meses)
         </h2>
         <ResponsiveContainer width="100%" height={220}>
@@ -163,7 +163,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
             <YAxis tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} width={24} />
             <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
-            <Bar dataKey="anamneses" name="Anamneses" fill="#f97316" radius={[4,4,0,0]} />
+            <Bar dataKey="anamneses" name="Anamneses" fill="#e8799f" radius={[4,4,0,0]} />
             <Bar dataKey="avaliacoes" name="Avaliações" fill="#a855f7" radius={[4,4,0,0]} />
             <Bar dataKey="registros" name="Registros de carga" fill="#3b82f6" radius={[4,4,0,0]} />
           </BarChart>
@@ -174,7 +174,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
         {/* Ranking de engajamento */}
         <div className="card p-6">
           <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-            <Trophy className="h-4 w-4" style={{ color: '#f97316' }} />
+            <Trophy className="h-4 w-4" style={{ color: '#e8799f' }} />
             Ranking de engajamento
           </h2>
 
@@ -189,7 +189,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
                   <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
                     i === 0 ? 'text-yellow-800 bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-300'
                     : i === 1 ? 'text-gray-700 bg-gray-100 dark:bg-gray-800 dark:text-gray-300'
-                    : i === 2 ? 'text-orange-800 bg-orange-100 dark:bg-orange-900/30 dark:text-orange-300'
+                    : i === 2 ? 'text-brand-800 bg-brand-100 dark:bg-brand-900/30 dark:text-brand-300'
                     : 'text-muted-foreground bg-muted'
                   }`}>
                     {i + 1}
@@ -211,7 +211,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
         {/* Evolução dos alunos */}
         <div className="card p-6">
           <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-            <TrendingUp className="h-4 w-4" style={{ color: '#f97316' }} />
+            <TrendingUp className="h-4 w-4" style={{ color: '#e8799f' }} />
             Evolução corporal dos alunos
           </h2>
 
@@ -296,13 +296,13 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
                 <PolarGrid stroke="hsl(var(--border))" />
                 <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
-                <Radar name={topAluno.nome} dataKey="value" stroke="#f97316" fill="#f97316" fillOpacity={0.25} strokeWidth={2} />
+                <Radar name={topAluno.nome} dataKey="value" stroke="#e8799f" fill="#e8799f" fillOpacity={0.25} strokeWidth={2} />
                 <Tooltip contentStyle={{ fontSize: 12 }} formatter={(v: any) => [`${v}`, 'Score']} />
               </RadarChart>
             </ResponsiveContainer>
             <div className="grid grid-cols-2 gap-3 w-full lg:w-64 flex-shrink-0">
               {[
-                { label: 'Score total', value: `${topAluno.score}/100`, color: '#f97316' },
+                { label: 'Score total', value: `${topAluno.score}/100`, color: '#e8799f' },
                 { label: 'Anamneses', value: topAluno.anamneses, color: '#3b82f6' },
                 { label: 'Treinos', value: topAluno.treinos, color: '#a855f7' },
                 { label: 'Avaliações', value: topAluno.avaliacoes, color: '#22c55e' },

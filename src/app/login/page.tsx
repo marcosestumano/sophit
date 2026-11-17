@@ -42,7 +42,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12" style={{background:'linear-gradient(160deg,#1a0a00,#3b1200,#7c2d12)'}}>
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12" style={{background:'linear-gradient(160deg,#1a0710,#3b1022,#6e2d45)'}}>
         <div className="flex items-center gap-3">
           <SophitLogo size={48} />
           <span className="font-bold text-2xl tracking-widest text-white">SOPHIT</span>
@@ -51,7 +51,7 @@ export default function LoginPage() {
           <h1 className="text-white text-4xl font-bold leading-tight mb-4">
             Treine com<br />inteligência.<br />Evolua com<br />dados.
           </h1>
-          <p className="text-orange-200 text-lg leading-relaxed">
+          <p className="text-brand-200 text-lg leading-relaxed">
             A plataforma completa para acompanhar anamneses, avaliações físicas e treinos dos seus alunos.
           </p>
         </div>
@@ -63,7 +63,7 @@ export default function LoginPage() {
           ].map(s => (
             <div key={s.frase} className="flex items-start gap-3 rounded-xl p-4" style={{background:'rgba(255,255,255,0.07)'}}>
               <span className="text-xl flex-shrink-0 mt-0.5">{s.icon}</span>
-              <p className="text-orange-100 text-sm leading-relaxed">{s.frase}</p>
+              <p className="text-brand-100 text-sm leading-relaxed">{s.frase}</p>
             </div>
           ))}
         </div>
@@ -74,7 +74,7 @@ export default function LoginPage() {
         <div className="w-full max-w-md animate-fade-in">
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <SophitLogo size={40} />
-            <span className="font-bold text-xl tracking-widest" style={{background:'linear-gradient(135deg,#f97316,#c2410c)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>SOPHIT</span>
+            <span className="font-bold text-xl tracking-widest" style={{background:'linear-gradient(135deg,#e8799f,#b4476e)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>SOPHIT</span>
           </div>
 
           <h2 className="text-2xl font-bold text-foreground mb-1">Bem-vindo de volta</h2>
@@ -119,7 +119,7 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="form-label !mb-0">Senha</label>
-                <Link href="/forgot-password" className="text-xs" style={{color:'#ea580c'}}>Esqueceu a senha?</Link>
+                <Link href="/forgot-password" className="text-xs" style={{color:'#d45f88'}}>Esqueceu a senha?</Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{color:'hsl(var(--muted-foreground))'}} />
@@ -138,7 +138,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Não tem uma conta?{' '}
-            <Link href="/register" className="font-medium" style={{color:'#ea580c'}}>Criar conta</Link>
+            <Link href="/register" className="font-medium" style={{color:'#d45f88'}}>Criar conta</Link>
           </p>
         </div>
       </div>

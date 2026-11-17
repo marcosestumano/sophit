@@ -36,7 +36,7 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
             <div className="flex items-center gap-2 flex-wrap">
               <h3 className="font-semibold text-foreground">{treino.titulo}</h3>
               <span className={treino.ativo
-                ? 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
+                ? 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300'
                 : 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-muted text-muted-foreground'
               }>
                 {treino.ativo ? 'Ativo' : 'Inativo'}
@@ -73,7 +73,7 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
           {exercicios.map((ex, i) => (
             <div key={i} className="flex items-center gap-2 text-xs p-2 rounded-lg bg-muted/30">
               <span className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                style={{ background: 'rgba(249,115,22,0.15)', color: '#ea580c' }}>
+                style={{ background: 'rgba(232,121,159,0.15)', color: '#d45f88' }}>
                 {i + 1}
               </span>
               <span className="font-medium text-foreground truncate">{ex.nome}</span>

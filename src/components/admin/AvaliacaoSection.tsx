@@ -93,14 +93,14 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
       {open && (
         <div className="border-t border-border p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 animate-slide-up">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#ea580c'}}>Básico</p>
+            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Básico</p>
             <DataRow label="Peso" value={av.peso} unit="kg" />
             <DataRow label="Altura" value={av.altura} unit="cm" />
             <DataRow label="IMC" value={av.imc ? Number(av.imc).toFixed(2) : comp.imc} />
           </div>
           {Object.values(med).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#ea580c'}}>Medidas (cm)</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Medidas (cm)</p>
               {Object.entries(med).filter(([,v])=>v).map(([k,v])=>(
                 <DataRow key={k} label={MEDIDAS_LABELS[k]??k} value={v as string} />
               ))}
@@ -109,7 +109,7 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
           <div>
             {Object.values(dob).some(Boolean) && (
               <>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#ea580c'}}>Dobras (mm)</p>
+                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Dobras (mm)</p>
                 {Object.entries(dob).filter(([,v])=>v).map(([k,v])=>(
                   <DataRow key={k} label={DOBRAS_LABELS[k]??k} value={v as string} />
                 ))}
@@ -117,7 +117,7 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
             )}
             {Object.values(dia).some(Boolean) && (
               <>
-                <p className="text-xs font-bold uppercase tracking-wider mt-3 mb-2" style={{color:'#ea580c'}}>Diâmetros (cm)</p>
+                <p className="text-xs font-bold uppercase tracking-wider mt-3 mb-2" style={{color:'#d45f88'}}>Diâmetros (cm)</p>
                 {Object.entries(dia).filter(([,v])=>v).map(([k,v])=>(
                   <DataRow key={k} label={DIAMETROS_LABELS[k]??k} value={v as string} />
                 ))}
@@ -125,7 +125,7 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
             )}
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#ea580c'}}>Composição</p>
+            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Composição</p>
             <DataRow label="% Gordura" value={av.percentual_gordura ?? comp.perc_gordura} unit="%" />
             <DataRow label="Massa Magra" value={av.massa_magra ?? comp.massa_livre_gordura} unit="kg" />
             {Object.entries(comp)
@@ -164,7 +164,7 @@ export function AvaliacaoSection({ userId, userName, initialAvaliacoes }: Props)
                 ? 'text-white'
                 : 'text-muted-foreground hover:bg-muted border border-border'
             }`}
-            style={tab === t.key ? {background:'linear-gradient(135deg,#f97316,#c2410c)'} : {}}>
+            style={tab === t.key ? {background:'linear-gradient(135deg,#e8799f,#b4476e)'} : {}}>
             <t.icon className="h-4 w-4" />
             {t.label}
           </button>

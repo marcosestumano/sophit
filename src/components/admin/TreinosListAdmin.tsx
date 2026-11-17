@@ -101,7 +101,7 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
   return (
     <div className="space-y-6">
       {(saving || saveError) && (
-        <div className="flex items-center gap-2 text-xs" style={{ color: saveError ? '#dc2626' : '#ea580c' }}>
+        <div className="flex items-center gap-2 text-xs" style={{ color: saveError ? '#dc2626' : '#d45f88' }}>
           {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {saveError ?? 'Salvando nova ordem...'}
         </div>
@@ -126,36 +126,36 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
             className="flex items-center gap-2 px-3 py-1.5 rounded-t-lg cursor-grab active:cursor-grabbing select-none"
             style={{
               background: dragOver === i && dragActive !== i
-                ? 'rgba(249,115,22,0.12)'
-                : 'rgba(249,115,22,0.06)',
+                ? 'rgba(232,121,159,0.12)'
+                : 'rgba(232,121,159,0.06)',
               border: dragOver === i && dragActive !== i
-                ? '1px solid rgba(249,115,22,0.5)'
-                : '1px solid rgba(249,115,22,0.15)',
+                ? '1px solid rgba(232,121,159,0.5)'
+                : '1px solid rgba(232,121,159,0.15)',
               borderBottom: 'none',
             }}
             title="Arraste para reordenar"
           >
-            <GripVertical className="h-4 w-4" style={{ color: '#ea580c' }} />
-            <span className="flex-1 text-xs font-medium" style={{ color: '#ea580c' }}>
+            <GripVertical className="h-4 w-4" style={{ color: '#d45f88' }} />
+            <span className="flex-1 text-xs font-medium" style={{ color: '#d45f88' }}>
               {i + 1}º treino — arraste para reordenar
             </span>
             <button
               type="button"
               onClick={() => reorder(i, i - 1)}
               disabled={i === 0 || saving}
-              className="p-1 rounded hover:bg-orange-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1 rounded hover:bg-brand-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
               title="Mover para cima"
             >
-              <ChevronUp className="h-4 w-4" style={{ color: '#ea580c' }} />
+              <ChevronUp className="h-4 w-4" style={{ color: '#d45f88' }} />
             </button>
             <button
               type="button"
               onClick={() => reorder(i, i + 1)}
               disabled={i === items.length - 1 || saving}
-              className="p-1 rounded hover:bg-orange-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              className="p-1 rounded hover:bg-brand-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
               title="Mover para baixo"
             >
-              <ChevronDown className="h-4 w-4" style={{ color: '#ea580c' }} />
+              <ChevronDown className="h-4 w-4" style={{ color: '#d45f88' }} />
             </button>
           </div>
 
@@ -164,7 +164,7 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
             className="rounded-b-lg rounded-tr-lg transition-all duration-150"
             style={{
               border: dragOver === i && dragActive !== i
-                ? '1px solid rgba(249,115,22,0.5)'
+                ? '1px solid rgba(232,121,159,0.5)'
                 : '1px solid hsl(var(--border))',
               borderTop: 'none',
               padding: '14px',

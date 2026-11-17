@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
+import { dateKey } from '@/lib/dates'
 import { createClient } from '@/lib/supabase/client'
 import {
   Camera, Upload, Trash2, Loader2, ImageIcon,
@@ -34,7 +35,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
   const [success, setSuccess] = useState<string | null>(null)
   const [lightbox, setLightbox] = useState<Foto | null>(null)
   const [descricao, setDescricao] = useState('')
-  const [dataFoto, setDataFoto] = useState(new Date().toISOString().slice(0, 10))
+  const [dataFoto, setDataFoto] = useState(dateKey())
   const inputAntes = useRef<HTMLInputElement>(null)
   const inputDepois = useRef<HTMLInputElement>(null)
 
@@ -119,7 +120,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
       {/* Upload section */}
       <div className="card p-5">
         <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Camera className="h-4 w-4" style={{ color: '#f97316' }} />
+          <Camera className="h-4 w-4" style={{ color: '#e8799f' }} />
           {isAdmin ? 'Adicionar foto do aluno' : 'Adicionar nova foto'}
         </h3>
 
@@ -158,10 +159,10 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
             <button
               onClick={() => inputAntes.current?.click()}
               disabled={uploading !== null}
-              className="w-full flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-dashed border-border hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-dashed border-border hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading === 'antes'
-                ? <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#f97316' }} />
+                ? <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#e8799f' }} />
                 : <Upload className="h-6 w-6 text-muted-foreground" />}
               <span className="text-sm font-medium text-foreground">
                 {uploading === 'antes' ? 'Enviando...' : 'Foto ANTES'}
@@ -182,10 +183,10 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
             <button
               onClick={() => inputDepois.current?.click()}
               disabled={uploading !== null}
-              className="w-full flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-dashed border-border hover:border-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full flex flex-col items-center gap-2 p-4 rounded-xl border-2 border-dashed border-border hover:border-brand-400 hover:bg-brand-50 dark:hover:bg-brand-900/10 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {uploading === 'depois'
-                ? <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#f97316' }} />
+                ? <Loader2 className="h-6 w-6 animate-spin" style={{ color: '#e8799f' }} />
                 : <Upload className="h-6 w-6 text-muted-foreground" />}
               <span className="text-sm font-medium text-foreground">
                 {uploading === 'depois' ? 'Enviando...' : 'Foto DEPOIS'}
@@ -224,7 +225,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
           {fotosAntes.length > 0 && fotosDepois.length > 0 && (
             <div className="card p-5">
               <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                <span className="h-2 w-2 rounded-full" style={{ background: '#f97316' }} />
+                <span className="h-2 w-2 rounded-full" style={{ background: '#e8799f' }} />
                 Comparativo Antes × Depois
               </h3>
               <div className="grid grid-cols-2 gap-3">

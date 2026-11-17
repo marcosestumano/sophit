@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { dateKey } from '@/lib/dates'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
@@ -49,7 +50,7 @@ export default function GestorTreinosPage() {
     resolver: zodResolver(treinoSchema),
     defaultValues: {
       lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
-      data_atribuicao: new Date().toISOString().slice(0, 10),
+      data_atribuicao: dateKey(),
     },
   })
 
@@ -95,7 +96,7 @@ export default function GestorTreinosPage() {
       setSaved(true)
       reset({
         lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
-        data_atribuicao: new Date().toISOString().slice(0, 10),
+        data_atribuicao: dateKey(),
       })
       setTimeout(() => setSaved(false), 3000)
     }
@@ -105,7 +106,7 @@ export default function GestorTreinosPage() {
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <Dumbbell className="h-6 w-6" style={{ color: '#f97316' }} />
+          <Dumbbell className="h-6 w-6" style={{ color: '#e8799f' }} />
           Gestor de Treinos
         </h1>
         <p className="text-muted-foreground mt-1">Crie, reutilize e atribua treinos personalizados</p>
@@ -118,10 +119,10 @@ export default function GestorTreinosPage() {
           className="w-full flex items-center justify-between p-5 hover:bg-muted/30 transition-colors"
         >
           <div className="flex items-center gap-2">
-            <BookOpen className="h-4 w-4" style={{ color: '#f97316' }} />
+            <BookOpen className="h-4 w-4" style={{ color: '#e8799f' }} />
             <span className="font-semibold text-foreground">Biblioteca de Treinos</span>
             {templates.length > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 font-medium">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">
                 {templates.length} salvos
               </span>
             )}
@@ -214,7 +215,7 @@ export default function GestorTreinosPage() {
             <label className="flex items-center gap-3 cursor-pointer">
               <div
                 onClick={() => setSaveAsTemplate(!saveAsTemplate)}
-                className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${saveAsTemplate ? 'bg-orange-500' : 'bg-muted-foreground/30'}`}
+                className={`w-10 h-5 rounded-full transition-colors relative flex-shrink-0 ${saveAsTemplate ? 'bg-brand-500' : 'bg-muted-foreground/30'}`}
               >
                 <div className={`absolute top-0.5 w-4 h-4 rounded-full bg-white transition-transform ${saveAsTemplate ? 'translate-x-5' : 'translate-x-0.5'}`} />
               </div>
@@ -267,7 +268,7 @@ export default function GestorTreinosPage() {
                 >
                   <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
                   <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                    style={{ background: 'rgba(249,115,22,0.15)', color: '#ea580c' }}>
+                    style={{ background: 'rgba(232,121,159,0.15)', color: '#d45f88' }}>
                     {index + 1}
                   </div>
                   <span className="flex-1 text-sm font-medium text-foreground truncate">

@@ -73,7 +73,7 @@ export default function RegisterPage() {
       {/* Left panel */}
       <div
         className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(160deg,#1a0a00,#3b1200,#7c2d12)' }}
+        style={{ background: 'linear-gradient(160deg,#1a0710,#3b1022,#6e2d45)' }}
       >
         <div className="flex items-center gap-3">
           <SophitLogo size={48} />
@@ -84,7 +84,7 @@ export default function RegisterPage() {
           <h1 className="text-white text-4xl font-bold leading-tight mb-4">
             Comece sua jornada<br />de evolução hoje.
           </h1>
-          <p className="text-orange-200 text-lg leading-relaxed">
+          <p className="text-brand-200 text-lg leading-relaxed">
             Crie sua conta gratuitamente e tenha acesso ao acompanhamento personalizado de saúde e performance.
           </p>
         </div>
@@ -97,7 +97,7 @@ export default function RegisterPage() {
           ].map(s => (
             <div key={s.label} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.08)' }}>
               <p className="text-white text-2xl font-bold">{s.value}</p>
-              <p className="text-orange-200 text-sm mt-1">{s.label}</p>
+              <p className="text-brand-200 text-sm mt-1">{s.label}</p>
             </div>
           ))}
         </div>
@@ -110,7 +110,7 @@ export default function RegisterPage() {
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <SophitLogo size={40} />
             <span className="font-bold text-xl tracking-widest" style={{
-              background: 'linear-gradient(135deg,#f97316,#c2410c)',
+              background: 'linear-gradient(135deg,#e8799f,#b4476e)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
@@ -206,7 +206,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Já tem uma conta?{' '}
-            <Link href="/login" className="font-medium" style={{ color: '#ea580c' }}>
+            <Link href="/login" className="font-medium" style={{ color: '#d45f88' }}>
               Fazer login
             </Link>
           </p>

@@ -54,10 +54,10 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
         className="w-full flex items-center justify-between p-4 hover:bg-muted/40 transition-colors text-left"
       >
         <div className="flex items-center gap-2">
-          <TrendingUp className="h-4 w-4" style={{color:'#f97316'}} />
+          <TrendingUp className="h-4 w-4" style={{color:'#e8799f'}} />
           <span className="text-sm font-semibold text-foreground">Progressão de cargas — {treinoTitulo}</span>
           {totalRegistros > 0 && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300">
               {totalRegistros} registros
             </span>
           )}
@@ -104,7 +104,7 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
                           {diff > 0 ? `+${diff}` : diff === 0 ? '=' : diff} kg
                         </span>
                       )}
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300">
                         {ultima} kg atual
                       </span>
                     </div>
@@ -117,7 +117,7 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
                         <XAxis dataKey="data" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
                         <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} width={32} />
                         <Tooltip contentStyle={{ fontSize: 12 }} formatter={(v: any) => [`${v} kg`, 'Carga']} />
-                        <Line type="monotone" dataKey="carga" stroke="#f97316" strokeWidth={2} dot={{ fill: '#f97316', r: 3 }} activeDot={{ r: 5 }} connectNulls />
+                        <Line type="monotone" dataKey="carga" stroke="#e8799f" strokeWidth={2} dot={{ fill: '#e8799f', r: 3 }} activeDot={{ r: 5 }} connectNulls />
                       </LineChart>
                     </ResponsiveContainer>
                   ) : (

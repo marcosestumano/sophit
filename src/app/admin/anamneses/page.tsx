@@ -23,7 +23,7 @@ export default async function AdminAnamnesePage() {
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
         <div className="flex-1">
           <h1 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2">
-            <Inbox className="h-5 w-5 flex-shrink-0" style={{color:'#f97316'}} />
+            <Inbox className="h-5 w-5 flex-shrink-0" style={{color:'#e8799f'}} />
             Inbox de Anamneses
           </h1>
           <p className="text-muted-foreground text-sm mt-0.5">
@@ -39,7 +39,7 @@ export default async function AdminAnamnesePage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {[
-          { label: 'Total recebidas', value: anamneses?.length ?? 0, icon: Inbox, color: 'text-orange-600 bg-orange-50 dark:bg-orange-900/20' },
+          { label: 'Total recebidas', value: anamneses?.length ?? 0, icon: Inbox, color: 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' },
           { label: 'Pendentes', value: pendentes.length, icon: Clock, color: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20' },
           { label: 'Respondidas', value: respondidas.length, icon: CheckCircle2, color: 'text-green-600 bg-green-50 dark:bg-green-900/20' },
         ].map(s => (
@@ -68,7 +68,7 @@ export default async function AdminAnamnesePage() {
                 <Link key={a.id} href={`/admin/anamneses/${a.id}`}
                   className="flex items-center gap-3 p-3 sm:p-4 hover:bg-muted/50 transition-colors">
                   <div className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{background:'linear-gradient(135deg,#f97316,#c2410c)'}}>
+                    style={{background:'linear-gradient(135deg,#e8799f,#b4476e)'}}>
                     <span className="text-white text-xs font-semibold">{initials}</span>
                   </div>
                   <div className="flex-1 min-w-0">

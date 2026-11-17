@@ -22,7 +22,7 @@ export function SplashScreen() {
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center"
       style={{
-        background: 'linear-gradient(160deg,#1a0a00,#3b1200,#7c2d12)',
+        background: 'linear-gradient(160deg,#1a0710,#3b1022,#6e2d45)',
         opacity: phase === 'exit' ? 0 : 1,
         transition: phase === 'exit' ? 'opacity 0.6s ease-out' : 'none',
         pointerEvents: phase === 'exit' ? 'none' : 'all',
@@ -50,10 +50,10 @@ export function SplashScreen() {
                 transform: phase === 'enter' ? 'translateY(20px)' : 'translateY(0)',
                 transition: `opacity 0.4s ease-out ${0.1 + i * 0.07}s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + i * 0.07}s`,
                 background: i < 2
-                  ? 'linear-gradient(135deg, #fff 0%, #fdba74 100%)'
+                  ? 'linear-gradient(135deg, #fff 0%, #f8b4cc 100%)'
                   : i < 4
-                  ? 'linear-gradient(135deg, #fdba74 0%, #f97316 100%)'
-                  : 'linear-gradient(135deg, #f97316 0%, #c2410c 100%)',
+                  ? 'linear-gradient(135deg, #f8b4cc 0%, #e8799f 100%)'
+                  : 'linear-gradient(135deg, #e8799f 0%, #b4476e 100%)',
                 WebkitBackgroundClip: 'text',
                 WebkitTextFillColor: 'transparent',
               }}
@@ -65,7 +65,7 @@ export function SplashScreen() {
 
         {/* Tagline */}
         <p
-          className="text-orange-200 text-sm sm:text-base tracking-widest uppercase"
+          className="text-brand-200 text-sm sm:text-base tracking-widest uppercase"
           style={{
             opacity: phase === 'enter' ? 0 : 0.7,
             transform: phase === 'enter' ? 'translateY(8px)' : 'translateY(0)',
@@ -89,7 +89,7 @@ export function SplashScreen() {
           <div
             style={{
               height: '100%',
-              background: 'linear-gradient(90deg, #f97316, #fff)',
+              background: 'linear-gradient(90deg, #e8799f, #fff)',
               borderRadius: '9999px',
               width: phase === 'enter' ? '0%' : phase === 'hold' ? '100%' : '100%',
               transition: phase === 'hold' ? 'width 0.9s cubic-bezier(0.4,0,0.2,1)' : 'none',

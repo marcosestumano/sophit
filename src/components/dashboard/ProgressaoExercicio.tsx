@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { dateKey } from '@/lib/dates'
 import { createClient } from '@/lib/supabase/client'
 import {
   LineChart, Line, XAxis, YAxis, CartesianGrid,
@@ -89,7 +90,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
       series: parseInt(form.series),
       reps: form.reps,
       observacoes: form.observacoes,
-      data_registro: new Date().toISOString().slice(0, 10),
+      data_registro: dateKey(),
     })
     setSaving(false)
     setSaved(true)
@@ -115,7 +116,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
         className="w-full flex items-center gap-3 p-4 hover:bg-muted/40 transition-colors text-left"
       >
         <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-          style={{background:'rgba(249,115,22,0.15)',color:'#ea580c'}}>
+          style={{background:'rgba(232,121,159,0.15)',color:'#d45f88'}}>
           {index + 1}
         </div>
 
@@ -139,7 +140,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
             </span>
           )}
           {ultimaCarga && (
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300">
+            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300">
               {ultimaCarga} kg
             </span>
           )}
@@ -246,10 +247,10 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
                   <Line
                     type="monotone"
                     dataKey="carga"
-                    stroke="#f97316"
+                    stroke="#e8799f"
                     strokeWidth={2.5}
-                    dot={{ fill: '#f97316', r: 4, strokeWidth: 0 }}
-                    activeDot={{ r: 6, fill: '#ea580c' }}
+                    dot={{ fill: '#e8799f', r: 4, strokeWidth: 0 }}
+                    activeDot={{ r: 6, fill: '#d45f88' }}
                     connectNulls
                   />
                 </LineChart>

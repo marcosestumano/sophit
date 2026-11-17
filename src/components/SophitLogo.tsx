@@ -19,7 +19,7 @@ export function SophitLogo({ size = 32 }: { size?: number }) {
       />
       <defs>
         <linearGradient id="fireOuter" x1="50" y1="8" x2="50" y2="88" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#f97316" />
+          <stop offset="0%" stopColor="#e8799f" />
           <stop offset="60%" stopColor="#dc2626" />
           <stop offset="100%" stopColor="#9a1515" />
         </linearGradient>

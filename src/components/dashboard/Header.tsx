@@ -46,7 +46,7 @@ export function Header({ profile }: HeaderProps) {
 
         <button className="btn-ghost p-2 relative">
           <Bell className="h-4 w-4" />
-          <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full" style={{background:'#f97316'}} />
+          <span className="absolute top-1.5 right-1.5 h-1.5 w-1.5 rounded-full" style={{background:'#e8799f'}} />
         </button>
 
         <div className="relative">
@@ -55,7 +55,7 @@ export function Header({ profile }: HeaderProps) {
             className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-muted transition-colors"
           >
             <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{background:'linear-gradient(135deg,#f97316,#c2410c)'}}>
+              style={{background:'linear-gradient(135deg,#e8799f,#b4476e)'}}>
               <span className="text-white text-xs font-semibold">{initials}</span>
             </div>
             <div className="hidden sm:block text-left">

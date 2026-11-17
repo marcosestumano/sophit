@@ -1,10 +1,17 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import './globals.css'
 import { SplashProvider } from '@/components/SplashProvider'
 
 export const metadata: Metadata = {
   title: 'Sophit — Saúde & Performance',
   description: 'Plataforma SaaS para profissionais de saúde e fitness',
+}
+
+export const viewport: Viewport = {
+  themeColor: '#f8b4cc',
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

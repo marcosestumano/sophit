@@ -88,7 +88,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
     if (v < 18.5) return { txt:'Abaixo do peso', cor:'#3b82f6' }
     if (v < 25)   return { txt:'Normal',          cor:'#16a34a' }
     if (v < 30)   return { txt:'Sobrepeso',        cor:'#f59e0b' }
-    if (v < 35)   return { txt:'Obesidade I',      cor:'#f97316' }
+    if (v < 35)   return { txt:'Obesidade I',      cor:'#e8799f' }
     return             { txt:'Obesidade II+',    cor:'#dc2626' }
   }
   const imcVal = latest.imc ?? (comp.imc ? parseFloat(comp.imc) : null)
@@ -99,7 +99,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
       {/* Destaques principais */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {latest.peso && (
-          <div className="p-3 rounded-xl border border-border" style={{background:'rgba(249,115,22,0.06)'}}>
+          <div className="p-3 rounded-xl border border-border" style={{background:'rgba(232,121,159,0.06)'}}>
             <p className="text-xs text-muted-foreground">Peso</p>
             <p className="text-2xl font-bold text-foreground mt-1">{latest.peso}<span className="text-sm font-normal text-muted-foreground ml-1">kg</span></p>
             {prev?.peso && <Trend current={latest.peso} previous={prev.peso} />}
@@ -113,7 +113,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           </div>
         )}
         {(latest.percentual_gordura ?? comp.perc_gordura) && (
-          <div className="p-3 rounded-xl border border-border" style={{background:'rgba(249,115,22,0.06)'}}>
+          <div className="p-3 rounded-xl border border-border" style={{background:'rgba(232,121,159,0.06)'}}>
             <p className="text-xs text-muted-foreground">% Gordura</p>
             <p className="text-2xl font-bold text-foreground mt-1">
               {latest.percentual_gordura ?? comp.perc_gordura}
@@ -126,7 +126,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           </div>
         )}
         {(latest.massa_magra ?? comp.massa_livre_gordura) && (
-          <div className="p-3 rounded-xl border border-border" style={{background:'rgba(249,115,22,0.06)'}}>
+          <div className="p-3 rounded-xl border border-border" style={{background:'rgba(232,121,159,0.06)'}}>
             <p className="text-xs text-muted-foreground">Massa Magra</p>
             <p className="text-2xl font-bold text-foreground mt-1">
               {parseFloat(String(latest.massa_magra ?? comp.massa_livre_gordura)).toFixed(1)}
@@ -150,7 +150,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Medidas */}
           {Object.values(med).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#ea580c'}}>Medidas Corporais (cm)</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Medidas Corporais (cm)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {Object.entries(med).filter(([,v])=>v).map(([k,v]) => (
                   <Card key={k} label={MEDIDAS_LABELS[k]??k} value={v}
@@ -163,7 +163,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Dobras */}
           {Object.values(dob).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#ea580c'}}>Dobras Cutâneas (mm)</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Dobras Cutâneas (mm)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {Object.entries(dob).filter(([,v])=>v).map(([k,v]) => (
                   <Card key={k} label={DOBRAS_LABELS[k]??k} value={v} />
@@ -175,7 +175,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Diâmetros */}
           {Object.values(dia).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#ea580c'}}>Diâmetro Ósseo (cm)</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Diâmetro Ósseo (cm)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {Object.entries(dia).filter(([,v])=>v).map(([k,v]) => (
                   <Card key={k} label={DIAMETROS_LABELS[k]??k} value={v} />
@@ -187,7 +187,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Composição extra */}
           {Object.keys(comp).length > 0 && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#ea580c'}}>Composição Corporal</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Composição Corporal</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {comp.rcq       && <Card label="RCQ" value={comp.rcq} prev={(compPrev as any).rcq} />}
                 {comp.densidade && <Card label="Densidade (g/cm³)" value={comp.densidade} />}
@@ -200,13 +200,13 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Histórico resumido */}
           {avaliacoes.length > 1 && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#ea580c'}}>Histórico de avaliações</p>
+              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Histórico de avaliações</p>
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {avaliacoes.map((av, i) => (
                   <div key={av.id} className="flex items-center justify-between text-xs p-2.5 rounded-lg bg-muted/40">
                     <span className="text-muted-foreground">
                       {new Date(av.created_at).toLocaleDateString('pt-BR')}
-                      {i === 0 && <span className="ml-2 text-orange-600 font-medium">← mais recente</span>}
+                      {i === 0 && <span className="ml-2 text-brand-600 font-medium">← mais recente</span>}
                     </span>
                     <div className="flex gap-4">
                       {av.peso && <span className="text-foreground font-medium">{av.peso} kg</span>}

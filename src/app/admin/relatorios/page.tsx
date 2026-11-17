@@ -85,18 +85,18 @@ export default async function RelatoriosPage() {
 
   const stats = [
     { label:'Total de alunos',    value:totalUsers??0,     icon:Users,        cor:'#3b82f6', bg:'bg-blue-50 dark:bg-blue-900/20' },
-    { label:'Anamneses enviadas', value:totalAnamneses??0, icon:ClipboardList, cor:'#f97316', bg:'bg-orange-50 dark:bg-orange-900/20' },
+    { label:'Anamneses enviadas', value:totalAnamneses??0, icon:ClipboardList, cor:'#e8799f', bg:'bg-brand-50 dark:bg-brand-900/20' },
     { label:'Pendentes',          value:pendentes??0,      icon:ClipboardList, cor:'#f59e0b', bg:'bg-amber-50 dark:bg-amber-900/20' },
     { label:'Respondidas',        value:respondidas??0,    icon:TrendingUp,   cor:'#22c55e', bg:'bg-green-50 dark:bg-green-900/20' },
     { label:'Treinos criados',    value:totalTreinos??0,   icon:Dumbbell,     cor:'#a855f7', bg:'bg-purple-50 dark:bg-purple-900/20' },
-    { label:'Avaliações físicas', value:totalAvaliacoes??0,icon:Scale,        cor:'#f97316', bg:'bg-orange-50 dark:bg-orange-900/20' },
+    { label:'Avaliações físicas', value:totalAvaliacoes??0,icon:Scale,        cor:'#e8799f', bg:'bg-brand-50 dark:bg-brand-900/20' },
   ]
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-          <BarChart3 className="h-6 w-6" style={{color:'#f97316'}} />
+          <BarChart3 className="h-6 w-6" style={{color:'#e8799f'}} />
           Relatórios & Desempenho
         </h1>
         <p className="text-muted-foreground mt-1">Visão geral da plataforma e evolução dos alunos</p>
@@ -125,7 +125,7 @@ export default async function RelatoriosPage() {
       {/* Tabela de avaliações por aluno */}
       <div className="card p-6">
         <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-          <Scale className="h-4 w-4" style={{color:'#f97316'}} />
+          <Scale className="h-4 w-4" style={{color:'#e8799f'}} />
           Dados de Avaliação Física por Aluno
         </h2>
         {alunosEngajamento.filter(a => a.ultimaMedidas).length === 0 ? (
@@ -162,10 +162,10 @@ export default async function RelatoriosPage() {
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.cintura ? `${m.cintura} cm` : '—'}</td>
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.quadril ? `${m.quadril} cm` : '—'}</td>
                       <td className="py-3 px-3">
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 font-medium">{a.avaliacoes}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">{a.avaliacoes}</span>
                       </td>
                       <td className="py-3 px-3">
-                        <Link href={`/admin/usuarios/${a.id}`} className="inline-flex items-center gap-1 text-xs font-medium hover:underline" style={{color:'#ea580c'}}>
+                        <Link href={`/admin/usuarios/${a.id}`} className="inline-flex items-center gap-1 text-xs font-medium hover:underline" style={{color:'#d45f88'}}>
                           Ver perfil <ArrowRight className="h-3 w-3" />
                         </Link>
                       </td>

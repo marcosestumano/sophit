@@ -148,3 +148,75 @@ export interface DashboardStats {
   totalAvaliacoes: number
   totalUsers: number
 }
+
+// ============================================================
+// Dieta & Cardio
+// ============================================================
+export interface Alimento {
+  nome: string
+  quantidade?: string
+  kcal?: number
+  proteina?: number
+  carbo?: number
+  gordura?: number
+}
+
+export interface DietaPlano {
+  id: string
+  user_id: string
+  titulo: string
+  meta_kcal: number | null
+  meta_proteina: number | null
+  meta_carbo: number | null
+  meta_gordura: number | null
+  agua_litros: number | null
+  dias_semana: string
+  prescricao: string | null
+  observacoes: string | null
+  refeicao_livre: string | null
+  ativo: boolean
+  created_at: string
+}
+
+export interface DietaRefeicao {
+  id: string
+  plano_id: string
+  user_id: string
+  nome: string
+  horario: string | null
+  alimentos: Alimento[]
+  observacoes: string | null
+  ordem: number
+  criado_por: string | null
+}
+
+export interface DietaCheck {
+  id: string
+  refeicao_id: string
+  user_id: string
+  data: string
+}
+
+export interface CardioPrescricao {
+  id: string
+  user_id: string
+  tipo: string
+  duracao_min: number | null
+  frequencia_semana: number | null
+  intensidade: string | null
+  observacoes: string | null
+  ativo: boolean
+}
+
+export interface CardioRegistro {
+  id: string
+  user_id: string
+  prescricao_id: string | null
+  data: string
+  tipo: string
+  duracao_min: number | null
+  distancia_km: number | null
+  calorias: number | null
+  intensidade: string | null
+  observacoes: string | null
+}

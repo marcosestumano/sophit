@@ -22,7 +22,7 @@ function imcLabel(imc: number) {
   if (imc < 18.5) return { txt: 'Abaixo do peso', cor: '#3b82f6' }
   if (imc < 25)   return { txt: 'Peso normal',    cor: '#16a34a' }
   if (imc < 30)   return { txt: 'Sobrepeso',      cor: '#f59e0b' }
-  if (imc < 35)   return { txt: 'Obesidade I',    cor: '#f97316' }
+  if (imc < 35)   return { txt: 'Obesidade I',    cor: '#e8799f' }
   if (imc < 40)   return { txt: 'Obesidade II',   cor: '#ef4444' }
   return               { txt: 'Obesidade III',  cor: '#dc2626' }
 }
@@ -31,11 +31,11 @@ function SectionHeader({ title, open, onToggle }: { title: string; open: boolean
   return (
     <button type="button" onClick={onToggle}
       className="w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors hover:bg-muted/50"
-      style={{ background: 'rgba(249,115,22,0.07)', border: '1px solid rgba(249,115,22,0.2)' }}>
-      <span className="text-sm font-semibold" style={{ color: '#ea580c' }}>{title}</span>
+      style={{ background: 'rgba(232,121,159,0.07)', border: '1px solid rgba(232,121,159,0.2)' }}>
+      <span className="text-sm font-semibold" style={{ color: '#d45f88' }}>{title}</span>
       {open
-        ? <ChevronUp className="h-4 w-4" style={{ color: '#ea580c' }} />
-        : <ChevronDown className="h-4 w-4" style={{ color: '#ea580c' }} />}
+        ? <ChevronUp className="h-4 w-4" style={{ color: '#d45f88' }} />
+        : <ChevronDown className="h-4 w-4" style={{ color: '#d45f88' }} />}
     </button>
   )
 }
@@ -188,7 +188,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
           className="w-full flex items-center justify-between p-4 hover:bg-muted/30 transition-colors"
         >
           <div className="flex items-center gap-2 min-w-0">
-            <History className="h-4 w-4 flex-shrink-0" style={{ color: '#f97316' }} />
+            <History className="h-4 w-4 flex-shrink-0" style={{ color: '#e8799f' }} />
             <div className="text-left min-w-0">
               <p className="text-xs text-muted-foreground">Base para esta avaliação</p>
               <p className="text-sm font-medium text-foreground truncate">{selectedLabel}</p>
@@ -196,7 +196,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             {historico.length > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 font-medium">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">
                 {historico.length} registros
               </span>
             )}
@@ -224,7 +224,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
                 <p className="text-sm font-medium text-foreground">Começar do zero</p>
                 <p className="text-xs text-muted-foreground">Todos os campos em branco</p>
               </div>
-              {selectedId === null && <Check className="h-4 w-4" style={{ color: '#f97316' }} />}
+              {selectedId === null && <Check className="h-4 w-4" style={{ color: '#e8799f' }} />}
             </button>
 
             {/* Lista do histórico */}
@@ -240,7 +240,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
                     type="button"
                     onClick={() => applyHistorico(av)}
                     className="w-full flex items-center justify-between px-4 py-3 hover:bg-muted/30 transition-colors border-b border-border last:border-0"
-                    style={isSelected ? { background: 'rgba(249,115,22,0.06)' } : {}}
+                    style={isSelected ? { background: 'rgba(232,121,159,0.06)' } : {}}
                   >
                     <div className="text-left flex-1 min-w-0">
                       <div className="flex items-center gap-2">
@@ -248,7 +248,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
                           {format(new Date(av.created_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                         </p>
                         {i === 0 && (
-                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300 font-medium">
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">
                             mais recente
                           </span>
                         )}
@@ -263,7 +263,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
                           </span>}
                       </div>
                     </div>
-                    {isSelected && <Check className="h-4 w-4 flex-shrink-0 ml-2" style={{ color: '#f97316' }} />}
+                    {isSelected && <Check className="h-4 w-4 flex-shrink-0 ml-2" style={{ color: '#e8799f' }} />}
                   </button>
                 )
               })
@@ -274,7 +274,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
 
       {/* Banner informativo */}
       <div className="flex items-center gap-2 p-3 rounded-lg text-xs"
-        style={{ background: 'rgba(249,115,22,0.07)', border: '1px solid rgba(249,115,22,0.2)', color: '#ea580c' }}>
+        style={{ background: 'rgba(232,121,159,0.07)', border: '1px solid rgba(232,121,159,0.2)', color: '#d45f88' }}>
         <RefreshCw className="h-3.5 w-3.5 flex-shrink-0" />
         Altere apenas os campos que mudaram. Ao salvar, um novo registro será criado preservando o histórico.
       </div>
@@ -282,8 +282,8 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
       {/* IMC preview */}
       {imc && imcInfo && (
         <div className="card p-4 flex items-center gap-4 animate-slide-up">
-          <div className="p-2.5 rounded-xl bg-orange-50 dark:bg-orange-900/20">
-            <Calculator className="h-5 w-5" style={{ color: '#f97316' }} />
+          <div className="p-2.5 rounded-xl bg-brand-50 dark:bg-brand-900/20">
+            <Calculator className="h-5 w-5" style={{ color: '#e8799f' }} />
           </div>
           <div>
             <p className="text-xs text-muted-foreground">IMC calculado</p>

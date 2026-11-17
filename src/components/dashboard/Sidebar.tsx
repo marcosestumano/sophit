@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react'
 import {
   LayoutDashboard, ClipboardList, Dumbbell, Users,
   BarChart3, Scale, ChevronLeft, ChevronRight,
-  Inbox, UserCircle, Camera, X,
+  Inbox, UserCircle, Camera, X, Utensils, HeartPulse,
 } from 'lucide-react'
 import { SophitLogo } from '@/components/SophitLogo'
 import type { Profile } from '@/types'
@@ -18,6 +18,8 @@ const userNavItems = [
   { href: '/dashboard', label: 'Início', icon: LayoutDashboard },
   { href: '/dashboard/anamnese', label: 'Anamnese', icon: ClipboardList },
   { href: '/dashboard/treinos', label: 'Meus Treinos', icon: Dumbbell },
+  { href: '/dashboard/dieta', label: 'Dieta', icon: Utensils },
+  { href: '/dashboard/cardio', label: 'Cardio', icon: HeartPulse },
   { href: '/dashboard/progresso', label: 'Meu Progresso', icon: Camera },
   { href: '/dashboard/perfil', label: 'Perfil', icon: UserCircle },
 ]
@@ -95,7 +97,7 @@ export function Sidebar({ profile }: SidebarProps) {
         <div className="flex items-center h-16 px-4 border-b border-border gap-2.5 flex-shrink-0">
           <div className="flex-shrink-0"><SophitLogo size={32} /></div>
           <span className="font-bold text-lg tracking-widest flex-1" style={{
-            background: 'linear-gradient(135deg,#f97316,#c2410c)',
+            background: 'linear-gradient(135deg,#e8799f,#b4476e)',
             WebkitBackgroundClip: 'text',
             WebkitTextFillColor: 'transparent'
           }}>
@@ -114,8 +116,8 @@ export function Sidebar({ profile }: SidebarProps) {
         {/* Role badge */}
         <div className="px-4 pt-4">
           <span className={cn('badge text-xs', isAdmin
-            ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
-            : 'bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300'
+            ? 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300'
+            : 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
           )}>
             {isAdmin ? 'Administrador' : 'Aluno'}
           </span>
@@ -134,7 +136,7 @@ export function Sidebar({ profile }: SidebarProps) {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300'
+                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
@@ -184,9 +186,9 @@ export function Sidebar({ profile }: SidebarProps) {
           aria-label="Abrir menu"
         >
           <div className="flex flex-col gap-1">
-            <span className="block w-5 h-0.5 rounded-full" style={{background:'#f97316'}} />
-            <span className="block w-5 h-0.5 rounded-full" style={{background:'#f97316'}} />
-            <span className="block w-3.5 h-0.5 rounded-full" style={{background:'#f97316'}} />
+            <span className="block w-5 h-0.5 rounded-full" style={{background:'#e8799f'}} />
+            <span className="block w-5 h-0.5 rounded-full" style={{background:'#e8799f'}} />
+            <span className="block w-3.5 h-0.5 rounded-full" style={{background:'#e8799f'}} />
           </div>
         </button>
       )}
@@ -201,7 +203,7 @@ export function Sidebar({ profile }: SidebarProps) {
           <div className="flex-shrink-0"><SophitLogo size={32} /></div>
           {!collapsed && (
             <span className="font-bold text-lg tracking-widest" style={{
-              background: 'linear-gradient(135deg,#f97316,#c2410c)',
+              background: 'linear-gradient(135deg,#e8799f,#b4476e)',
               WebkitBackgroundClip: 'text',
               WebkitTextFillColor: 'transparent'
             }}>
@@ -214,8 +216,8 @@ export function Sidebar({ profile }: SidebarProps) {
         {!collapsed && (
           <div className="px-4 pt-4">
             <span className={cn('badge text-xs', isAdmin
-              ? 'bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300'
-              : 'bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300'
+              ? 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300'
+              : 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
             )}>
               {isAdmin ? 'Administrador' : 'Aluno'}
             </span>
@@ -235,7 +237,7 @@ export function Sidebar({ profile }: SidebarProps) {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300'
+                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   collapsed && 'justify-center'
                 )}
