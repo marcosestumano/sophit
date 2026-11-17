@@ -25,6 +25,14 @@ interface Props {
   avaliacoes: { peso: number | null; percentual_gordura: number | null; created_at: string }[]
 }
 
+/** Próximo treino da rotação A → B → C, considerando o que foi feito antes de `key`. */
+function proximoTreino(treinos: Props['treinos'], progressoes: Props['progressoes'], key: string) {
+  const anteriores = progressoes.filter(x => x.data_registro < key).sort((a, b) => b.data_registro.localeCompare(a.data_registro))
+  const ultimoIdx = anteriores.length ? treinos.findIndex(t => t.id === anteriores[0].treino_id) : -1
+  const idx = (ultimoIdx + 1) % treinos.length
+  return { idx, treino: treinos[idx] }
+}
+
 const n = (v: number) => round(v).toLocaleString('pt-BR')
 const dias = (v: number) => `${v} dia${v !== 1 ? 's' : ''}`
 
@@ -58,7 +66,19 @@ export function HomeView(p: Props) {
   const sDieta = currentStreak(k => dados.dietaDays.has(k), today)
   const sCardio = currentStreak(k => dados.cardioDays.has(k), today)
 
+  const treinoHojePendente = p.treinos.length > 0 && !dados.treinoDays.has(todayKey)
+  const proxHoje = treinoHojePendente ? proximoTreino(p.treinos, p.progressoes, todayKey) : null
+  const mostrarBarra = !!proxHoje && selected === todayKey
+
   const semana = weekDays(today)
+  const categorias = [
+    p.treinos.length > 0 && { label: 'Treino', cor: CORES.treino, feito: (k: string) => dados.treinoDays.has(k) },
+    refeicoes.length > 0 && { label: 'Dieta', cor: CORES.dieta, feito: (k: string) => dados.dietaDays.has(k) },
+    p.cardioPrescricoes.length > 0 && { label: 'Cardio', cor: CORES.cardio, feito: (k: string) => dados.cardioDays.has(k) },
+  ].filter(Boolean) as { label: string; cor: string; feito: (k: string) => boolean }[]
+  const statusDia = (k: string) => categorias.length
+    ? ': ' + categorias.map(c => `${c.label.toLowerCase()} ${c.feito(k) ? 'feito' : 'pendente'}`).join(', ')
+    : ''
   const selLabel = selected === todayKey ? 'Hoje' : format(parseKey(selected), "EEE, dd", { locale: ptBR })
 
   return (
@@ -96,27 +116,35 @@ export function HomeView(p: Props) {
           const k = dateKey(d)
           const ativo = k === selected
           return (
-            <button key={k} onClick={() => setSelected(k)} aria-pressed={ativo} aria-label={format(d, "EEEE, d 'de' MMMM", { locale: ptBR })}
+            <button key={k} onClick={() => setSelected(k)} aria-pressed={ativo}
+              aria-label={`${format(d, "EEEE, d 'de' MMMM", { locale: ptBR })}${statusDia(k)}`}
               className={cn('press w-[42px] h-[72px] rounded-2xl border flex flex-col items-center justify-center gap-0.5 transition-colors duration-150',
                 ativo ? 'bg-[#2c2325] border-[#2c2325] text-[#f8f3f2] dark:bg-[#f8f3f2] dark:border-[#f8f3f2] dark:text-[#2c2325]' : 'bg-card border-border text-foreground',
                 k === todayKey && !ativo && 'border-primary')}>
               <span className={cn('text-xs font-medium', ativo ? 'opacity-70' : 'text-muted-foreground')}>{DIAS_CURTOS[i]}</span>
               <span className="text-lg leading-tight">{format(d, 'd')}</span>
-              <span className="flex gap-[3px] mt-0.5 h-1.5">
-                {p.treinos.length > 0 && <Dot color={CORES.treino} on={dados.treinoDays.has(k)} />}
-                {refeicoes.length > 0 && <Dot color={CORES.dieta} on={dados.dietaDays.has(k)} />}
-                {p.cardioPrescricoes.length > 0 && <Dot color={CORES.cardio} on={dados.cardioDays.has(k)} />}
+              <span className="flex gap-[3px] mt-1 h-[7px]" aria-hidden="true">
+                {categorias.map(c => <Dot key={c.label} color={c.cor} on={c.feito(k)} />)}
               </span>
             </button>
           )
         })}
       </div>
 
+      {categorias.length > 0 && (
+        <p className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs font-medium text-muted-foreground" aria-hidden="true">
+          {categorias.map(c => (
+            <span key={c.label} className="flex items-center gap-1.5"><Dot color={c.cor} on />{c.label}</span>
+          ))}
+          <span className="flex items-center gap-1.5"><Dot color="hsl(var(--muted-foreground))" on={false} />pendente</span>
+        </p>
+      )}
+
       {/* Resumo do dia — o único painel escuro da tela */}
       <section aria-label={`Resumo de ${selLabel}`} className="app-panel mt-4 p-5">
         <p className="text-xs font-medium opacity-70">{selLabel} · {TABS[tab].titulo.toLowerCase()}</p>
         <div className="mt-2">
-          {tab === 'treino' && <TreinoResumo {...p} selected={selected} treinoDays={dados.treinoDays} />}
+          {tab === 'treino' && <TreinoResumo {...p} selected={selected} todayKey={todayKey} treinoDays={dados.treinoDays} />}
           {tab === 'dieta' && <DietaResumo plano={p.plano} refeicoes={refeicoes} checados={dados.checksPorDia.get(selected)} />}
           {tab === 'cardio' && <CardioResumo prescricoes={p.cardioPrescricoes} registros={p.cardioRegistros} selected={selected} />}
         </div>
@@ -152,6 +180,16 @@ export function HomeView(p: Props) {
           </div>
         </div>
       ) : null}
+      {mostrarBarra && proxHoje && (
+        <>
+          <div className="h-16 lg:hidden" aria-hidden="true" />
+          <div className="fixed inset-x-0 z-30 px-6 lg:hidden bottom-[calc(env(safe-area-inset-bottom)+92px)]">
+            <Link href={`/dashboard/treinos?t=${proxHoje.treino.id}`} className="btn-primary w-full h-14 max-w-2xl mx-auto flex">
+              <Play className="h-4 w-4 fill-current" /> Iniciar treino {letraTreino(proxHoje.idx)} · {proxHoje.treino.titulo}
+            </Link>
+          </div>
+        </>
+      )}
     </AppScreen>
   )
 }
@@ -166,8 +204,12 @@ function StreakRow({ icon: Icon, label, v }: { icon: any; label: string; v: numb
   )
 }
 
+/** Feito = ponto cheio; pendente = só o contorno. A forma muda, não só a cor. */
 function Dot({ color, on }: { color: string; on: boolean }) {
-  return <span className="h-1.5 w-1.5 rounded-full" style={{ background: on ? color : 'currentColor', opacity: on ? 1 : 0.2 }} />
+  return (
+    <span className="h-[7px] w-[7px] rounded-full flex-shrink-0"
+      style={on ? { background: color } : { boxShadow: `inset 0 0 0 1.5px ${color}`, opacity: 0.55 }} />
+  )
 }
 
 const TABS: Record<Tab, { titulo: string; icon: any; href: string; link: string }> = {
@@ -191,18 +233,15 @@ function Vazio({ texto }: { texto: string }) {
   return <p className="py-4 opacity-80">{texto}</p>
 }
 
-function TreinoResumo({ treinos, progressoes, selected, treinoDays }: Props & { selected: string; treinoDays: Set<string> }) {
-  if (!treinos.length) return <Vazio texto="Nenhum treino prescrito ainda." />
+function TreinoResumo({ treinos, progressoes, selected, todayKey, treinoDays }: Props & { selected: string; todayKey: string; treinoDays: Set<string> }) {
+  if (!treinos.length) return <Vazio texto="Seu profissional ainda não montou seus treinos. Eles aparecem aqui assim que forem prescritos." />
 
   const feitos = Array.from(new Set(progressoes.filter(x => x.data_registro === selected).map(x => x.treino_id)))
     .map(id => treinos.find(t => t.id === id)).filter(Boolean) as Props['treinos']
-  const anteriores = progressoes.filter(x => x.data_registro < selected).sort((a, b) => b.data_registro.localeCompare(a.data_registro))
-  const ultimoIdx = anteriores.length ? treinos.findIndex(t => t.id === anteriores[0].treino_id) : -1
-  const proxIdx = (ultimoIdx + 1) % treinos.length
-  const prox = treinos[proxIdx]
   const naSemana = weekDays(parseKey(selected)).map(dateKey).filter(k => treinoDays.has(k)).length
   const rodape = <p className="text-sm opacity-70 mt-3">{naSemana} treino{naSemana !== 1 ? 's' : ''} nesta semana</p>
 
+  // Dia com registro: mostra o que foi feito
   if (feitos.length) {
     return (
       <div>
@@ -212,16 +251,44 @@ function TreinoResumo({ treinos, progressoes, selected, treinoDays }: Props & { 
       </div>
     )
   }
+
+  // Dia passado sem registro: não oferece "Iniciar" (a carga sairia com a data de hoje)
+  if (selected < todayKey) {
+    return (
+      <div>
+        <p className="text-[28px] leading-tight tracking-[-0.03em]">Sem treino registrado</p>
+        <p className="opacity-70 mt-1">Nenhuma carga foi registrada neste dia.</p>
+        {rodape}
+      </div>
+    )
+  }
+
+  const { idx, treino } = proximoTreino(treinos, progressoes, selected)
+  const cabecalho = (rotulo: string) => (
+    <div className="flex items-center gap-3">
+      <span className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-xl">{letraTreino(idx)}</span>
+      <div className="min-w-0">
+        <p className="text-xs font-medium opacity-70">{rotulo} · {treino.lista_exercicios?.length ?? 0} exercícios</p>
+        <p className="text-[28px] leading-tight tracking-[-0.03em] truncate">{treino.titulo}</p>
+      </div>
+    </div>
+  )
+
+  // Dia futuro: só a previsão, sem ação
+  if (selected > todayKey) {
+    return (
+      <div>
+        {cabecalho('Previsto')}
+        <p className="text-sm opacity-70 mt-3">Segue a ordem dos seus treinos a partir do último registrado.</p>
+      </div>
+    )
+  }
+
+  // Hoje: a ação principal. No celular ela fica fixa perto da barra inferior.
   return (
     <div>
-      <div className="flex items-center gap-3">
-        <span className="h-12 w-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-xl">{letraTreino(proxIdx)}</span>
-        <div className="min-w-0">
-          <p className="text-xs font-medium opacity-70">Próximo · {prox.lista_exercicios?.length ?? 0} exercícios</p>
-          <p className="text-[28px] leading-tight tracking-[-0.03em] truncate">{prox.titulo}</p>
-        </div>
-      </div>
-      <Link href={`/dashboard/treinos?t=${prox.id}`} className="btn-primary w-full mt-4 h-12">
+      {cabecalho('Treino de hoje')}
+      <Link href={`/dashboard/treinos?t=${treino.id}`} className="btn-primary w-full mt-4 h-12 hidden lg:flex">
         <Play className="h-4 w-4 fill-current" /> Iniciar treino
       </Link>
       {rodape}
