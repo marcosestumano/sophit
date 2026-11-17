@@ -32,7 +32,7 @@ export default async function RelatoriosPage() {
     supabase.from('progressao_exercicios').select('user_id, carga, data_registro, exercicio_nome').order('data_registro'),
     supabase.from('anamneses').select('user_id, status, created_at').order('created_at'),
     supabase.from('avaliacoes_fisicas')
-      .select('user_id, peso, altura, imc, percentual_gordura, massa_magra, medidas_completas, medidas, composicao, created_at')
+      .select('id, user_id, peso, altura, imc, percentual_gordura, massa_magra, medidas_completas, medidas, composicao, created_at')
       .order('created_at', { ascending: false }),
     supabase.from('treinos').select('user_id, created_at').order('created_at'),
   ])
