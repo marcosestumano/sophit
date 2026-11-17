@@ -20,8 +20,8 @@ export default async function AnamnesePage() {
     <div className="max-w-3xl mx-auto">
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <ClipboardList className="h-6 w-6 text-brand-600" />
+          <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
+            <ClipboardList className="h-6 w-6 text-rose-text" />
             Anamneses
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -56,7 +56,7 @@ export default async function AnamnesePage() {
 
                 {anamnese.feedback_admin && (
                   <div className="p-3 rounded-lg bg-brand-50 dark:bg-brand-900/20 border border-brand-100 dark:border-brand-800/50">
-                    <div className="flex items-center gap-1.5 text-xs text-brand-700 dark:text-brand-300 font-medium mb-1.5">
+                    <div className="flex items-center gap-1.5 text-xs text-rose-text  font-medium mb-1.5">
                       <MessageSquare className="h-3.5 w-3.5" />
                       Feedback do profissional
                     </div>

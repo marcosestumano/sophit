@@ -105,7 +105,7 @@ export default function GestorTreinosPage() {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div>
-        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+        <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
           <Dumbbell className="h-6 w-6" style={{ color: '#e8799f' }} />
           Gestor de Treinos
         </h1>
@@ -120,9 +120,9 @@ export default function GestorTreinosPage() {
         >
           <div className="flex items-center gap-2">
             <BookOpen className="h-4 w-4" style={{ color: '#e8799f' }} />
-            <span className="font-semibold text-foreground">Biblioteca de Treinos</span>
+            <span className="font-medium text-foreground">Biblioteca de Treinos</span>
             {templates.length > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30  font-medium">
                 {templates.length} salvos
               </span>
             )}
@@ -180,7 +180,7 @@ export default function GestorTreinosPage() {
       {/* Formulário */}
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
         <div className="card p-6 space-y-4">
-          <h2 className="font-semibold text-foreground">Informações do Treino</h2>
+          <h2 className="font-normal text-foreground">Informações do Treino</h2>
 
           <div>
             <label className="form-label">Atribuir para</label>
@@ -241,7 +241,7 @@ export default function GestorTreinosPage() {
         {/* Exercícios */}
         <div className="card p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-semibold text-foreground">
+            <h2 className="font-normal text-foreground">
               Exercícios
               <span className="ml-2 text-xs font-normal text-muted-foreground">({fields.length})</span>
             </h2>
@@ -267,8 +267,8 @@ export default function GestorTreinosPage() {
                   onClick={() => setExpandedEx(expandedEx === index ? null : index)}
                 >
                   <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                  <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                    style={{ background: 'rgba(232,121,159,0.15)', color: '#d45f88' }}>
+                  <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+                    style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
                     {index + 1}
                   </div>
                   <span className="flex-1 text-sm font-medium text-foreground truncate">

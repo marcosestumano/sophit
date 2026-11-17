@@ -3,8 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Dumbbell, Play, ChevronDown, Check, History } from 'lucide-react'
-import { AppShell, HeroTitle, Chip } from '@/components/app/AppShell'
+import { Dumbbell, Play, ChevronDown, ChevronRight, Check } from 'lucide-react'
+import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
 import { cn } from '@/lib/utils'
@@ -43,23 +43,18 @@ export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
   }, [abrirId])
 
   return (
-    <AppShell
-      hero={
-        <>
-          <HeroTitle title="Meus treinos" />
-          <div className="mt-3"><Chip><Dumbbell className="h-4 w-4" /> {ativos.length} treino{ativos.length !== 1 ? 's' : ''}</Chip></div>
-        </>
-      }
-    >
+    <AppScreen>
+      <ScreenHeader title="Meus treinos" sub={`${ativos.length} treino${ativos.length !== 1 ? 's' : ''} no plano`} />
+
       {ativos.length === 0 && (
-        <div className="app-card p-10 text-center">
-          <Dumbbell className="h-12 w-12 text-muted-foreground mx-auto mb-3 opacity-30" />
-          <p className="font-medium text-foreground">Nenhum treino atribuído</p>
-          <p className="text-sm text-muted-foreground mt-1">Aguarde seu profissional criar um treino para você.</p>
+        <div className="app-card p-8 mt-4 text-center">
+          <Dumbbell className="h-10 w-10 text-muted-foreground mx-auto mb-3 opacity-40" strokeWidth={1.5} />
+          <p className="font-medium text-foreground">Nenhum treino ainda</p>
+          <p className="text-muted-foreground mt-1">Seu profissional monta os treinos e eles aparecem aqui.</p>
         </div>
       )}
 
-      <div className="space-y-3">
+      <div className="space-y-3 mt-2">
         {ativos.map((t, i) => (
           <div key={t.id} ref={el => { refs.current[t.id] = el }} className="scroll-mt-4">
             <TreinoItem
@@ -75,22 +70,23 @@ export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
       </div>
 
       {inativos.length > 0 && (
-        <div className="mt-8">
-          <button onClick={() => setVerHistorico(v => !v)} className="flex items-center gap-2 text-sm font-semibold text-muted-foreground mb-3">
-            <History className="h-4 w-4" /> Treinos anteriores ({inativos.length})
-            <ChevronDown className={cn('h-4 w-4 transition-transform', verHistorico && 'rotate-180')} />
+        <div className="mt-6">
+          <button onClick={() => setVerHistorico(v => !v)} aria-expanded={verHistorico}
+            className="link-rose flex items-center gap-2 min-h-[44px]">
+            Treinos anteriores ({inativos.length})
+            <ChevronDown className={cn('h-[18px] w-[18px] transition-transform duration-150', verHistorico && 'rotate-180')} strokeWidth={1.75} />
           </button>
           {verHistorico && (
-            <div className="space-y-3 opacity-80">
+            <div className="space-y-3 mt-2">
               {inativos.map(t => (
-                <TreinoItem key={t.id} treino={t} letra="•" userId={userId} destaque={false} feitoHoje={false}
+                <TreinoItem key={t.id} treino={t} letra="·" userId={userId} destaque={false} feitoHoje={false}
                   ultima={ultimaData(t.id)} aberto={aberto === t.id} onToggle={() => setAberto(aberto === t.id ? null : t.id)} />
               ))}
             </div>
           )}
         </div>
       )}
-    </AppShell>
+    </AppScreen>
   )
 }
 
@@ -99,40 +95,46 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
   ultima?: string; aberto: boolean; onToggle: () => void
 }) {
   const ex = treino.lista_exercicios ?? []
+  const meta = `${ex.length} exercício${ex.length !== 1 ? 's' : ''} · ${ultima ? `último em ${format(parseKey(ultima), "d 'de' MMM", { locale: ptBR })}` : 'ainda não registrado'}`
+
+  if (destaque && !aberto) {
+    return (
+      <div className="app-card p-5 border-2 border-primary">
+        <div className="flex items-center gap-4">
+          <span className="h-14 w-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl">{letra}</span>
+          <div className="min-w-0">
+            <p className="text-xs font-medium text-muted-foreground">Próximo · {ex.length} exercícios</p>
+            <p className="text-[26px] leading-tight tracking-[-0.02em] text-foreground truncate">{treino.titulo}</p>
+          </div>
+        </div>
+        <p className="mt-3 mb-4 text-muted-foreground">
+          {ultima ? `Último registro em ${format(parseKey(ultima), "d 'de' MMMM", { locale: ptBR })}.` : 'Primeira vez com este treino.'}
+        </p>
+        <button onClick={onToggle} className="btn-primary w-full h-12"><Play className="h-4 w-4 fill-current" /> Iniciar treino</button>
+      </div>
+    )
+  }
+
   return (
-    <div className={cn('app-card overflow-hidden', destaque && 'border-2 border-brand-400')}>
-      <button onClick={onToggle} className="w-full text-left p-4 flex items-start gap-3">
-        <span className={cn('h-12 w-12 rounded-2xl flex items-center justify-center text-xl font-bold flex-shrink-0',
-          destaque ? 'text-white' : 'bg-muted text-foreground')}
-          style={destaque ? { background: 'linear-gradient(150deg,#f294b5,#d45f88)' } : undefined}>
-          {feitoHoje ? <Check className="h-6 w-6 text-emerald-500" /> : letra}
+    <div className={cn('app-card overflow-hidden', !aberto && 'lift')}>
+      <button onClick={onToggle} aria-expanded={aberto} className="w-full text-left p-4 flex items-center gap-4 min-h-[80px]">
+        <span className={cn('h-12 w-12 rounded-2xl flex items-center justify-center text-xl flex-shrink-0',
+          aberto && destaque ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>
+          {feitoHoje ? <Check className="h-6 w-6 text-dieta" strokeWidth={2} /> : letra}
         </span>
         <span className="flex-1 min-w-0">
-          <span className="flex items-center gap-2 flex-wrap">
-            {destaque && <span className="text-[11px] font-bold rounded-full px-2 py-0.5 bg-brand-100 text-brand-700 dark:bg-brand-900/50 dark:text-brand-200">Próximo</span>}
-            {feitoHoje && <span className="text-[11px] font-bold rounded-full px-2 py-0.5 bg-emerald-100 text-emerald-700 dark:bg-emerald-900/40 dark:text-emerald-300">Feito hoje</span>}
-            <span className="text-xs text-muted-foreground">{ex.length} exercício{ex.length !== 1 ? 's' : ''}</span>
-          </span>
-          <span className="block text-lg font-bold text-foreground uppercase truncate mt-0.5">{treino.titulo}</span>
-          <span className="block text-xs text-muted-foreground">
-            {ultima ? `Último registro: ${format(parseKey(ultima), "dd 'de' MMM", { locale: ptBR })}` : 'Ainda não registrado'}
-          </span>
+          <span className="block text-xl tracking-[-0.01em] text-foreground truncate">{treino.titulo}</span>
+          <span className="block text-xs font-medium text-muted-foreground">{feitoHoje ? 'Feito hoje · ' : ''}{meta}</span>
         </span>
-        <ChevronDown className={cn('h-5 w-5 text-muted-foreground mt-3 transition-transform', aberto && 'rotate-180')} />
+        {aberto
+          ? <ChevronDown className="h-5 w-5 text-muted-foreground rotate-180" strokeWidth={1.75} />
+          : <ChevronRight className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />}
       </button>
 
-      {destaque && !aberto && (
-        <div className="px-4 pb-4">
-          <button onClick={onToggle} className="w-full btn-primary py-3 rounded-2xl text-base">
-            <Play className="h-4 w-4 fill-current" /> Iniciar treino
-          </button>
-        </div>
-      )}
-
       {aberto && (
-        <div className="border-t border-border p-3 space-y-3 animate-slide-up">
-          {treino.descricao && <p className="text-sm text-muted-foreground px-1">{treino.descricao}</p>}
-          <p className="text-xs text-muted-foreground px-1">Toque em cada exercício para registrar a carga.</p>
+        <div className="border-t border-border p-3 space-y-3">
+          {treino.descricao && <p className="text-muted-foreground px-1">{treino.descricao}</p>}
+          <p className="text-sm text-muted-foreground px-1">Toque em cada exercício para registrar a carga.</p>
           {ex.map((e: any, i: number) => (
             <ProgressaoExercicio key={i} exercicio={e} treinoId={treino.id} userId={userId} index={i} />
           ))}

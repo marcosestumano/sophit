@@ -40,7 +40,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
     return (
       <div className="card p-3 text-xs shadow-lg">
         <p className="text-muted-foreground mb-1">{label}</p>
-        <p className="font-semibold text-foreground">{payload[0].value} kg</p>
+        <p className="font-medium text-foreground">{payload[0].value} kg</p>
       </div>
     )
   }
@@ -115,13 +115,13 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
         onClick={() => setExpanded(!expanded)}
         className="w-full flex items-center gap-3 p-4 hover:bg-muted/40 transition-colors text-left"
       >
-        <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-bold"
-          style={{background:'rgba(232,121,159,0.15)',color:'#d45f88'}}>
+        <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium"
+          style={{background:'rgba(232,121,159,0.15)',color: 'var(--rose-text)'}}>
           {index + 1}
         </div>
 
         <div className="flex-1 min-w-0">
-          <p className="text-sm font-semibold text-foreground">{exercicio.nome}</p>
+          <p className="text-sm font-medium text-foreground">{exercicio.nome}</p>
           <p className="text-xs text-muted-foreground">
             {exercicio.series} séries × {exercicio.reps} reps
             {exercicio.carga ? ` · ${exercicio.carga}` : ''}
@@ -140,7 +140,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
             </span>
           )}
           {ultimaCarga && (
-            <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300">
+            <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 ">
               {ultimaCarga} kg
             </span>
           )}
@@ -154,7 +154,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
 
           {/* Formulário de registro */}
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            <p className="text-xs font-medium text-muted-foreground mb-3">
               Registrar execução de hoje
             </p>
             <div className="grid grid-cols-2 gap-3">
@@ -212,7 +212,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
 
           {/* Gráfico */}
           <div>
-            <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3">
+            <p className="text-xs font-medium text-muted-foreground mb-3">
               Progressão de carga
             </p>
 
@@ -260,7 +260,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
             {/* Histórico em tabela */}
             {historico.length > 0 && (
               <div className="mt-3 space-y-1.5 max-h-48 overflow-y-auto">
-                <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider">Histórico</p>
+                <p className="text-xs font-medium text-muted-foreground">Histórico</p>
                 {[...historico].reverse().map((h) => (
                   <div key={h.id} className="flex items-center justify-between text-xs p-2 rounded-lg bg-muted/30">
                     <span className="text-muted-foreground">
@@ -268,7 +268,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
                     </span>
                     <div className="flex gap-3">
                       <span className="text-muted-foreground">{h.series}×{h.reps}</span>
-                      <span className="font-semibold text-foreground">{h.carga} kg</span>
+                      <span className="font-medium text-foreground">{h.carga} kg</span>
                     </div>
                     {h.observacoes && (
                       <span className="text-muted-foreground italic truncate max-w-[100px]">{h.observacoes}</span>

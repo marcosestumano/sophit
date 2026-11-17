@@ -8,7 +8,17 @@ module.exports = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-outfit)', 'system-ui', 'sans-serif'],
+      },
+      fontSize: {
+        xs: ['13px', '18px'],
+      },
       colors: {
+        treino: 'var(--cor-treino)',
+        dieta: 'var(--cor-dieta)',
+        cardio: 'var(--cor-cardio)',
+        rose: { text: 'var(--rose-text)' },
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
         card: {

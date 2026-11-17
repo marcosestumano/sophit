@@ -34,9 +34,9 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
         <div className="flex items-start justify-between gap-3 mb-2">
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-foreground">{treino.titulo}</h3>
+              <h3 className="font-medium text-foreground">{treino.titulo}</h3>
               <span className={treino.ativo
-                ? 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300'
+                ? 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-brand-100 text-brand-800 dark:bg-brand-900/30 '
                 : 'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-muted text-muted-foreground'
               }>
                 {treino.ativo ? 'Ativo' : 'Inativo'}
@@ -72,8 +72,8 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
           {exercicios.map((ex, i) => (
             <div key={i} className="flex items-center gap-2 text-xs p-2 rounded-lg bg-muted/30">
-              <span className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                style={{ background: 'rgba(232,121,159,0.15)', color: '#d45f88' }}>
+              <span className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+                style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
                 {i + 1}
               </span>
               <span className="font-medium text-foreground truncate">{ex.nome}</span>

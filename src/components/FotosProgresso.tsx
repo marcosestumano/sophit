@@ -119,7 +119,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
 
       {/* Upload section */}
       <div className="card p-5">
-        <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+        <h3 className="font-medium text-foreground mb-4 flex items-center gap-2">
           <Camera className="h-4 w-4" style={{ color: '#e8799f' }} />
           {isAdmin ? 'Adicionar foto do aluno' : 'Adicionar nova foto'}
         </h3>
@@ -224,7 +224,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
           {/* Comparação lado a lado */}
           {fotosAntes.length > 0 && fotosDepois.length > 0 && (
             <div className="card p-5">
-              <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+              <h3 className="font-medium text-foreground mb-4 flex items-center gap-2">
                 <span className="h-2 w-2 rounded-full" style={{ background: '#e8799f' }} />
                 Comparativo Antes × Depois
               </h3>
@@ -232,7 +232,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
                 {/* Antes mais recente */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">ANTES</span>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400">ANTES</span>
                     <span className="text-xs text-muted-foreground">
                       {format(new Date(fotosAntes[0].data_foto), "dd/MM/yyyy")}
                     </span>
@@ -250,7 +250,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
                 {/* Depois mais recente */}
                 <div>
                   <div className="flex items-center gap-2 mb-2">
-                    <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">DEPOIS</span>
+                    <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400">DEPOIS</span>
                     <span className="text-xs text-muted-foreground">
                       {format(new Date(fotosDepois[0].data_foto), "dd/MM/yyyy")}
                     </span>
@@ -275,8 +275,8 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
             if (lista.length === 0) return null
             return (
               <div key={tipo} className="card p-5">
-                <h3 className="font-semibold text-foreground mb-4 flex items-center gap-2">
-                  <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                <h3 className="font-medium text-foreground mb-4 flex items-center gap-2">
+                  <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                     tipo === 'antes'
                       ? 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'
                       : 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400'
@@ -341,7 +341,7 @@ export function FotosProgresso({ userId, isAdmin = false }: Props) {
               className="w-full rounded-xl max-h-[80vh] object-contain"
             />
             <div className="flex items-center justify-between mt-3">
-              <span className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
                 lightbox.tipo === 'antes'
                   ? 'bg-red-500/20 text-red-300'
                   : 'bg-green-500/20 text-green-300'

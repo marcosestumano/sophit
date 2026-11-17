@@ -21,7 +21,7 @@ export default async function UsuariosPage() {
     <div className="max-w-5xl mx-auto px-2 sm:px-0">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
         <div className="flex-1">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-normal text-foreground flex items-center gap-2">
             <Users className="h-5 w-5 flex-shrink-0" style={{ color: '#e8799f' }} />
             Alunos
           </h1>
@@ -43,8 +43,8 @@ export default async function UsuariosPage() {
             return (
               <div key={profile.id} className="flex flex-col sm:flex-row sm:items-center gap-3 p-4 border-b border-border last:border-0">
                 <div className="flex items-center gap-3 flex-1 min-w-0">
-                  <div className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-semibold"
-                    style={{ background: 'linear-gradient(135deg,#e8799f,#b4476e)' }}>
+                  <div className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0 text-white text-sm font-medium"
+                    style={{ background: '#e8799f' }}>
                     {initials}
                   </div>
                   <div className="min-w-0">

@@ -55,9 +55,9 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
       >
         <div className="flex items-center gap-2">
           <TrendingUp className="h-4 w-4" style={{color:'#e8799f'}} />
-          <span className="text-sm font-semibold text-foreground">Progressão de cargas — {treinoTitulo}</span>
+          <span className="text-sm font-medium text-foreground">Progressão de cargas — {treinoTitulo}</span>
           {totalRegistros > 0 && (
-            <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300">
+            <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 ">
               {totalRegistros} registros
             </span>
           )}
@@ -92,7 +92,7 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
               return (
                 <div key={ex.nome}>
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-sm font-semibold text-foreground">{ex.nome}</p>
+                    <p className="text-sm font-medium text-foreground">{ex.nome}</p>
                     <div className="flex items-center gap-2">
                       {diff !== null && (
                         <span className={`flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full ${
@@ -104,7 +104,7 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
                           {diff > 0 ? `+${diff}` : diff === 0 ? '=' : diff} kg
                         </span>
                       )}
-                      <span className="text-xs font-bold px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 ">
                         {ultima} kg atual
                       </span>
                     </div>
@@ -134,7 +134,7 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
                           {format(new Date(h.data_registro), "dd/MM/yyyy")}
                         </span>
                         <span className="text-muted-foreground">{h.series}×{h.reps}</span>
-                        <span className="font-semibold text-foreground">{h.carga} kg</span>
+                        <span className="font-medium text-foreground">{h.carga} kg</span>
                         {h.observacoes && <span className="text-muted-foreground italic truncate max-w-[120px]">{h.observacoes}</span>}
                       </div>
                     ))}

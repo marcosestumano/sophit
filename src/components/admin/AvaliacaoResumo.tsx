@@ -53,7 +53,7 @@ function Card({ label, value, unit, prev }: { label: string; value: any; unit?: 
     <div className="p-3 rounded-lg bg-muted/40 border border-border/50">
       <p className="text-xs text-muted-foreground mb-1">{label}</p>
       <div className="flex items-end justify-between gap-1">
-        <span className="text-base font-bold text-foreground">{value}{unit && <span className="text-xs font-normal text-muted-foreground ml-0.5">{unit}</span>}</span>
+        <span className="text-base font-medium text-foreground">{value}{unit && <span className="text-xs font-normal text-muted-foreground ml-0.5">{unit}</span>}</span>
         {prev !== undefined && <Trend current={parseFloat(value)} previous={parseFloat(prev)} />}
       </div>
     </div>
@@ -101,21 +101,21 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
         {latest.peso && (
           <div className="p-3 rounded-xl border border-border" style={{background:'rgba(232,121,159,0.06)'}}>
             <p className="text-xs text-muted-foreground">Peso</p>
-            <p className="text-2xl font-bold text-foreground mt-1">{latest.peso}<span className="text-sm font-normal text-muted-foreground ml-1">kg</span></p>
+            <p className="text-2xl font-medium text-foreground mt-1">{latest.peso}<span className="text-sm font-normal text-muted-foreground ml-1">kg</span></p>
             {prev?.peso && <Trend current={latest.peso} previous={prev.peso} />}
           </div>
         )}
         {imcVal && (
           <div className="p-3 rounded-xl border" style={{borderColor: imcInfo?.cor + '40', background: imcInfo?.cor + '10'}}>
             <p className="text-xs text-muted-foreground">IMC</p>
-            <p className="text-2xl font-bold mt-1" style={{color: imcInfo?.cor}}>{imcVal.toFixed(1)}</p>
+            <p className="text-2xl font-medium mt-1" style={{color: imcInfo?.cor}}>{imcVal.toFixed(1)}</p>
             <p className="text-xs font-medium" style={{color: imcInfo?.cor}}>{imcInfo?.txt}</p>
           </div>
         )}
         {(latest.percentual_gordura ?? comp.perc_gordura) && (
           <div className="p-3 rounded-xl border border-border" style={{background:'rgba(232,121,159,0.06)'}}>
             <p className="text-xs text-muted-foreground">% Gordura</p>
-            <p className="text-2xl font-bold text-foreground mt-1">
+            <p className="text-2xl font-medium text-foreground mt-1">
               {latest.percentual_gordura ?? comp.perc_gordura}
               <span className="text-sm font-normal text-muted-foreground ml-1">%</span>
             </p>
@@ -128,7 +128,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
         {(latest.massa_magra ?? comp.massa_livre_gordura) && (
           <div className="p-3 rounded-xl border border-border" style={{background:'rgba(232,121,159,0.06)'}}>
             <p className="text-xs text-muted-foreground">Massa Magra</p>
-            <p className="text-2xl font-bold text-foreground mt-1">
+            <p className="text-2xl font-medium text-foreground mt-1">
               {parseFloat(String(latest.massa_magra ?? comp.massa_livre_gordura)).toFixed(1)}
               <span className="text-sm font-normal text-muted-foreground ml-1">kg</span>
             </p>
@@ -150,7 +150,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Medidas */}
           {Object.values(med).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Medidas Corporais (cm)</p>
+              <p className="text-xs font-medium mb-3" style={{color: 'var(--rose-text)'}}>Medidas Corporais (cm)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {Object.entries(med).filter(([,v])=>v).map(([k,v]) => (
                   <Card key={k} label={MEDIDAS_LABELS[k]??k} value={v}
@@ -163,7 +163,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Dobras */}
           {Object.values(dob).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Dobras Cutâneas (mm)</p>
+              <p className="text-xs font-medium mb-3" style={{color: 'var(--rose-text)'}}>Dobras Cutâneas (mm)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {Object.entries(dob).filter(([,v])=>v).map(([k,v]) => (
                   <Card key={k} label={DOBRAS_LABELS[k]??k} value={v} />
@@ -175,7 +175,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Diâmetros */}
           {Object.values(dia).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Diâmetro Ósseo (cm)</p>
+              <p className="text-xs font-medium mb-3" style={{color: 'var(--rose-text)'}}>Diâmetro Ósseo (cm)</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                 {Object.entries(dia).filter(([,v])=>v).map(([k,v]) => (
                   <Card key={k} label={DIAMETROS_LABELS[k]??k} value={v} />
@@ -187,7 +187,7 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Composição extra */}
           {Object.keys(comp).length > 0 && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Composição Corporal</p>
+              <p className="text-xs font-medium mb-3" style={{color: 'var(--rose-text)'}}>Composição Corporal</p>
               <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-2">
                 {comp.rcq       && <Card label="RCQ" value={comp.rcq} prev={(compPrev as any).rcq} />}
                 {comp.densidade && <Card label="Densidade (g/cm³)" value={comp.densidade} />}
@@ -200,13 +200,13 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
           {/* Histórico resumido */}
           {avaliacoes.length > 1 && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-3" style={{color:'#d45f88'}}>Histórico de avaliações</p>
+              <p className="text-xs font-medium mb-3" style={{color: 'var(--rose-text)'}}>Histórico de avaliações</p>
               <div className="space-y-1.5 max-h-48 overflow-y-auto">
                 {avaliacoes.map((av, i) => (
                   <div key={av.id} className="flex items-center justify-between text-xs p-2.5 rounded-lg bg-muted/40">
                     <span className="text-muted-foreground">
                       {new Date(av.created_at).toLocaleDateString('pt-BR')}
-                      {i === 0 && <span className="ml-2 text-brand-600 font-medium">← mais recente</span>}
+                      {i === 0 && <span className="ml-2 text-rose-text font-medium">← mais recente</span>}
                     </span>
                     <div className="flex gap-4">
                       {av.peso && <span className="text-foreground font-medium">{av.peso} kg</span>}

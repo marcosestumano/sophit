@@ -26,8 +26,8 @@ export default async function AvaliacoesPage() {
     <div className="max-w-5xl mx-auto">
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
-            <Scale className="h-6 w-6 text-brand-600" />
+          <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
+            <Scale className="h-6 w-6 text-rose-text" />
             Avaliações Físicas
           </h1>
           <p className="text-muted-foreground mt-1">
@@ -38,8 +38,8 @@ export default async function AvaliacoesPage() {
 
       {/* Quick access: select user to evaluate */}
       <div className="card p-5 mb-6">
-        <h2 className="font-semibold text-foreground mb-3 flex items-center gap-2">
-          <Plus className="h-4 w-4 text-brand-600" />
+        <h2 className="font-normal text-foreground mb-3 flex items-center gap-2">
+          <Plus className="h-4 w-4 text-rose-text" />
           Nova Avaliação
         </h2>
         <div className="flex gap-3">
@@ -77,7 +77,7 @@ export default async function AvaliacoesPage() {
                 className="flex items-center gap-4 p-4 hover:bg-muted/50 transition-colors group"
               >
                 <div className="h-10 w-10 rounded-full bg-brand-600 flex items-center justify-center flex-shrink-0">
-                  <span className="text-white text-sm font-semibold">{initials}</span>
+                  <span className="text-white text-sm font-medium">{initials}</span>
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="font-medium text-sm text-foreground">{profile?.full_name ?? profile?.email}</p>

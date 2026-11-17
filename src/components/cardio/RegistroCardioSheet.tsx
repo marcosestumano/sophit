@@ -57,7 +57,7 @@ export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave }
 
   return (
     <Sheet open={open} onClose={onClose} title="Registrar cardio"
-      footer={<button onClick={salvar} disabled={saving} className="btn-primary w-full py-3 rounded-xl">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar cardio</button>}>
+      footer={<button onClick={salvar} disabled={saving} className="btn-primary w-full h-12">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar cardio</button>}>
       <div className="space-y-4">
         {prescricoes.length > 0 && (
           <div>
@@ -65,7 +65,7 @@ export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave }
             <div className="flex flex-wrap gap-2">
               {prescricoes.map(p => (
                 <button key={p.id} type="button" onClick={() => escolherPresc(p)}
-                  className={cn('rounded-full border px-3 py-1.5 text-sm', prescId === p.id ? 'bg-brand-500 border-brand-500 text-white' : 'border-border text-foreground')}>
+                  className={cn('press rounded-full border px-4 min-h-[44px] transition-colors duration-150', prescId === p.id ? 'bg-primary border-primary text-primary-foreground' : 'border-border text-foreground hover:bg-muted')}>
                   {p.tipo}{p.duracao_min ? ` · ${p.duracao_min}min` : ''}
                 </button>
               ))}
@@ -77,7 +77,7 @@ export function RegistroCardioSheet({ open, onClose, data, prescricoes, onSave }
           <div className="flex flex-wrap gap-2">
             {TIPOS_CARDIO.map(t => (
               <button key={t} type="button" onClick={() => { setTipo(t); setPrescId(null) }}
-                className={cn('rounded-full border px-3 py-1.5 text-sm', tipo === t && !prescId ? 'bg-brand-100 border-brand-400 text-brand-800 dark:bg-brand-900/50 dark:text-brand-100' : 'border-border text-foreground')}>
+                className={cn('press rounded-full border px-4 min-h-[44px] transition-colors duration-150', tipo === t && !prescId ? 'bg-foreground border-foreground text-background' : 'border-border text-foreground hover:bg-muted')}>
                 {t}
               </button>
             ))}

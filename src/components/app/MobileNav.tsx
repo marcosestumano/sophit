@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Home, ClipboardList, UserCircle, Dumbbell, Utensils, HeartPulse, ChevronRight } from 'lucide-react'
+import { IconChip, CORES } from '@/components/app/AppShell'
 import { cn } from '@/lib/utils'
 
 export interface PrescricoesResumo {
@@ -13,6 +14,7 @@ export interface PrescricoesResumo {
 }
 
 const PRESC_ROUTES = ['/dashboard/treinos', '/dashboard/dieta', '/dashboard/cardio']
+const plural = (n: number, s: string, p: string) => `${n} ${n === 1 ? s : p}`
 
 export function MobileNav({ resumo }: { resumo: PrescricoesResumo }) {
   const pathname = usePathname()
@@ -26,61 +28,57 @@ export function MobileNav({ resumo }: { resumo: PrescricoesResumo }) {
   const isPerfil = pathname.startsWith('/dashboard/perfil')
 
   const opcoes = [
-    { href: '/dashboard/treinos', label: 'Treinos', desc: 'Ver todos os seus treinos', icon: Dumbbell, cor: '#e8799f', bg: 'rgba(232,121,159,0.18)',
-      info: `${resumo.treinos} treino${resumo.treinos !== 1 ? 's' : ''} no plano` },
-    { href: '/dashboard/dieta', label: 'Dieta', desc: 'Ver suas refeições', icon: Utensils, cor: '#5fbf8a', bg: 'rgba(95,191,138,0.18)',
-      info: `${resumo.refeicoes} refeiç${resumo.refeicoes !== 1 ? 'ões' : 'ão'} no plano` },
-    { href: '/dashboard/cardio', label: 'Cardio', desc: 'Seus cardios da semana', icon: HeartPulse, cor: '#a78bfa', bg: 'rgba(167,139,250,0.18)',
-      info: `${resumo.cardios} cardio${resumo.cardios !== 1 ? 's' : ''} prescrito${resumo.cardios !== 1 ? 's' : ''}` },
+    { href: '/dashboard/treinos', label: 'Treinos', desc: 'Seus treinos da semana', icon: Dumbbell, cor: 'var(--rose-text)', tint: CORES.treinoTint,
+      info: `${plural(resumo.treinos, 'treino', 'treinos')} no plano` },
+    { href: '/dashboard/dieta', label: 'Dieta', desc: 'Refeições e metas do dia', icon: Utensils, cor: CORES.dieta, tint: CORES.dietaTint,
+      info: `${plural(resumo.refeicoes, 'refeição', 'refeições')} por dia` },
+    { href: '/dashboard/cardio', label: 'Cardio', desc: 'Prescrito e registrado', icon: HeartPulse, cor: CORES.cardio, tint: CORES.cardioTint,
+      info: `${plural(resumo.cardios, 'cardio prescrito', 'cardios prescritos')}` },
   ]
 
   return (
     <>
-      {/* Sheet de Prescrições */}
       <div
-        className={cn('fixed inset-0 z-40 bg-black/50 transition-opacity lg:hidden', open ? 'opacity-100' : 'opacity-0 pointer-events-none')}
+        className={cn('fixed inset-0 z-40 bg-[#2c2325]/45 transition-opacity duration-200 lg:hidden', open ? 'opacity-100' : 'opacity-0 pointer-events-none')}
         onClick={() => setOpen(false)}
+        aria-hidden="true"
       />
-      <div
+      <section
         className={cn(
-          'fixed inset-x-0 bottom-0 z-50 app-sheet px-5 pt-3 pb-safe transition-transform duration-300 lg:hidden',
+          'fixed inset-x-0 bottom-0 z-50 bg-card rounded-t-3xl px-6 pt-3 pb-[calc(env(safe-area-inset-bottom)+96px)] transition-transform duration-200 ease-out lg:hidden',
           open ? 'translate-y-0' : 'translate-y-full'
         )}
         role="dialog"
         aria-label="Prescrições"
+        aria-hidden={!open}
       >
-        <div className="mx-auto mb-5 h-1.5 w-12 rounded-full bg-muted-foreground/30" />
-        <h2 className="text-2xl font-bold text-foreground">Prescrições</h2>
-        <p className="text-muted-foreground mb-5">Escolha o que você quer ver</p>
-        <div className="app-card overflow-hidden mb-6">
-          {opcoes.map((o, i) => (
-            <button
-              key={o.href}
-              onClick={() => router.push(o.href)}
-              className={cn('w-full flex items-center gap-4 p-4 text-left active:bg-muted transition-colors', i > 0 && 'border-t border-border')}
-            >
-              <span className="h-14 w-14 rounded-full flex items-center justify-center flex-shrink-0 border-2"
-                style={{ background: o.bg, borderColor: o.cor }}>
-                <o.icon className="h-6 w-6" style={{ color: o.cor }} />
-              </span>
-              <span className="flex-1 min-w-0">
-                <span className="block text-lg font-bold text-foreground">{o.label}</span>
-                <span className="block text-sm text-foreground/80">{o.desc}</span>
-                <span className="block text-xs text-muted-foreground mt-0.5">{o.info}</span>
-              </span>
-              <ChevronRight className="h-5 w-5 text-muted-foreground" />
-            </button>
-          ))}
-        </div>
-      </div>
+        <div className="mx-auto mb-5 h-1 w-10 rounded-full bg-foreground/20" />
+        <h2 className="text-[28px] font-normal tracking-[-0.03em] text-foreground">Prescrições</h2>
+        <p className="text-muted-foreground mt-1 mb-3">O que o seu profissional montou para você.</p>
+        {opcoes.map((o, i) => (
+          <button
+            key={o.href}
+            onClick={() => router.push(o.href)}
+            tabIndex={open ? 0 : -1}
+            className={cn('w-full flex items-center gap-4 py-4 text-left min-h-[72px]', i > 0 && 'border-t border-border')}
+          >
+            <IconChip icon={o.icon} color={o.cor} tint={o.tint} size={52} />
+            <span className="flex-1 min-w-0">
+              <span className="block text-lg font-medium text-foreground">{o.label}</span>
+              <span className="block text-foreground">{o.desc}</span>
+              <span className="block text-xs font-medium text-muted-foreground">{o.info}</span>
+            </span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
+          </button>
+        ))}
+      </section>
 
-      {/* Barra inferior */}
-      <nav className="fixed inset-x-0 bottom-0 z-30 border-t border-border bg-card/95 backdrop-blur pb-safe lg:hidden">
-        <div className="grid grid-cols-3 h-[72px]">
+      <nav aria-label="Navegação principal" className="fixed inset-x-0 bottom-0 z-[55] border-t border-border bg-card pb-safe lg:hidden">
+        <div className="grid grid-cols-3 h-20 px-2 pb-2">
           <NavItem href="/dashboard" label="Início" icon={Home} active={isHome && !open} />
-          <button onClick={() => setOpen(v => !v)} className="flex flex-col items-center justify-center gap-1">
-            <Pill active={isPresc || open}><ClipboardList className="h-5 w-5" /></Pill>
-            <span className={cn('text-xs font-medium', isPresc || open ? 'text-brand-600 dark:text-brand-300' : 'text-muted-foreground')}>Prescrições</span>
+          <button onClick={() => setOpen(v => !v)} aria-expanded={open} className="flex flex-col items-center justify-center gap-1">
+            <Pill active={isPresc || open}><ClipboardList className="h-[22px] w-[22px]" strokeWidth={1.75} /></Pill>
+            <span className={cn('text-xs font-medium', isPresc || open ? 'text-foreground' : 'text-muted-foreground')}>Prescrições</span>
           </button>
           <NavItem href="/dashboard/perfil" label="Perfil" icon={UserCircle} active={isPerfil && !open} />
         </div>
@@ -91,8 +89,8 @@ export function MobileNav({ resumo }: { resumo: PrescricoesResumo }) {
 
 function Pill({ active, children }: { active: boolean; children: React.ReactNode }) {
   return (
-    <span className={cn('flex items-center justify-center h-8 w-16 rounded-full transition-colors',
-      active ? 'bg-brand-200 text-brand-800 dark:bg-brand-900/60 dark:text-brand-200' : 'text-muted-foreground')}>
+    <span className={cn('flex items-center justify-center h-8 w-16 rounded-full transition-colors duration-150',
+      active ? 'bg-[rgba(232,121,159,0.18)] text-foreground' : 'text-muted-foreground')}>
       {children}
     </span>
   )
@@ -100,9 +98,9 @@ function Pill({ active, children }: { active: boolean; children: React.ReactNode
 
 function NavItem({ href, label, icon: Icon, active }: { href: string; label: string; icon: any; active: boolean }) {
   return (
-    <Link href={href} className="flex flex-col items-center justify-center gap-1">
-      <Pill active={active}><Icon className="h-5 w-5" /></Pill>
-      <span className={cn('text-xs font-medium', active ? 'text-brand-600 dark:text-brand-300' : 'text-muted-foreground')}>{label}</span>
+    <Link href={href} aria-current={active ? 'page' : undefined} className="flex flex-col items-center justify-center gap-1">
+      <Pill active={active}><Icon className="h-[22px] w-[22px]" strokeWidth={1.75} /></Pill>
+      <span className={cn('text-xs font-medium', active ? 'text-foreground' : 'text-muted-foreground')}>{label}</span>
     </Link>
   )
 }

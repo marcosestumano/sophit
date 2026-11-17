@@ -22,7 +22,7 @@ export default async function AdminAnamnesePage() {
     <div className="max-w-5xl mx-auto px-2 sm:px-0">
       <div className="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
         <div className="flex-1">
-          <h1 className="text-xl sm:text-2xl font-bold text-foreground flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-normal text-foreground flex items-center gap-2">
             <Inbox className="h-5 w-5 flex-shrink-0" style={{color:'#e8799f'}} />
             Inbox de Anamneses
           </h1>
@@ -39,7 +39,7 @@ export default async function AdminAnamnesePage() {
       {/* Stats */}
       <div className="grid grid-cols-3 gap-3 mb-6">
         {[
-          { label: 'Total recebidas', value: anamneses?.length ?? 0, icon: Inbox, color: 'text-brand-600 bg-brand-50 dark:bg-brand-900/20' },
+          { label: 'Total recebidas', value: anamneses?.length ?? 0, icon: Inbox, color: 'text-rose-text bg-brand-50 dark:bg-brand-900/20' },
           { label: 'Pendentes', value: pendentes.length, icon: Clock, color: 'text-amber-600 bg-amber-50 dark:bg-amber-900/20' },
           { label: 'Respondidas', value: respondidas.length, icon: CheckCircle2, color: 'text-green-600 bg-green-50 dark:bg-green-900/20' },
         ].map(s => (
@@ -47,7 +47,7 @@ export default async function AdminAnamnesePage() {
             <div className={`inline-flex p-2 rounded-lg ${s.color} mb-2`}>
               <s.icon className="h-4 w-4" />
             </div>
-            <p className="text-xl sm:text-2xl font-bold text-foreground">{s.value}</p>
+            <p className="text-xl sm:text-2xl font-medium text-foreground">{s.value}</p>
             <p className="text-xs text-muted-foreground mt-0.5 leading-tight">{s.label}</p>
           </div>
         ))}
@@ -56,7 +56,7 @@ export default async function AdminAnamnesePage() {
       {/* Pendentes */}
       {pendentes.length > 0 && (
         <div className="mb-6">
-          <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+          <h2 className="text-xs font-normal text-muted-foreground mb-3 px-1">
             Aguardando resposta
           </h2>
           <div className="card divide-y divide-border overflow-hidden">
@@ -68,12 +68,12 @@ export default async function AdminAnamnesePage() {
                 <Link key={a.id} href={`/admin/anamneses/${a.id}`}
                   className="flex items-center gap-3 p-3 sm:p-4 hover:bg-muted/50 transition-colors">
                   <div className="h-9 w-9 rounded-full flex items-center justify-center flex-shrink-0"
-                    style={{background:'linear-gradient(135deg,#e8799f,#b4476e)'}}>
-                    <span className="text-white text-xs font-semibold">{initials}</span>
+                    style={{background:'#e8799f'}}>
+                    <span className="text-[#2c2325] text-xs font-medium">{initials}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <p className="font-semibold text-sm text-foreground truncate">
+                      <p className="font-medium text-sm text-foreground truncate">
                         {profile?.full_name ?? profile?.email}
                       </p>
                       <span className="badge badge-pending text-xs">Pendente</span>
@@ -95,7 +95,7 @@ export default async function AdminAnamnesePage() {
       {/* Respondidas */}
       {respondidas.length > 0 && (
         <div>
-          <h2 className="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+          <h2 className="text-xs font-normal text-muted-foreground mb-3 px-1">
             Respondidas
           </h2>
           <div className="card divide-y divide-border overflow-hidden opacity-80">
@@ -107,7 +107,7 @@ export default async function AdminAnamnesePage() {
                 <Link key={a.id} href={`/admin/anamneses/${a.id}`}
                   className="flex items-center gap-3 p-3 sm:p-4 hover:bg-muted/50 transition-colors">
                   <div className="h-9 w-9 rounded-full bg-muted flex items-center justify-center flex-shrink-0">
-                    <span className="text-muted-foreground text-xs font-semibold">{initials}</span>
+                    <span className="text-muted-foreground text-xs font-medium">{initials}</span>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">

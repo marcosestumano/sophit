@@ -35,7 +35,7 @@ function SimNaoDetalhe({ label, value, descricao }: { label: string; value?: str
     <div className="py-1.5 border-b border-border/40 last:border-0">
       <div className="grid grid-cols-5 gap-2 text-sm">
         <span className="col-span-2 text-muted-foreground">{label}</span>
-        <span className={`col-span-3 font-medium ${isSim ? 'text-amber-600 dark:text-amber-400' : 'text-brand-600'}`}>
+        <span className={`col-span-3 font-medium ${isSim ? 'text-amber-600 dark:text-amber-400' : 'text-rose-text'}`}>
           {isSim ? 'Sim' : 'Não'}
         </span>
       </div>
@@ -79,7 +79,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
           {/* Identificação */}
           <div className="card p-6">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-foreground">Anamnese</h2>
+              <h2 className="font-normal text-foreground">Anamnese</h2>
               <span className={anamnese.status === 'pendente' ? 'badge badge-pending' : 'badge badge-done'}>
                 {anamnese.status === 'pendente' ? 'Pendente' : 'Respondido'}
               </span>
@@ -87,7 +87,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
 
             {/* Identificação */}
             <div className="mb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-brand-600 mb-3">Identificação</h3>
+              <h3 className="text-xs font-medium text-rose-text mb-3">Identificação</h3>
               <Detalhe label="Nome" value={d.nome} />
               <Detalhe label="Idade" value={d.idade ? `${d.idade} anos` : undefined} />
               <Detalhe label="Sexo" value={d.sexo} />
@@ -95,7 +95,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
 
             {/* Objetivos */}
             <div className="mb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-brand-600 mb-3">Objetivos e Preferências</h3>
+              <h3 className="text-xs font-medium text-rose-text mb-3">Objetivos e Preferências</h3>
               <Detalhe
                 label="Objetivos"
                 value={d.objetivos?.map((o: string) => OBJETIVO_MAP[o] ?? o).join(', ')}
@@ -112,7 +112,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
 
             {/* Histórico físico */}
             <div className="mb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-brand-600 mb-3">Histórico de Atividade Física (últimos 3 meses)</h3>
+              <h3 className="text-xs font-medium text-rose-text mb-3">Histórico de Atividade Física (últimos 3 meses)</h3>
               <Detalhe label="Praticou exercício?" value={d.praticou_exercicio === 'sim' ? 'Sim' : 'Não'} />
               {d.praticou_exercicio === 'sim' && (
                 <>
@@ -126,7 +126,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
 
             {/* Saúde */}
             <div className="mb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-brand-600 mb-3">Histórico de Saúde</h3>
+              <h3 className="text-xs font-medium text-rose-text mb-3">Histórico de Saúde</h3>
               <SimNaoDetalhe label="Tem doenças diagnosticadas?" value={d.tem_doenca} descricao={d.doencas} />
               <Detalhe label="Medicamentos de uso contínuo" value={d.medicamentos || 'Nenhum'} />
               <SimNaoDetalhe label="Fez cirurgia?" value={d.fez_cirurgia} descricao={d.cirurgia_regioes} />
@@ -134,7 +134,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
 
             {/* Dores */}
             <div className="mb-5">
-              <h3 className="text-xs font-bold uppercase tracking-wider text-brand-600 mb-3">Dores e Limitações</h3>
+              <h3 className="text-xs font-medium text-rose-text mb-3">Dores e Limitações</h3>
               <SimNaoDetalhe label="Tem dor muscular atual?" value={d.tem_dor} />
               {d.tem_dor === 'sim' && d.dor_regioes?.length > 0 && (
                 <div className="ml-4 mt-2 space-y-2">
@@ -142,8 +142,8 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
                     <div key={i} className="p-3 rounded-lg bg-muted/50 border border-border text-sm">
                       <div className="flex items-center justify-between">
                         <span className="font-medium text-foreground">{r.regiao}</span>
-                        <span className={`font-bold text-lg ${
-                          r.nota <= 3 ? 'text-brand-600' : r.nota <= 6 ? 'text-amber-500' : 'text-red-500'
+                        <span className={`font-medium text-lg ${
+                          r.nota <= 3 ? 'text-rose-text' : r.nota <= 6 ? 'text-amber-500' : 'text-red-500'
                         }`}>
                           {r.nota}/10
                         </span>
@@ -165,7 +165,7 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
 
             {d.informacoes_adicionais && (
               <div className="p-3 rounded-lg bg-muted/50 border border-border">
-                <p className="text-xs font-semibold text-muted-foreground mb-1">Informações adicionais</p>
+                <p className="text-xs font-medium text-muted-foreground mb-1">Informações adicionais</p>
                 <p className="text-sm text-foreground">{d.informacoes_adicionais}</p>
               </div>
             )}
@@ -181,23 +181,23 @@ export default async function AnamneseDetailPage({ params }: { params: { id: str
         {/* Sidebar */}
         <div className="space-y-4">
           <div className="card p-5">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wider mb-4">Aluno</h3>
+            <h3 className="text-sm font-medium text-muted-foreground mb-4">Aluno</h3>
             <div className="flex items-center gap-3 mb-4">
               <div className="h-12 w-12 rounded-full bg-brand-600 flex items-center justify-center">
-                <span className="text-white font-semibold">
+                <span className="text-white font-medium">
                   {(profile?.full_name ?? profile?.email ?? 'U')
                     .split(' ').slice(0, 2).map((n: string) => n[0]).join('').toUpperCase()}
                 </span>
               </div>
               <div>
-                <p className="font-semibold text-foreground">{profile?.full_name ?? 'Sem nome'}</p>
+                <p className="font-medium text-foreground">{profile?.full_name ?? 'Sem nome'}</p>
                 <p className="text-sm text-muted-foreground">{profile?.email}</p>
               </div>
             </div>
             <div className="space-y-2 text-sm">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <User className="h-3.5 w-3.5" />
-                <Link href={`/admin/usuarios/${profile?.id}`} className="text-brand-600 hover:underline">
+                <Link href={`/admin/usuarios/${profile?.id}`} className="text-rose-text hover:underline">
                   Ver perfil completo
                 </Link>
               </div>

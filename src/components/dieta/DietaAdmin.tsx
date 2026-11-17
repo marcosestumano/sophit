@@ -22,7 +22,7 @@ export function DietaAdmin({ userId }: { userId: string }) {
   return (
     <div className="card p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4 gap-3">
-        <h2 className="font-semibold text-foreground flex items-center gap-2">
+        <h2 className="font-normal text-foreground flex items-center gap-2">
           <Utensils className="h-4 w-4 text-brand-500" /> Plano alimentar
         </h2>
         {d.plano && (
@@ -40,7 +40,7 @@ export function DietaAdmin({ userId }: { userId: string }) {
         ) : (
           <>
             <div className="rounded-lg bg-muted/50 p-3 mb-4 text-sm">
-              <p className="font-semibold text-foreground">{d.plano.titulo}</p>
+              <p className="font-medium text-foreground">{d.plano.titulo}</p>
               <p className="text-muted-foreground mt-0.5">
                 Meta: {round(d.plano.meta_kcal || tot.kcal)} kcal · P {round(d.plano.meta_proteina || tot.proteina)}g · C {round(d.plano.meta_carbo || tot.carbo)}g · G {round(d.plano.meta_gordura || tot.gordura)}g
                 {d.plano.agua_litros != null && ` · Água ${String(d.plano.agua_litros).replace('.', ',')} L`}

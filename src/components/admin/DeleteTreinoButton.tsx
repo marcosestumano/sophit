@@ -30,7 +30,7 @@ export function DeleteTreinoButton({ treinoId, titulo }: { treinoId: string; tit
               <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Deletar treino</h3>
+              <h3 className="font-medium text-foreground">Deletar treino</h3>
               <p className="text-xs text-muted-foreground">Esta ação não pode ser desfeita</p>
             </div>
           </div>

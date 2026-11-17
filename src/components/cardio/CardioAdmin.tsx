@@ -43,14 +43,14 @@ export function CardioAdmin({ userId }: { userId: string }) {
   return (
     <div className="card p-5 sm:p-6">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="font-semibold text-foreground flex items-center gap-2"><HeartPulse className="h-4 w-4 text-brand-500" /> Cardio</h2>
+        <h2 className="font-normal text-foreground flex items-center gap-2"><HeartPulse className="h-4 w-4 text-brand-500" /> Cardio</h2>
         <button onClick={() => setEdit(null)} disabled={!!erro} className="btn-secondary text-xs px-3 py-1.5"><Plus className="h-3.5 w-3.5" /> Prescrever</button>
       </div>
 
       {loading ? <Loader2 className="h-5 w-5 animate-spin text-brand-500" /> : erro ? <p className="text-sm text-destructive">{erro}</p> : (
         <div className="grid md:grid-cols-2 gap-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Prescrito</p>
+            <p className="text-xs font-medium text-muted-foreground mb-2">Prescrito</p>
             {prescricoes.length === 0 && <p className="text-sm text-muted-foreground">Nenhum cardio prescrito.</p>}
             <div className="space-y-2">
               {prescricoes.map(p => (
@@ -67,7 +67,7 @@ export function CardioAdmin({ userId }: { userId: string }) {
             </div>
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider text-muted-foreground mb-2">Feitos (últimos 14 dias)</p>
+            <p className="text-xs font-medium text-muted-foreground mb-2">Feitos (últimos 14 dias)</p>
             {registros.length === 0 && <p className="text-sm text-muted-foreground">Nenhum registro.</p>}
             <div className="space-y-1.5">
               {registros.map(r => (

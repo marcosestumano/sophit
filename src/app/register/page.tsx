@@ -61,7 +61,7 @@ export default function RegisterPage() {
           <div className="inline-flex p-4 rounded-full bg-green-50 dark:bg-green-900/20 mb-4">
             <CheckCircle2 className="h-8 w-8 text-green-600" />
           </div>
-          <h2 className="text-xl font-semibold text-foreground mb-2">Conta criada!</h2>
+          <h2 className="text-xl font-normal text-foreground mb-2">Conta criada!</h2>
           <p className="text-muted-foreground">Redirecionando...</p>
         </div>
       </div>
@@ -73,15 +73,15 @@ export default function RegisterPage() {
       {/* Left panel */}
       <div
         className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12"
-        style={{ background: 'linear-gradient(160deg,#1a0710,#3b1022,#6e2d45)' }}
+        style={{ background: '#2c2325' }}
       >
         <div className="flex items-center gap-3">
           <SophitLogo size={48} />
-          <span className="font-bold text-2xl tracking-widest text-white">SOPHIT</span>
+          <span className="font-medium text-2xl text-white">Sophit</span>
         </div>
 
         <div>
-          <h1 className="text-white text-4xl font-bold leading-tight mb-4">
+          <h1 className="text-white text-4xl font-normal leading-tight mb-4">
             Comece sua jornada<br />de evolução hoje.
           </h1>
           <p className="text-brand-200 text-lg leading-relaxed">
@@ -96,7 +96,7 @@ export default function RegisterPage() {
             { label: 'Alunos ativos', value: '12k+' },
           ].map(s => (
             <div key={s.label} className="rounded-xl p-4" style={{ background: 'rgba(255,255,255,0.08)' }}>
-              <p className="text-white text-2xl font-bold">{s.value}</p>
+              <p className="text-white text-2xl font-medium">{s.value}</p>
               <p className="text-brand-200 text-sm mt-1">{s.label}</p>
             </div>
           ))}
@@ -109,16 +109,13 @@ export default function RegisterPage() {
           {/* Mobile logo */}
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <SophitLogo size={40} />
-            <span className="font-bold text-xl tracking-widest" style={{
-              background: 'linear-gradient(135deg,#e8799f,#b4476e)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              SOPHIT
+            <span className="font-medium text-xl" style={{
+              }}>
+              Sophit
             </span>
           </div>
 
-          <h2 className="text-2xl font-bold text-foreground mb-1">Criar conta</h2>
+          <h2 className="text-2xl font-normal text-foreground mb-1">Criar conta</h2>
           <p className="text-muted-foreground mb-8">Preencha os dados para começar</p>
 
           {error && (
@@ -146,7 +143,7 @@ export default function RegisterPage() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t" style={{ borderColor: 'hsl(var(--border))' }} />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
+            <div className="relative flex justify-center text-xs">
               <span className="px-2" style={{ background: 'hsl(var(--background))', color: 'hsl(var(--muted-foreground))' }}>ou</span>
             </div>
           </div>
@@ -206,7 +203,7 @@ export default function RegisterPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Já tem uma conta?{' '}
-            <Link href="/login" className="font-medium" style={{ color: '#d45f88' }}>
+            <Link href="/login" className="font-medium" style={{ color: 'var(--rose-text)' }}>
               Fazer login
             </Link>
           </p>

@@ -135,8 +135,8 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
             }}
             title="Arraste para reordenar"
           >
-            <GripVertical className="h-4 w-4" style={{ color: '#d45f88' }} />
-            <span className="flex-1 text-xs font-medium" style={{ color: '#d45f88' }}>
+            <GripVertical className="h-4 w-4" style={{ color: 'var(--rose-text)' }} />
+            <span className="flex-1 text-xs font-medium" style={{ color: 'var(--rose-text)' }}>
               {i + 1}º treino — arraste para reordenar
             </span>
             <button
@@ -146,7 +146,7 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
               className="p-1 rounded hover:bg-brand-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
               title="Mover para cima"
             >
-              <ChevronUp className="h-4 w-4" style={{ color: '#d45f88' }} />
+              <ChevronUp className="h-4 w-4" style={{ color: 'var(--rose-text)' }} />
             </button>
             <button
               type="button"
@@ -155,7 +155,7 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
               className="p-1 rounded hover:bg-brand-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
               title="Mover para baixo"
             >
-              <ChevronDown className="h-4 w-4" style={{ color: '#d45f88' }} />
+              <ChevronDown className="h-4 w-4" style={{ color: 'var(--rose-text)' }} />
             </button>
           </div>
 

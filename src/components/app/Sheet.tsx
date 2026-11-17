@@ -16,11 +16,11 @@ export function Sheet({ open, onClose, title, children, footer }: {
 
   if (!open) return null
   return (
-    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-black/50" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
-      <div className="w-full sm:max-w-lg max-h-[92dvh] flex flex-col bg-card rounded-t-3xl sm:rounded-3xl shadow-2xl animate-slide-up">
+    <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center bg-[#2c2325]/45" onClick={e => { if (e.target === e.currentTarget) onClose() }}>
+      <div role="dialog" aria-modal="true" aria-label={title} className="w-full sm:max-w-lg max-h-[92dvh] flex flex-col bg-card rounded-t-3xl sm:rounded-3xl border border-border">
         <div className="flex items-center justify-between px-5 pt-4 pb-3 border-b border-border">
-          <h2 className="text-lg font-bold text-foreground">{title}</h2>
-          <button onClick={onClose} className="p-1.5 rounded-full hover:bg-muted" aria-label="Fechar"><X className="h-5 w-5" /></button>
+          <h2 className="text-lg font-normal text-foreground">{title}</h2>
+          <button onClick={onClose} className="h-11 w-11 -mr-2 rounded-full flex items-center justify-center hover:bg-muted" aria-label="Fechar"><X className="h-5 w-5" strokeWidth={1.75} /></button>
         </div>
         <div className="flex-1 overflow-y-auto px-5 py-4">{children}</div>
         {footer && <div className="px-5 py-3 border-t border-border pb-[max(env(safe-area-inset-bottom),0.75rem)]">{footer}</div>}
@@ -32,7 +32,7 @@ export function Sheet({ open, onClose, title, children, footer }: {
 export function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
   return (
     <label className={'block ' + (className ?? '')}>
-      <span className="form-label text-xs block mb-1 text-muted-foreground font-medium">{label}</span>
+      <span className="block mb-1.5 text-sm font-medium text-foreground">{label}</span>
       {children}
     </label>
   )

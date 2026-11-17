@@ -88,14 +88,14 @@ export default async function RelatoriosPage() {
     { label:'Anamneses enviadas', value:totalAnamneses??0, icon:ClipboardList, cor:'#e8799f', bg:'bg-brand-50 dark:bg-brand-900/20' },
     { label:'Pendentes',          value:pendentes??0,      icon:ClipboardList, cor:'#f59e0b', bg:'bg-amber-50 dark:bg-amber-900/20' },
     { label:'Respondidas',        value:respondidas??0,    icon:TrendingUp,   cor:'#22c55e', bg:'bg-green-50 dark:bg-green-900/20' },
-    { label:'Treinos criados',    value:totalTreinos??0,   icon:Dumbbell,     cor:'#a855f7', bg:'bg-purple-50 dark:bg-purple-900/20' },
+    { label:'Treinos criados',    value:totalTreinos??0,   icon:Dumbbell,     cor:'#3a68a8', bg:'bg-sky-50 dark:bg-sky-900/20' },
     { label:'Avaliações físicas', value:totalAvaliacoes??0,icon:Scale,        cor:'#e8799f', bg:'bg-brand-50 dark:bg-brand-900/20' },
   ]
 
   return (
     <div className="max-w-6xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-bold text-foreground flex items-center gap-2">
+        <h1 className="text-2xl font-normal text-foreground flex items-center gap-2">
           <BarChart3 className="h-6 w-6" style={{color:'#e8799f'}} />
           Relatórios & Desempenho
         </h1>
@@ -108,7 +108,7 @@ export default async function RelatoriosPage() {
             <div className={`inline-flex p-2.5 rounded-lg ${s.bg} mb-3`}>
               <s.icon className="h-5 w-5" style={{color:s.cor}} />
             </div>
-            <p className="text-3xl font-bold text-foreground">{s.value}</p>
+            <p className="text-3xl font-medium text-foreground">{s.value}</p>
             <p className="text-sm text-muted-foreground mt-1">{s.label}</p>
           </div>
         ))}
@@ -124,7 +124,7 @@ export default async function RelatoriosPage() {
 
       {/* Tabela de avaliações por aluno */}
       <div className="card p-6">
-        <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+        <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
           <Scale className="h-4 w-4" style={{color:'#e8799f'}} />
           Dados de Avaliação Física por Aluno
         </h2>
@@ -136,7 +136,7 @@ export default async function RelatoriosPage() {
               <thead>
                 <tr className="border-b border-border">
                   {['Aluno','Peso','Altura','IMC','% Gordura','Massa Magra','Cintura','Quadril','Aval.',''].map(h => (
-                    <th key={h} className="text-left text-xs font-semibold text-muted-foreground py-2 px-3 first:pl-0 whitespace-nowrap">{h}</th>
+                    <th key={h} className="text-left text-xs font-medium text-muted-foreground py-2 px-3 first:pl-0 whitespace-nowrap">{h}</th>
                   ))}
                 </tr>
               </thead>
@@ -155,17 +155,17 @@ export default async function RelatoriosPage() {
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.peso ? `${m.peso} kg` : '—'}</td>
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.altura ? `${m.altura} cm` : '—'}</td>
                       <td className="py-3 px-3 whitespace-nowrap">
-                        {imcN ? <span className="font-semibold" style={{color:imcColor}}>{imcN.toFixed(1)}</span> : <span className="text-muted-foreground">—</span>}
+                        {imcN ? <span className="font-medium" style={{color:imcColor}}>{imcN.toFixed(1)}</span> : <span className="text-muted-foreground">—</span>}
                       </td>
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.gordura ? `${m.gordura}%` : '—'}</td>
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.massaMagra ? `${parseFloat(String(m.massaMagra)).toFixed(1)} kg` : '—'}</td>
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.cintura ? `${m.cintura} cm` : '—'}</td>
                       <td className="py-3 px-3 text-foreground whitespace-nowrap">{m.quadril ? `${m.quadril} cm` : '—'}</td>
                       <td className="py-3 px-3">
-                        <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">{a.avaliacoes}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30  font-medium">{a.avaliacoes}</span>
                       </td>
                       <td className="py-3 px-3">
-                        <Link href={`/admin/usuarios/${a.id}`} className="inline-flex items-center gap-1 text-xs font-medium hover:underline" style={{color:'#d45f88'}}>
+                        <Link href={`/admin/usuarios/${a.id}`} className="inline-flex items-center gap-1 text-xs font-medium hover:underline" style={{color: 'var(--rose-text)'}}>
                           Ver perfil <ArrowRight className="h-3 w-3" />
                         </Link>
                       </td>

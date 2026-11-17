@@ -45,14 +45,14 @@ export function FeedbackForm({ anamneseId, existingFeedback, status }: FeedbackF
 
   return (
     <div className="card p-6">
-      <h2 className="font-semibold text-foreground flex items-center gap-2 mb-4">
-        <MessageSquare className="h-4 w-4 text-brand-600" />
+      <h2 className="font-normal text-foreground flex items-center gap-2 mb-4">
+        <MessageSquare className="h-4 w-4 text-rose-text" />
         {status === 'respondido' ? 'Editar Feedback' : 'Enviar Feedback'}
       </h2>
 
       {existingFeedback && status === 'respondido' && (
         <div className="p-3 rounded-lg bg-brand-50 dark:bg-brand-900/20 border border-brand-200 dark:border-brand-800 mb-4">
-          <div className="flex items-center gap-2 text-brand-700 dark:text-brand-300 text-xs font-medium mb-1">
+          <div className="flex items-center gap-2 text-rose-text  text-xs font-medium mb-1">
             <CheckCircle2 className="h-3.5 w-3.5" />
             Feedback já enviado
           </div>
@@ -83,7 +83,7 @@ export function FeedbackForm({ anamneseId, existingFeedback, status }: FeedbackF
           </button>
 
           {saved && (
-            <span className="flex items-center gap-1.5 text-sm text-brand-600">
+            <span className="flex items-center gap-1.5 text-sm text-rose-text">
               <CheckCircle2 className="h-4 w-4" />
               Salvo com sucesso!
             </span>

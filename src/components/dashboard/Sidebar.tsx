@@ -96,12 +96,9 @@ export function Sidebar({ profile }: SidebarProps) {
         {/* Logo */}
         <div className="flex items-center h-16 px-4 border-b border-border gap-2.5 flex-shrink-0">
           <div className="flex-shrink-0"><SophitLogo size={32} /></div>
-          <span className="font-bold text-lg tracking-widest flex-1" style={{
-            background: 'linear-gradient(135deg,#e8799f,#b4476e)',
-            WebkitBackgroundClip: 'text',
-            WebkitTextFillColor: 'transparent'
-          }}>
-            SOPHIT
+          <span className="font-medium text-lg flex-1" style={{
+            }}>
+            Sophit
           </span>
           {onClose && (
             <button
@@ -116,8 +113,8 @@ export function Sidebar({ profile }: SidebarProps) {
         {/* Role badge */}
         <div className="px-4 pt-4">
           <span className={cn('badge text-xs', isAdmin
-            ? 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300'
-            : 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
+            ? 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 '
+            : 'bg-muted text-foreground'
           )}>
             {isAdmin ? 'Administrador' : 'Aluno'}
           </span>
@@ -136,7 +133,7 @@ export function Sidebar({ profile }: SidebarProps) {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
+                    ? 'bg-muted text-foreground'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground'
                 )}
               >
@@ -202,12 +199,9 @@ export function Sidebar({ profile }: SidebarProps) {
         <div className="flex items-center h-16 px-4 border-b border-border gap-2.5">
           <div className="flex-shrink-0"><SophitLogo size={32} /></div>
           {!collapsed && (
-            <span className="font-bold text-lg tracking-widest" style={{
-              background: 'linear-gradient(135deg,#e8799f,#b4476e)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent'
-            }}>
-              SOPHIT
+            <span className="font-medium text-lg" style={{
+              }}>
+              Sophit
             </span>
           )}
         </div>
@@ -216,8 +210,8 @@ export function Sidebar({ profile }: SidebarProps) {
         {!collapsed && (
           <div className="px-4 pt-4">
             <span className={cn('badge text-xs', isAdmin
-              ? 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300'
-              : 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
+              ? 'bg-brand-100 text-brand-800 dark:bg-brand-900/30 '
+              : 'bg-muted text-foreground'
             )}>
               {isAdmin ? 'Administrador' : 'Aluno'}
             </span>
@@ -237,7 +231,7 @@ export function Sidebar({ profile }: SidebarProps) {
                 className={cn(
                   'flex items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium transition-colors',
                   isActive
-                    ? 'bg-brand-50 text-brand-700 dark:bg-brand-900/20 dark:text-brand-300'
+                    ? 'bg-muted text-foreground'
                     : 'text-muted-foreground hover:bg-muted hover:text-foreground',
                   collapsed && 'justify-center'
                 )}

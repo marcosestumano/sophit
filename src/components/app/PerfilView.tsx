@@ -5,9 +5,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ClipboardList, Camera, Moon, Sun, LogOut, ChevronRight, Pencil, Check, Loader2, Shield } from 'lucide-react'
+import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Shield } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
-import { AppShell } from '@/components/app/AppShell'
+import { AppScreen, IconChip } from '@/components/app/AppShell'
 import type { Profile } from '@/types'
 
 export function PerfilView({ profile }: { profile: Profile }) {
@@ -44,62 +44,63 @@ export function PerfilView({ profile }: { profile: Profile }) {
   const iniciais = (nome || profile.email).split(' ').slice(0, 2).map(n => n[0]).join('').toUpperCase()
 
   return (
-    <AppShell
-      hero={
-        <div className="flex flex-col items-center pt-4 pb-2 text-center">
-          <div className="h-24 w-24 rounded-full bg-white/25 border-4 border-white/70 flex items-center justify-center text-3xl font-bold">{iniciais}</div>
-          {editando ? (
-            <div className="mt-3 flex items-center gap-2 w-full max-w-xs">
-              <input autoFocus value={nome} onChange={e => setNome(e.target.value)} onKeyDown={e => e.key === 'Enter' && salvarNome()}
-                className="flex-1 rounded-xl bg-white/90 text-gray-900 px-3 py-2 outline-none" />
-              <button onClick={salvarNome} className="h-10 w-10 rounded-full bg-white text-brand-700 flex items-center justify-center" aria-label="Salvar nome">
-                {salvando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-5 w-5" />}
-              </button>
-            </div>
-          ) : (
-            <button onClick={() => setEditando(true)} className="mt-3 flex items-center gap-2 text-2xl font-bold drop-shadow-sm">
-              {nome || 'Sem nome'} <Pencil className="h-4 w-4 opacity-80" />
+    <AppScreen>
+      <header className="pt-8 pb-2 flex flex-col items-center text-center">
+        <span className="h-[88px] w-[88px] rounded-full bg-primary text-primary-foreground flex items-center justify-center text-[34px]">{iniciais}</span>
+        {editando ? (
+          <div className="mt-4 flex items-center gap-2 w-full max-w-xs">
+            <label htmlFor="perfil-nome" className="sr-only">Seu nome</label>
+            <input id="perfil-nome" autoFocus value={nome} onChange={e => setNome(e.target.value)} onKeyDown={e => e.key === 'Enter' && salvarNome()}
+              className="input-base flex-1" />
+            <button onClick={salvarNome} className="btn-primary px-0 w-11" aria-label="Salvar nome">
+              {salvando ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-5 w-5" />}
             </button>
-          )}
-          <p className="text-sm opacity-90">{profile.email}</p>
-          <p className="text-xs opacity-80 mt-1">Membro desde {format(new Date(profile.created_at), "MMMM 'de' yyyy", { locale: ptBR })}</p>
-        </div>
-      }
-    >
-      <div className="app-card overflow-hidden">
-        <Row href="/dashboard/anamnese" icon={ClipboardList} t="Minhas anamneses" d="Questionários e feedbacks" />
+          </div>
+        ) : (
+          <h1 className="enter mt-4 text-[30px] leading-tight font-normal tracking-[-0.03em] text-foreground">{nome || 'Sem nome'}</h1>
+        )}
+        <p className="enter-2 text-muted-foreground">{profile.email}</p>
+        <p className="text-xs font-medium text-muted-foreground mt-1">
+          {profile.role === 'admin' ? 'Administrador' : 'Aluno'} desde {format(new Date(profile.created_at), "MMMM 'de' yyyy", { locale: ptBR })}
+        </p>
+        {!editando && (
+          <button onClick={() => setEditando(true)} className="btn-secondary mt-4"><Pencil className="h-4 w-4" strokeWidth={1.75} /> Editar nome</button>
+        )}
+      </header>
+
+      <div className="app-card overflow-hidden mt-6">
+        <Row href="/dashboard/anamnese" icon={ClipboardList} t="Minhas anamneses" d="Questionários e respostas" />
         <Row href="/dashboard/progresso" icon={Camera} t="Fotos de evolução" d="Antes e depois" />
         {profile.role === 'admin' && <Row href="/admin" icon={Shield} t="Painel do administrador" d="Gerenciar alunos" />}
       </div>
 
-      <div className="app-card overflow-hidden mt-4">
-        <button onClick={toggleTema} className="w-full flex items-center gap-4 px-4 py-4 text-left active:bg-muted/60">
-          {dark ? <Sun className="h-5 w-5 text-foreground" /> : <Moon className="h-5 w-5 text-foreground" />}
-          <span className="flex-1 font-semibold text-foreground">Tema {dark ? 'claro' : 'escuro'}</span>
-          <span className={`h-6 w-11 rounded-full p-0.5 transition-colors ${dark ? 'bg-brand-500' : 'bg-muted-foreground/30'}`}>
-            <span className={`block h-5 w-5 rounded-full bg-white transition-transform ${dark ? 'translate-x-5' : ''}`} />
-          </span>
-        </button>
+      <div className="app-card overflow-hidden mt-3">
+        <div className="flex items-center gap-4 px-4 py-3 min-h-[72px]">
+          <IconChip icon={Moon} color="hsl(var(--foreground))" tint="hsl(var(--muted))" />
+          <span className="flex-1 font-medium text-foreground" id="tema-label">Tema escuro</span>
+          <button role="switch" aria-checked={dark} aria-labelledby="tema-label" onClick={toggleTema}
+            className={`h-8 w-[52px] rounded-full p-1 flex transition-colors duration-150 ${dark ? 'bg-primary' : 'bg-foreground/20'}`}>
+            <span className={`block h-6 w-6 rounded-full bg-white transition-transform duration-150 ${dark ? 'translate-x-5' : ''}`} />
+          </button>
+        </div>
       </div>
 
-      <button onClick={sair} className="app-card mt-4 w-full flex items-center gap-4 px-4 py-4 text-left text-destructive active:bg-muted/60">
-        <LogOut className="h-5 w-5" /> <span className="font-semibold">Sair da conta</span>
+      <button onClick={sair} className="mt-6 flex items-center gap-3 min-h-[44px] font-medium text-destructive hover:underline underline-offset-4">
+        <LogOut className="h-5 w-5" strokeWidth={1.75} /> Sair da conta
       </button>
-    </AppShell>
+    </AppScreen>
   )
 }
 
-function Row({ href, icon: Icon, t, d }: { href: string; icon: any; t: string; d: string }) {
+function Row({ href, icon, t, d }: { href: string; icon: any; t: string; d: string }) {
   return (
-    <Link href={href} className="flex items-center gap-4 px-4 py-4 border-b border-border last:border-b-0 active:bg-muted/60">
-      <span className="h-10 w-10 rounded-full flex items-center justify-center bg-brand-100 dark:bg-brand-900/40">
-        <Icon className="h-5 w-5 text-brand-600 dark:text-brand-300" />
-      </span>
+    <Link href={href} className="flex items-center gap-4 px-4 py-3 min-h-[72px] border-b border-border last:border-b-0 hover:bg-muted/50 transition-colors duration-150">
+      <IconChip icon={icon} color="hsl(var(--foreground))" tint="hsl(var(--muted))" />
       <span className="flex-1">
-        <span className="block font-semibold text-foreground">{t}</span>
-        <span className="block text-xs text-muted-foreground">{d}</span>
+        <span className="block font-medium text-foreground">{t}</span>
+        <span className="block text-sm text-muted-foreground">{d}</span>
       </span>
-      <ChevronRight className="h-5 w-5 text-muted-foreground" />
+      <ChevronRight className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
     </Link>
   )
 }

@@ -50,11 +50,11 @@ export function PlanoEditor({ open, onClose, plano, onSave }: {
 
   return (
     <Sheet open={open} onClose={onClose} title={plano ? 'Editar plano alimentar' : 'Novo plano alimentar'}
-      footer={<button onClick={salvar} disabled={saving} className="btn-primary w-full py-3 rounded-xl">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar plano</button>}>
+      footer={<button onClick={salvar} disabled={saving} className="btn-primary w-full h-12">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar plano</button>}>
       <div className="space-y-3">
         <Field label="Título"><input className="input-base" value={f.titulo ?? ''} onChange={set('titulo')} placeholder="Plano Alimentar Base" /></Field>
-        <p className="text-xs text-muted-foreground pt-1">Metas diárias (deixe em branco para usar a soma das refeições)</p>
-        <div className="grid grid-cols-4 gap-2">
+        <p className="text-sm text-muted-foreground pt-1">Metas diárias (deixe em branco para usar a soma das refeições)</p>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
           <Field label="Kcal"><input className="input-base" inputMode="numeric" value={f.meta_kcal ?? ''} onChange={set('meta_kcal')} /></Field>
           <Field label="Prot. (g)"><input className="input-base" inputMode="numeric" value={f.meta_proteina ?? ''} onChange={set('meta_proteina')} /></Field>
           <Field label="Carbo (g)"><input className="input-base" inputMode="numeric" value={f.meta_carbo ?? ''} onChange={set('meta_carbo')} /></Field>
@@ -121,10 +121,10 @@ export function RefeicaoEditor({ open, onClose, refeicao, onSave }: {
     <Sheet open={open} onClose={onClose} title={refeicao ? 'Editar refeição' : 'Nova refeição'}
       footer={
         <div className="flex items-center gap-3">
-          <p className="flex-1 text-xs text-muted-foreground">
+          <p className="flex-1 text-sm text-muted-foreground">
             <b className="text-foreground">{round(tot.kcal)} kcal</b> · {round(tot.proteina)}g P · {round(tot.carbo)}g C · {round(tot.gordura)}g G
           </p>
-          <button onClick={salvar} disabled={saving} className="btn-primary py-2.5 px-5 rounded-xl">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar</button>
+          <button onClick={salvar} disabled={saving} className="btn-primary">{saving && <Loader2 className="h-4 w-4 animate-spin" />}Salvar</button>
         </div>
       }>
       <div className="space-y-3">
@@ -133,24 +133,24 @@ export function RefeicaoEditor({ open, onClose, refeicao, onSave }: {
           <Field label="Horário"><input type="time" className="input-base" value={horario} onChange={e => setHorario(e.target.value)} /></Field>
         </div>
 
-        <p className="text-sm font-semibold text-foreground pt-2">Alimentos</p>
+        <p className="font-medium text-foreground pt-2">Alimentos</p>
         {alimentos.map((a, i) => (
           <div key={i} className="rounded-xl border border-border p-3 space-y-2">
             <div className="flex gap-2">
               <input className="input-base flex-1" value={a.nome} onChange={e => upd(i, 'nome', e.target.value)} placeholder="Alimento (ex: Ovo)" />
-              <input className="input-base w-28" value={a.quantidade} onChange={e => upd(i, 'quantidade', e.target.value)} placeholder="Qtd (2 un)" />
+              <input className="input-base w-24" value={a.quantidade} onChange={e => upd(i, 'quantidade', e.target.value)} placeholder="Qtd (2 un)" />
               <button type="button" onClick={() => setAlimentos(l => l.length > 1 ? l.filter((_, j) => j !== i) : [vazio()])}
-                className="p-2 text-muted-foreground hover:text-destructive" aria-label="Remover alimento"><Trash2 className="h-4 w-4" /></button>
+                className="h-11 w-11 flex-shrink-0 rounded-full flex items-center justify-center text-muted-foreground hover:bg-muted hover:text-destructive" aria-label="Remover alimento"><Trash2 className="h-4 w-4" /></button>
             </div>
-            <div className="grid grid-cols-4 gap-2">
+            <div className="grid grid-cols-2 gap-2">
               {(['kcal', 'proteina', 'carbo', 'gordura'] as const).map(k => (
-                <input key={k} className="input-base text-xs" inputMode="decimal" value={a[k]} onChange={e => upd(i, k, e.target.value)}
+                <input key={k} className="input-base" inputMode="decimal" value={a[k]} onChange={e => upd(i, k, e.target.value)}
                   placeholder={{ kcal: 'kcal', proteina: 'P (g)', carbo: 'C (g)', gordura: 'G (g)' }[k]} />
               ))}
             </div>
           </div>
         ))}
-        <button type="button" onClick={() => setAlimentos(l => [...l, vazio()])} className="btn-secondary w-full rounded-xl">
+        <button type="button" onClick={() => setAlimentos(l => [...l, vazio()])} className="btn-secondary w-full">
           <Plus className="h-4 w-4" /> Adicionar alimento
         </button>
         <Field label="Observações"><textarea className="input-base min-h-[60px]" value={obs} onChange={e => setObs(e.target.value)} /></Field>

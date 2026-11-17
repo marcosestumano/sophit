@@ -96,7 +96,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
       <div className="card w-full max-w-2xl my-4 shadow-2xl animate-slide-up">
         {/* Header */}
         <div className="flex items-center justify-between p-5 border-b border-border">
-          <h2 className="font-bold text-foreground text-lg">Editar Treino</h2>
+          <h2 className="font-normal text-foreground text-lg">Editar Treino</h2>
           <button onClick={onClose} className="btn-ghost p-1.5"><X className="h-5 w-5" /></button>
         </div>
 
@@ -179,8 +179,8 @@ export function EditTreinoModal({ treino, onClose }: Props) {
                           <GripVertical className="h-4 w-4 text-muted-foreground" />
                         </div>
 
-                        <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0"
-                          style={{ background: 'rgba(232,121,159,0.15)', color: '#d45f88' }}>
+                        <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+                          style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
                           {index + 1}
                         </div>
 

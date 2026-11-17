@@ -93,14 +93,14 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
       {open && (
         <div className="border-t border-border p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 animate-slide-up">
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Básico</p>
+            <p className="text-xs font-medium mb-2" style={{color: 'var(--rose-text)'}}>Básico</p>
             <DataRow label="Peso" value={av.peso} unit="kg" />
             <DataRow label="Altura" value={av.altura} unit="cm" />
             <DataRow label="IMC" value={av.imc ? Number(av.imc).toFixed(2) : comp.imc} />
           </div>
           {Object.values(med).some(Boolean) && (
             <div>
-              <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Medidas (cm)</p>
+              <p className="text-xs font-medium mb-2" style={{color: 'var(--rose-text)'}}>Medidas (cm)</p>
               {Object.entries(med).filter(([,v])=>v).map(([k,v])=>(
                 <DataRow key={k} label={MEDIDAS_LABELS[k]??k} value={v as string} />
               ))}
@@ -109,7 +109,7 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
           <div>
             {Object.values(dob).some(Boolean) && (
               <>
-                <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Dobras (mm)</p>
+                <p className="text-xs font-medium mb-2" style={{color: 'var(--rose-text)'}}>Dobras (mm)</p>
                 {Object.entries(dob).filter(([,v])=>v).map(([k,v])=>(
                   <DataRow key={k} label={DOBRAS_LABELS[k]??k} value={v as string} />
                 ))}
@@ -117,7 +117,7 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
             )}
             {Object.values(dia).some(Boolean) && (
               <>
-                <p className="text-xs font-bold uppercase tracking-wider mt-3 mb-2" style={{color:'#d45f88'}}>Diâmetros (cm)</p>
+                <p className="text-xs font-medium mt-3 mb-2" style={{color: 'var(--rose-text)'}}>Diâmetros (cm)</p>
                 {Object.entries(dia).filter(([,v])=>v).map(([k,v])=>(
                   <DataRow key={k} label={DIAMETROS_LABELS[k]??k} value={v as string} />
                 ))}
@@ -125,7 +125,7 @@ function AvaliacaoCard({ av, onDelete }: { av: any; onDelete: () => void }) {
             )}
           </div>
           <div>
-            <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{color:'#d45f88'}}>Composição</p>
+            <p className="text-xs font-medium mb-2" style={{color: 'var(--rose-text)'}}>Composição</p>
             <DataRow label="% Gordura" value={av.percentual_gordura ?? comp.perc_gordura} unit="%" />
             <DataRow label="Massa Magra" value={av.massa_magra ?? comp.massa_livre_gordura} unit="kg" />
             {Object.entries(comp)
@@ -159,12 +159,12 @@ export function AvaliacaoSection({ userId, userName, initialAvaliacoes }: Props)
           { key: 'historico', label: `Histórico${avaliacoes.length > 0 ? ` (${avaliacoes.length})` : ''}`, icon: History },
         ].map(t => (
           <button key={t.key} onClick={() => setTab(t.key as any)}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+            className={`flex items-center gap-2 px-4 min-h-[44px] rounded-xl font-medium transition-colors ${
               tab === t.key
-                ? 'text-white'
+                ? 'text-[#2c2325] border border-transparent'
                 : 'text-muted-foreground hover:bg-muted border border-border'
             }`}
-            style={tab === t.key ? {background:'linear-gradient(135deg,#e8799f,#b4476e)'} : {}}>
+            style={tab === t.key ? {background:'#e8799f'} : {}}>
             <t.icon className="h-4 w-4" />
             {t.label}
           </button>
@@ -185,7 +185,7 @@ export function AvaliacaoSection({ userId, userName, initialAvaliacoes }: Props)
         <div className="space-y-4 animate-fade-in">
           {avaliacoes.length > 1 && (
             <div className="card p-5">
-              <p className="text-sm font-semibold text-foreground mb-4">Evolução ao longo do tempo</p>
+              <p className="text-sm font-medium text-foreground mb-4">Evolução ao longo do tempo</p>
               <EvolutionCharts avaliacoes={avaliacoes} />
             </div>
           )}

@@ -89,7 +89,7 @@ function ScoreBar({ value, max = 100 }: { value: number; max?: number }) {
       <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
         <div className="h-full rounded-full transition-all duration-500" style={{ width: `${pct}%`, background: color }} />
       </div>
-      <span className="text-xs font-bold w-8 text-right" style={{ color }}>{value}</span>
+      <span className="text-xs font-medium w-8 text-right" style={{ color }}>{value}</span>
     </div>
   )
 }
@@ -130,7 +130,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
 
       {/* Medidores de KPI */}
       <div className="card p-6">
-        <h2 className="font-semibold text-foreground mb-6 flex items-center gap-2">
+        <h2 className="font-normal text-foreground mb-6 flex items-center gap-2">
           <Target className="h-4 w-4" style={{ color: '#e8799f' }} />
           Medidores de desempenho geral
         </h2>
@@ -140,7 +140,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
             <p className="text-xs text-muted-foreground mt-1">{respondidas} de {totalAnamneses} respondidas</p>
           </div>
           <div className="flex flex-col items-center">
-            <GaugeMeter value={mediaScore} label="Score médio de engajamento" color="#a855f7" />
+            <GaugeMeter value={mediaScore} label="Score médio de engajamento" color="#3a68a8" />
             <p className="text-xs text-muted-foreground mt-1">{alunosEngajamento.length} alunos avaliados</p>
           </div>
           <div className="flex flex-col items-center">
@@ -152,7 +152,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
 
       {/* Atividade mensal */}
       <div className="card p-6">
-        <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+        <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
           <Zap className="h-4 w-4" style={{ color: '#e8799f' }} />
           Atividade mensal (últimos 6 meses)
         </h2>
@@ -164,7 +164,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
             <Tooltip content={<CustomTooltip />} />
             <Legend wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
             <Bar dataKey="anamneses" name="Anamneses" fill="#e8799f" radius={[4,4,0,0]} />
-            <Bar dataKey="avaliacoes" name="Avaliações" fill="#a855f7" radius={[4,4,0,0]} />
+            <Bar dataKey="avaliacoes" name="Avaliações" fill="#3a68a8" radius={[4,4,0,0]} />
             <Bar dataKey="registros" name="Registros de carga" fill="#3b82f6" radius={[4,4,0,0]} />
           </BarChart>
         </ResponsiveContainer>
@@ -173,7 +173,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Ranking de engajamento */}
         <div className="card p-6">
-          <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
             <Trophy className="h-4 w-4" style={{ color: '#e8799f' }} />
             Ranking de engajamento
           </h2>
@@ -186,10 +186,10 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
             <div className="space-y-4">
               {alunosEngajamento.slice(0, 8).map((a, i) => (
                 <div key={a.id} className="flex items-center gap-3">
-                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-bold flex-shrink-0 ${
+                  <div className={`h-6 w-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 ${
                     i === 0 ? 'text-yellow-800 bg-yellow-100 dark:bg-yellow-900/30 dark:text-yellow-300'
                     : i === 1 ? 'text-gray-700 bg-gray-100 dark:bg-gray-800 dark:text-gray-300'
-                    : i === 2 ? 'text-brand-800 bg-brand-100 dark:bg-brand-900/30 dark:text-brand-300'
+                    : i === 2 ? 'text-brand-800 bg-brand-100 dark:bg-brand-900/30 '
                     : 'text-muted-foreground bg-muted'
                   }`}>
                     {i + 1}
@@ -210,7 +210,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
 
         {/* Evolução dos alunos */}
         <div className="card p-6">
-          <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
             <TrendingUp className="h-4 w-4" style={{ color: '#e8799f' }} />
             Evolução corporal dos alunos
           </h2>
@@ -234,7 +234,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
                           {a.evolucaoPeso === null ? <Minus className="h-3 w-3 text-muted-foreground" />
                             : a.evolucaoPeso < 0 ? <TrendingDown className="h-3 w-3 text-green-500" />
                             : <TrendingUp className="h-3 w-3 text-red-500" />}
-                          <span className={`text-xs font-bold ${
+                          <span className={`text-xs font-medium ${
                             a.evolucaoPeso === null ? 'text-muted-foreground'
                             : a.evolucaoPeso < 0 ? 'text-green-600' : 'text-red-500'
                           }`}>
@@ -249,7 +249,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
                           {a.evolucaoGordura === null ? <Minus className="h-3 w-3 text-muted-foreground" />
                             : a.evolucaoGordura < 0 ? <TrendingDown className="h-3 w-3 text-green-500" />
                             : <TrendingUp className="h-3 w-3 text-red-500" />}
-                          <span className={`text-xs font-bold ${
+                          <span className={`text-xs font-medium ${
                             a.evolucaoGordura === null ? 'text-muted-foreground'
                             : a.evolucaoGordura < 0 ? 'text-green-600' : 'text-red-500'
                           }`}>
@@ -264,7 +264,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
                           {a.evolucaoCargaMedia === null ? <Minus className="h-3 w-3 text-muted-foreground" />
                             : a.evolucaoCargaMedia > 0 ? <TrendingUp className="h-3 w-3 text-green-500" />
                             : <TrendingDown className="h-3 w-3 text-red-500" />}
-                          <span className={`text-xs font-bold ${
+                          <span className={`text-xs font-medium ${
                             a.evolucaoCargaMedia === null ? 'text-muted-foreground'
                             : a.evolucaoCargaMedia > 0 ? 'text-green-600' : 'text-red-500'
                           }`}>
@@ -284,7 +284,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
       {/* Radar do top aluno */}
       {topAluno && radarData.length > 0 && (
         <div className="card p-6">
-          <h2 className="font-semibold text-foreground mb-1 flex items-center gap-2">
+          <h2 className="font-normal text-foreground mb-1 flex items-center gap-2">
             <Trophy className="h-4 w-4 text-yellow-500" />
             Perfil completo — {topAluno.nome}
             <span className="text-xs font-normal text-muted-foreground">(aluno mais engajado)</span>
@@ -304,13 +304,13 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
               {[
                 { label: 'Score total', value: `${topAluno.score}/100`, color: '#e8799f' },
                 { label: 'Anamneses', value: topAluno.anamneses, color: '#3b82f6' },
-                { label: 'Treinos', value: topAluno.treinos, color: '#a855f7' },
+                { label: 'Treinos', value: topAluno.treinos, color: '#3a68a8' },
                 { label: 'Avaliações', value: topAluno.avaliacoes, color: '#22c55e' },
                 { label: 'Reg. de carga', value: topAluno.registrosCarga, color: '#f59e0b' },
                 { label: 'Evolução força', value: topAluno.evolucaoCargaMedia !== null ? `${topAluno.evolucaoCargaMedia > 0 ? '+' : ''}${topAluno.evolucaoCargaMedia.toFixed(0)}%` : '—', color: '#22c55e' },
               ].map(item => (
                 <div key={item.label} className="p-3 rounded-lg bg-muted/40 text-center">
-                  <p className="text-lg font-bold" style={{ color: item.color }}>{item.value}</p>
+                  <p className="text-lg font-medium" style={{ color: item.color }}>{item.value}</p>
                   <p className="text-xs text-muted-foreground">{item.label}</p>
                 </div>
               ))}

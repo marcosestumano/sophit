@@ -42,13 +42,13 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex">
       {/* Left panel */}
-      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12" style={{background:'linear-gradient(160deg,#1a0710,#3b1022,#6e2d45)'}}>
+      <div className="hidden lg:flex lg:w-1/2 flex-col justify-between p-12" style={{background:'#2c2325'}}>
         <div className="flex items-center gap-3">
           <SophitLogo size={48} />
-          <span className="font-bold text-2xl tracking-widest text-white">SOPHIT</span>
+          <span className="font-medium text-2xl text-white">Sophit</span>
         </div>
         <div>
-          <h1 className="text-white text-4xl font-bold leading-tight mb-4">
+          <h1 className="text-white text-4xl font-normal leading-tight mb-4">
             Treine com<br />inteligência.<br />Evolua com<br />dados.
           </h1>
           <p className="text-brand-200 text-lg leading-relaxed">
@@ -74,10 +74,10 @@ export default function LoginPage() {
         <div className="w-full max-w-md animate-fade-in">
           <div className="flex items-center gap-3 mb-8 lg:hidden">
             <SophitLogo size={40} />
-            <span className="font-bold text-xl tracking-widest" style={{background:'linear-gradient(135deg,#e8799f,#b4476e)',WebkitBackgroundClip:'text',WebkitTextFillColor:'transparent'}}>SOPHIT</span>
+            <span className="font-medium text-xl" style={{}}>Sophit</span>
           </div>
 
-          <h2 className="text-2xl font-bold text-foreground mb-1">Bem-vindo de volta</h2>
+          <h2 className="text-2xl font-normal text-foreground mb-1">Bem-vindo de volta</h2>
           <p className="text-muted-foreground mb-8">Entre na sua conta para continuar</p>
 
           {error && (
@@ -102,7 +102,7 @@ export default function LoginPage() {
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t" style={{borderColor:'hsl(var(--border))'}} />
             </div>
-            <div className="relative flex justify-center text-xs uppercase">
+            <div className="relative flex justify-center text-xs">
               <span className="px-2" style={{background:'hsl(var(--background))',color:'hsl(var(--muted-foreground))'}}>ou</span>
             </div>
           </div>
@@ -119,7 +119,7 @@ export default function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-1.5">
                 <label className="form-label !mb-0">Senha</label>
-                <Link href="/forgot-password" className="text-xs" style={{color:'#d45f88'}}>Esqueceu a senha?</Link>
+                <Link href="/forgot-password" className="text-xs" style={{color: 'var(--rose-text)'}}>Esqueceu a senha?</Link>
               </div>
               <div className="relative">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4" style={{color:'hsl(var(--muted-foreground))'}} />
@@ -138,7 +138,7 @@ export default function LoginPage() {
 
           <p className="text-center text-sm text-muted-foreground mt-6">
             Não tem uma conta?{' '}
-            <Link href="/register" className="font-medium" style={{color:'#d45f88'}}>Criar conta</Link>
+            <Link href="/register" className="font-medium" style={{color: 'var(--rose-text)'}}>Criar conta</Link>
           </p>
         </div>
       </div>

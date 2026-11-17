@@ -53,7 +53,7 @@ export function DeleteUserButton({ userId, userName, userEmail, redirectAfter = 
               <UserX className="h-5 w-5 text-red-600 dark:text-red-400" />
             </div>
             <div>
-              <h3 className="font-semibold text-foreground">Deletar usuário</h3>
+              <h3 className="font-medium text-foreground">Deletar usuário</h3>
               <p className="text-xs text-muted-foreground">Esta ação é permanente e irreversível</p>
             </div>
           </div>
@@ -87,7 +87,7 @@ export function DeleteUserButton({ userId, userName, userEmail, redirectAfter = 
             <button
               onClick={handleDelete}
               disabled={loading}
-              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-semibold text-white transition-all disabled:opacity-50"
+              className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all disabled:opacity-50"
               style={{ background: '#dc2626' }}
             >
               {loading

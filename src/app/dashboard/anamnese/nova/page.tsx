@@ -204,9 +204,9 @@ export default function NovaAnamnesePage() {
     return (
       <div className="max-w-lg mx-auto text-center py-20 animate-fade-in">
         <div className="inline-flex p-5 rounded-full bg-brand-50 dark:bg-brand-900/20 mb-5">
-          <CheckCircle2 className="h-10 w-10 text-brand-600" />
+          <CheckCircle2 className="h-10 w-10 text-rose-text" />
         </div>
-        <h2 className="text-2xl font-bold text-foreground mb-2">Anamnese enviada!</h2>
+        <h2 className="text-2xl font-normal text-foreground mb-2">Anamnese enviada!</h2>
         <p className="text-muted-foreground">
           Seu profissional irá analisar e responder em breve.
         </p>
@@ -220,7 +220,7 @@ export default function NovaAnamnesePage() {
     <div className="max-w-2xl mx-auto pb-12">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-bold text-foreground">Anamnese</h1>
+        <h1 className="text-2xl font-normal text-foreground">Anamnese</h1>
         <p className="text-muted-foreground mt-1">
           Preencha com atenção para receber um acompanhamento personalizado
         </p>
@@ -231,7 +231,7 @@ export default function NovaAnamnesePage() {
         {STEPS.map((s, i) => (
           <div key={s.label} className="flex items-center gap-1 flex-1 min-w-0">
             <div className={cn(
-              'flex items-center justify-center w-7 h-7 rounded-full text-xs font-bold flex-shrink-0 transition-all',
+              'flex items-center justify-center w-7 h-7 rounded-full text-xs font-medium flex-shrink-0 transition-all',
               i < step ? 'bg-brand-600 text-white'
                 : i === step ? 'bg-brand-600 text-white ring-2 ring-brand-200 dark:ring-brand-800'
                 : 'bg-muted text-muted-foreground'
@@ -260,7 +260,7 @@ export default function NovaAnamnesePage() {
           {/* ── STEP 0: Identificação ─────────────────── */}
           {step === 0 && (
             <>
-              <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">
+              <p className="text-sm font-medium text-rose-text">
                 Identificação
               </p>
 
@@ -305,7 +305,7 @@ export default function NovaAnamnesePage() {
           {/* ── STEP 1: Objetivos ─────────────────────── */}
           {step === 1 && (
             <>
-              <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">
+              <p className="text-sm font-medium text-rose-text">
                 Objetivos e Preferências
               </p>
 
@@ -406,7 +406,7 @@ export default function NovaAnamnesePage() {
           {/* ── STEP 2: Histórico físico ──────────────── */}
           {step === 2 && (
             <>
-              <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">
+              <p className="text-sm font-medium text-rose-text">
                 Histórico de Atividade Física
               </p>
 
@@ -420,7 +420,7 @@ export default function NovaAnamnesePage() {
 
               {w.praticou_exercicio === 'sim' && (
                 <div className="space-y-4 p-4 rounded-lg bg-muted/40 border border-border">
-                  <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                  <p className="text-xs font-medium text-muted-foreground">
                     Detalhes do exercício praticado
                   </p>
 
@@ -472,7 +472,7 @@ export default function NovaAnamnesePage() {
           {/* ── STEP 3: Saúde ─────────────────────────── */}
           {step === 3 && (
             <>
-              <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">
+              <p className="text-sm font-medium text-rose-text">
                 Histórico de Saúde
               </p>
 
@@ -526,7 +526,7 @@ export default function NovaAnamnesePage() {
           {/* ── STEP 4: Dores & Limitações ────────────── */}
           {step === 4 && (
             <>
-              <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">
+              <p className="text-sm font-medium text-rose-text">
                 Dores, Desconfortos e Limitações
               </p>
 
@@ -549,8 +549,8 @@ export default function NovaAnamnesePage() {
                       {[0,1,2,3,4,5,6,7,8,9,10].map((n) => (
                         <div key={n} className="flex-1 text-center">
                           <div className={cn(
-                            'w-full aspect-square rounded-full flex items-center justify-center text-xs font-bold mx-auto max-w-[24px]',
-                            n === 0 ? 'bg-brand-100 text-brand-700 dark:bg-brand-900/30 dark:text-brand-300'
+                            'w-full aspect-square rounded-full flex items-center justify-center text-xs font-medium mx-auto max-w-[24px]',
+                            n === 0 ? 'bg-brand-100 text-rose-text dark:bg-brand-900/30 '
                               : n <= 3 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300'
                               : n <= 6 ? 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300'
                               : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300'
@@ -568,7 +568,7 @@ export default function NovaAnamnesePage() {
                     {dorFields.map((field, idx) => (
                       <div key={field.id} className="p-4 rounded-lg border border-border space-y-3">
                         <div className="flex items-center justify-between">
-                          <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
+                          <p className="text-xs font-medium text-muted-foreground">
                             Região {idx + 1}
                           </p>
                           {dorFields.length > 1 && (
@@ -716,7 +716,7 @@ export default function NovaAnamnesePage() {
           {/* ── STEP 5: Revisão ───────────────────────── */}
           {step === 5 && (
             <div className="space-y-4">
-              <p className="text-sm font-semibold text-brand-600 uppercase tracking-wider">
+              <p className="text-sm font-medium text-rose-text">
                 Revisão das respostas
               </p>
 

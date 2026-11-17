@@ -38,7 +38,7 @@ export default function OnboardingPage() {
           <div className="inline-flex p-3 bg-brand-600 rounded-2xl mb-4">
             <Activity className="h-8 w-8 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Bem-vindo ao VitalSync!</h1>
+          <h1 className="text-2xl font-normal text-foreground">Bem-vindo ao VitalSync!</h1>
           <p className="text-muted-foreground mt-2">
             Antes de continuar, como devemos te chamar?
           </p>

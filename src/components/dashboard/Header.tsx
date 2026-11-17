@@ -55,8 +55,8 @@ export function Header({ profile }: HeaderProps) {
             className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-muted transition-colors"
           >
             <div className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0"
-              style={{background:'linear-gradient(135deg,#e8799f,#b4476e)'}}>
-              <span className="text-white text-xs font-semibold">{initials}</span>
+              style={{background:'#e8799f'}}>
+              <span className="text-[#2c2325] text-xs font-medium">{initials}</span>
             </div>
             <div className="hidden sm:block text-left">
               <p className="text-sm font-medium text-foreground leading-tight">

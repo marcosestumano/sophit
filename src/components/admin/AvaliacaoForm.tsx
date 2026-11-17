@@ -32,10 +32,10 @@ function SectionHeader({ title, open, onToggle }: { title: string; open: boolean
     <button type="button" onClick={onToggle}
       className="w-full flex items-center justify-between px-4 py-3 rounded-lg transition-colors hover:bg-muted/50"
       style={{ background: 'rgba(232,121,159,0.07)', border: '1px solid rgba(232,121,159,0.2)' }}>
-      <span className="text-sm font-semibold" style={{ color: '#d45f88' }}>{title}</span>
+      <span className="text-sm font-medium" style={{ color: 'var(--rose-text)' }}>{title}</span>
       {open
-        ? <ChevronUp className="h-4 w-4" style={{ color: '#d45f88' }} />
-        : <ChevronDown className="h-4 w-4" style={{ color: '#d45f88' }} />}
+        ? <ChevronUp className="h-4 w-4" style={{ color: 'var(--rose-text)' }} />
+        : <ChevronDown className="h-4 w-4" style={{ color: 'var(--rose-text)' }} />}
     </button>
   )
 }
@@ -196,7 +196,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
           </div>
           <div className="flex items-center gap-2 flex-shrink-0">
             {historico.length > 0 && (
-              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">
+              <span className="text-xs px-2 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30  font-medium">
                 {historico.length} registros
               </span>
             )}
@@ -248,7 +248,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
                           {format(new Date(av.created_at), "dd 'de' MMMM 'de' yyyy", { locale: ptBR })}
                         </p>
                         {i === 0 && (
-                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30 dark:text-brand-300 font-medium">
+                          <span className="text-xs px-1.5 py-0.5 rounded-full bg-brand-100 text-brand-800 dark:bg-brand-900/30  font-medium">
                             mais recente
                           </span>
                         )}
@@ -274,7 +274,7 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
 
       {/* Banner informativo */}
       <div className="flex items-center gap-2 p-3 rounded-lg text-xs"
-        style={{ background: 'rgba(232,121,159,0.07)', border: '1px solid rgba(232,121,159,0.2)', color: '#d45f88' }}>
+        style={{ background: 'rgba(232,121,159,0.07)', border: '1px solid rgba(232,121,159,0.2)', color: 'var(--rose-text)' }}>
         <RefreshCw className="h-3.5 w-3.5 flex-shrink-0" />
         Altere apenas os campos que mudaram. Ao salvar, um novo registro será criado preservando o histórico.
       </div>
@@ -287,9 +287,9 @@ export function AvaliacaoForm({ userId, userName, onSaved }: Props) {
           </div>
           <div>
             <p className="text-xs text-muted-foreground">IMC calculado</p>
-            <p className="text-2xl font-bold text-foreground">{imc.toFixed(1)}</p>
+            <p className="text-2xl font-medium text-foreground">{imc.toFixed(1)}</p>
           </div>
-          <span className="text-sm font-semibold px-3 py-1 rounded-full border"
+          <span className="text-sm font-medium px-3 py-1 rounded-full border"
             style={{ color: imcInfo.cor, borderColor: imcInfo.cor, background: imcInfo.cor + '15' }}>
             {imcInfo.txt}
           </span>

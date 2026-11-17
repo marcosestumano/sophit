@@ -1,5 +1,8 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
+import { Outfit } from 'next/font/google'
+
+const outfit = Outfit({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-outfit', display: 'swap' })
 import { SplashProvider } from '@/components/SplashProvider'
 
 export const metadata: Metadata = {
@@ -8,7 +11,7 @@ export const metadata: Metadata = {
 }
 
 export const viewport: Viewport = {
-  themeColor: '#f8b4cc',
+  themeColor: '#f8f3f2',
   width: 'device-width',
   initialScale: 1,
   viewportFit: 'cover',
@@ -16,7 +19,7 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="pt-BR" suppressHydrationWarning>
+    <html lang="pt-BR" className={outfit.variable} suppressHydrationWarning>
       <head />
       <body className="min-h-screen bg-background font-sans antialiased">
         <script

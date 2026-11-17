@@ -42,11 +42,11 @@ export default async function UserProfilePage({ params }: { params: { id: string
       <div className="card p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
           <div className="h-14 w-14 rounded-full flex items-center justify-center flex-shrink-0"
-            style={{ background: 'linear-gradient(135deg,#e8799f,#b4476e)' }}>
-            <span className="text-white text-xl font-bold">{initials}</span>
+            style={{ background: '#e8799f' }}>
+            <span className="text-[#2c2325] text-xl font-medium">{initials}</span>
           </div>
           <div className="flex-1">
-            <h1 className="text-xl sm:text-2xl font-bold text-foreground">{profile.full_name ?? 'Sem nome'}</h1>
+            <h1 className="text-xl sm:text-2xl font-normal text-foreground">{profile.full_name ?? 'Sem nome'}</h1>
             <p className="text-muted-foreground text-sm">{profile.email}</p>
             <p className="text-xs text-muted-foreground mt-1">
               Membro desde {format(new Date(profile.created_at), "MMMM 'de' yyyy", { locale: ptBR })}
@@ -61,7 +61,7 @@ export default async function UserProfilePage({ params }: { params: { id: string
       {/* Resumo da última avaliação — sempre visível */}
       {avaliacoes && avaliacoes.length > 0 && (
         <div className="card p-5 sm:p-6">
-          <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+          <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
             <Scale className="h-4 w-4" style={{ color: '#e8799f' }} />
             Dados da Avaliação Física
           </h2>
@@ -73,11 +73,11 @@ export default async function UserProfilePage({ params }: { params: { id: string
       {treinos && treinos.length > 0 && (
         <div className="card p-5 sm:p-6">
           <div className="flex items-center justify-between mb-5">
-            <h2 className="font-semibold text-foreground flex items-center gap-2">
+            <h2 className="font-normal text-foreground flex items-center gap-2">
               <Dumbbell className="h-4 w-4" style={{ color: '#e8799f' }} />
               Treinos e Progressão de Cargas
             </h2>
-            <Link href="/admin/treinos" className="text-xs font-medium" style={{ color: '#d45f88' }}>
+            <Link href="/admin/treinos" className="text-xs font-medium" style={{ color: 'var(--rose-text)' }}>
               + Novo treino
             </Link>
           </div>
@@ -91,7 +91,7 @@ export default async function UserProfilePage({ params }: { params: { id: string
 
       {/* Fotos */}
       <div className="card p-5 sm:p-6">
-        <h2 className="font-semibold text-foreground mb-4 flex items-center gap-2">
+        <h2 className="font-normal text-foreground mb-4 flex items-center gap-2">
           <span className="h-2 w-2 rounded-full" style={{ background: '#e8799f' }} />
           Fotos de Progresso
         </h2>
@@ -100,7 +100,7 @@ export default async function UserProfilePage({ params }: { params: { id: string
 
       {/* Avaliação Física — nova + histórico */}
       <div className="card p-5 sm:p-6">
-        <h2 className="font-semibold text-foreground mb-5 flex items-center gap-2">
+        <h2 className="font-normal text-foreground mb-5 flex items-center gap-2">
           <span className="h-2 w-2 rounded-full" style={{ background: '#e8799f' }} />
           Avaliação Física
         </h2>

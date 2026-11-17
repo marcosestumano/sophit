@@ -22,7 +22,7 @@ export function SplashScreen() {
     <div
       className="fixed inset-0 z-[9999] flex items-center justify-center"
       style={{
-        background: 'linear-gradient(160deg,#1a0710,#3b1022,#6e2d45)',
+        background: '#f8f3f2',
         opacity: phase === 'exit' ? 0 : 1,
         transition: phase === 'exit' ? 'opacity 0.6s ease-out' : 'none',
         pointerEvents: phase === 'exit' ? 'none' : 'all',
@@ -33,7 +33,7 @@ export function SplashScreen() {
         <div style={{
           opacity: phase === 'enter' ? 0 : 1,
           transform: phase === 'enter' ? 'scale(0.5) translateY(12px)' : 'scale(1) translateY(0)',
-          transition: 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.34,1.56,0.64,1)',
+          transition: 'opacity 0.5s ease-out, transform 0.5s cubic-bezier(0.22,1,0.36,1)',
         }}>
           <SophitLogo size={72} />
         </div>
@@ -43,19 +43,13 @@ export function SplashScreen() {
           {letters.map((letter, i) => (
             <span
               key={i}
-              className="font-black tracking-widest text-white select-none"
+              className="font-normal select-none"
               style={{
                 fontSize: 'clamp(2.5rem, 8vw, 4rem)',
                 opacity: phase === 'enter' ? 0 : 1,
                 transform: phase === 'enter' ? 'translateY(20px)' : 'translateY(0)',
-                transition: `opacity 0.4s ease-out ${0.1 + i * 0.07}s, transform 0.4s cubic-bezier(0.34,1.56,0.64,1) ${0.1 + i * 0.07}s`,
-                background: i < 2
-                  ? 'linear-gradient(135deg, #fff 0%, #f8b4cc 100%)'
-                  : i < 4
-                  ? 'linear-gradient(135deg, #f8b4cc 0%, #e8799f 100%)'
-                  : 'linear-gradient(135deg, #e8799f 0%, #b4476e 100%)',
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                transition: `opacity 0.4s ease-out ${0.1 + i * 0.07}s, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${0.1 + i * 0.07}s`,
+                color: '#2c2325',
               }}
             >
               {letter}
@@ -65,9 +59,9 @@ export function SplashScreen() {
 
         {/* Tagline */}
         <p
-          className="text-brand-200 text-sm sm:text-base tracking-widest uppercase"
+          className="text-sm sm:text-base"
           style={{
-            opacity: phase === 'enter' ? 0 : 0.7,
+            opacity: phase === 'enter' ? 0 : 1, color: '#6d6566',
             transform: phase === 'enter' ? 'translateY(8px)' : 'translateY(0)',
             transition: 'opacity 0.5s ease-out 0.7s, transform 0.5s ease-out 0.7s',
           }}
@@ -81,7 +75,7 @@ export function SplashScreen() {
           style={{
             width: 'clamp(120px, 30vw, 200px)',
             height: 2,
-            background: 'rgba(255,255,255,0.15)',
+            background: 'rgba(44,35,37,0.12)',
             opacity: phase === 'enter' ? 0 : 1,
             transition: 'opacity 0.3s ease-out 0.5s',
           }}
@@ -89,7 +83,7 @@ export function SplashScreen() {
           <div
             style={{
               height: '100%',
-              background: 'linear-gradient(90deg, #e8799f, #fff)',
+              background: '#e8799f',
               borderRadius: '9999px',
               width: phase === 'enter' ? '0%' : phase === 'hold' ? '100%' : '100%',
               transition: phase === 'hold' ? 'width 0.9s cubic-bezier(0.4,0,0.2,1)' : 'none',
