@@ -1,11 +1,12 @@
 import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/auth'
 import { redirect } from 'next/navigation'
 import { sortTreinos } from '@/lib/utils'
 import { TreinosView } from '@/components/treinos/TreinosView'
 
 export default async function TreinosPage({ searchParams }: { searchParams: { t?: string } }) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const [{ data: treinosRaw }, { data: prog }] = await Promise.all([

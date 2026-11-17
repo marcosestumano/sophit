@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/auth'
 import { redirect, notFound } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
@@ -16,7 +17,7 @@ import { CardioAdmin } from '@/components/cardio/CardioAdmin'
 
 export default async function UserProfilePage({ params }: { params: { id: string } }) {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const [{ data: profile }, { data: avaliacoes }, { data: treinos }] = await Promise.all([

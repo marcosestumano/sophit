@@ -23,6 +23,12 @@ export function MobileNav({ resumo }: { resumo: PrescricoesResumo }) {
 
   useEffect(() => { setOpen(false) }, [pathname])
 
+  // As opções do menu Prescrições são botões (não <Link>), então o Next não as
+  // pré-carrega sozinho: pré-carregamos aqui para a troca de tela ser imediata.
+  useEffect(() => {
+    ['/dashboard', ...PRESC_ROUTES, '/dashboard/perfil'].forEach(r => router.prefetch(r))
+  }, [router])
+
   const isHome = pathname === '/dashboard'
   const isPresc = PRESC_ROUTES.some(r => pathname.startsWith(r))
   const isPerfil = pathname.startsWith('/dashboard/perfil')

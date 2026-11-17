@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/auth'
 import { redirect } from 'next/navigation'
 import { subDays, format } from 'date-fns'
 import { HomeView } from '@/components/home/HomeView'
@@ -6,7 +7,7 @@ import { sortTreinos } from '@/lib/utils'
 
 export default async function DashboardPage() {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   // Janela de histórico para sequências e calendário (folga para fuso horário)

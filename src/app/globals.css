@@ -202,6 +202,9 @@
     .lift:hover { transform: translateY(-2px); }
     .btn-primary:hover, .btn-secondary:hover { transform: translateY(-1px); }
   }
+  /* Esqueleto de carregamento: pulso suave, parado com "reduzir movimento" */
+  .sk { background-color: hsl(var(--muted)); animation: sk 1.4s ease-in-out infinite; }
+  @keyframes sk { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
   .enter  { animation: enter 700ms var(--ease-enter) both; }
   .enter-2 { animation: enter 700ms 120ms var(--ease-enter) both; }
   @keyframes enter { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }

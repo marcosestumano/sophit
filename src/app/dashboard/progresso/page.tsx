@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/auth'
 import { redirect } from 'next/navigation'
 import { Camera } from 'lucide-react'
 import { FotosProgresso } from '@/components/FotosProgresso'
@@ -10,9 +11,7 @@ export const metadata: Metadata = {
 
 export default async function ProgressoPage() {
   const supabase = createClient()
-  const {
-    data: { user },
-  } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   return (

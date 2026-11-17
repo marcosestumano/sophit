@@ -25,7 +25,10 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { user } } = await supabase.auth.getUser()
+  // getClaims() valida o token localmente (chaves assimétricas) e renova a sessão quando expira;
+  // evita uma ida ao servidor de Auth em cada troca de tela.
+  const { data: claimsData } = await supabase.auth.getClaims()
+  const user = claimsData?.claims?.sub ? { id: claimsData.claims.sub } : null
 
   const { pathname } = request.nextUrl
 

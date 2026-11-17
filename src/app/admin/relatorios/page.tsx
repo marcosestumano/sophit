@@ -1,4 +1,5 @@
 import { createClient } from '@/lib/supabase/server'
+import { getAuthUser } from '@/lib/supabase/auth'
 import { redirect } from 'next/navigation'
 import { BarChart3, Users, ClipboardList, Dumbbell, Scale, TrendingUp, ArrowRight } from 'lucide-react'
 import { RelatoriosCharts } from '@/components/admin/RelatoriosCharts'
@@ -6,7 +7,7 @@ import Link from 'next/link'
 
 export default async function RelatoriosPage() {
   const supabase = createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getAuthUser()
   if (!user) redirect('/login')
 
   const [
