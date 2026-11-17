@@ -84,10 +84,10 @@ export default async function RelatoriosPage() {
   }
 
   const stats = [
-    { label:'Total de alunos',    value:totalUsers??0,     icon:Users,        cor:'#3b82f6', bg:'bg-blue-50 dark:bg-blue-900/20' },
+    { label:'Total de alunos',    value:totalUsers??0,     icon:Users,        cor:'#3a68a8', bg:'bg-blue-50 dark:bg-blue-900/20' },
     { label:'Anamneses enviadas', value:totalAnamneses??0, icon:ClipboardList, cor:'#e8799f', bg:'bg-brand-50 dark:bg-brand-900/20' },
-    { label:'Pendentes',          value:pendentes??0,      icon:ClipboardList, cor:'#f59e0b', bg:'bg-amber-50 dark:bg-amber-900/20' },
-    { label:'Respondidas',        value:respondidas??0,    icon:TrendingUp,   cor:'#22c55e', bg:'bg-green-50 dark:bg-green-900/20' },
+    { label:'Pendentes',          value:pendentes??0,      icon:ClipboardList, cor:'#c98a1b', bg:'bg-amber-50 dark:bg-amber-900/20' },
+    { label:'Respondidas',        value:respondidas??0,    icon:TrendingUp,   cor:'#3f7a52', bg:'bg-green-50 dark:bg-green-900/20' },
     { label:'Treinos criados',    value:totalTreinos??0,   icon:Dumbbell,     cor:'#3a68a8', bg:'bg-sky-50 dark:bg-sky-900/20' },
     { label:'Avaliações físicas', value:totalAvaliacoes??0,icon:Scale,        cor:'#e8799f', bg:'bg-brand-50 dark:bg-brand-900/20' },
   ]
@@ -143,7 +143,7 @@ export default async function RelatoriosPage() {
                   const m = a.ultimaMedidas
                   if (!m) return null
                   const imcN = m.imc ? Number(m.imc) : null
-                  const imcColor = imcN ? (imcN < 18.5 ? '#3b82f6' : imcN < 25 ? '#16a34a' : imcN < 30 ? '#f59e0b' : '#ef4444') : undefined
+                  const imcColor = imcN ? (imcN < 18.5 ? '#3a68a8' : imcN < 25 ? '#16a34a' : imcN < 30 ? '#c98a1b' : '#ef4444') : undefined
                   return (
                     <tr key={a.id} className="border-b border-border/50 hover:bg-muted/30 transition-colors">
                       <td className="py-3 px-3 pl-0">

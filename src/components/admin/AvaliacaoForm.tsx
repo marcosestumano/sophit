@@ -19,12 +19,12 @@ function calcIMC(peso: number, altura: number) {
   return peso / Math.pow(altura / 100, 2)
 }
 function imcLabel(imc: number) {
-  if (imc < 18.5) return { txt: 'Abaixo do peso', cor: '#3b82f6' }
+  if (imc < 18.5) return { txt: 'Abaixo do peso', cor: '#3a68a8' }
   if (imc < 25)   return { txt: 'Peso normal',    cor: '#16a34a' }
-  if (imc < 30)   return { txt: 'Sobrepeso',      cor: '#f59e0b' }
+  if (imc < 30)   return { txt: 'Sobrepeso',      cor: '#c98a1b' }
   if (imc < 35)   return { txt: 'Obesidade I',    cor: '#e8799f' }
   if (imc < 40)   return { txt: 'Obesidade II',   cor: '#ef4444' }
-  return               { txt: 'Obesidade III',  cor: '#dc2626' }
+  return               { txt: 'Obesidade III',  cor: '#b3261e' }
 }
 
 function SectionHeader({ title, open, onToggle }: { title: string; open: boolean; onToggle: () => void }) {

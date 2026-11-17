@@ -23,7 +23,7 @@ export function DeleteTreinoButton({ treinoId, titulo }: { treinoId: string; tit
 
   if (confirming) {
     return (
-      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:'rgba(0,0,0,0.5)'}}>
+      <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{background:'rgba(44,35,37,0.45)'}}>
         <div className="card p-6 max-w-sm w-full shadow-xl animate-slide-up">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-lg bg-red-100 dark:bg-red-900/30">
@@ -49,7 +49,7 @@ export function DeleteTreinoButton({ treinoId, titulo }: { treinoId: string; tit
               onClick={handleDelete}
               disabled={loading}
               className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all"
-              style={{background:'#dc2626'}}
+              style={{background:'#b3261e'}}
             >
               {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
               Deletar

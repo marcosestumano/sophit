@@ -116,7 +116,7 @@ export function ProgressaoAdmin({ userId, treinoId, treinoTitulo, exercicios }: 
                         <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
                         <XAxis dataKey="data" tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
                         <YAxis domain={['auto', 'auto']} tick={{ fontSize: 10, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} width={32} />
-                        <Tooltip contentStyle={{ fontSize: 12 }} formatter={(v: any) => [`${v} kg`, 'Carga']} />
+                        <Tooltip contentStyle={{ fontSize: 13 }} formatter={(v: any) => [`${v} kg`, 'Carga']} />
                         <Line type="monotone" dataKey="carga" stroke="#e8799f" strokeWidth={2} dot={{ fill: '#e8799f', r: 3 }} activeDot={{ r: 5 }} connectNulls />
                       </LineChart>
                     </ResponsiveContainer>

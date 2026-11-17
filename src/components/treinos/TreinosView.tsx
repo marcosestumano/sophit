@@ -104,7 +104,7 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
           <span className="h-14 w-14 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center text-2xl">{letra}</span>
           <div className="min-w-0">
             <p className="text-xs font-medium text-muted-foreground">Próximo · {ex.length} exercícios</p>
-            <p className="text-[26px] leading-tight tracking-[-0.02em] text-foreground truncate">{treino.titulo}</p>
+            <p className="text-[28px] leading-tight tracking-[-0.02em] text-foreground truncate">{treino.titulo}</p>
           </div>
         </div>
         <p className="mt-3 mb-4 text-muted-foreground">

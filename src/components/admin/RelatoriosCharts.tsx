@@ -37,7 +37,7 @@ function GaugeMeter({ value, label, color }: { value: number; label: string; col
   const angle = -180 + (value / 100) * 180
 
   const getColor = (v: number) => {
-    if (v >= 70) return '#22c55e'
+    if (v >= 70) return '#3f7a52'
     if (v >= 40) return '#e8799f'
     return '#ef4444'
   }
@@ -83,7 +83,7 @@ function GaugeMeter({ value, label, color }: { value: number; label: string; col
 
 function ScoreBar({ value, max = 100 }: { value: number; max?: number }) {
   const pct = Math.min(100, (value / max) * 100)
-  const color = pct >= 70 ? '#22c55e' : pct >= 40 ? '#e8799f' : '#ef4444'
+  const color = pct >= 70 ? '#3f7a52' : pct >= 40 ? '#e8799f' : '#ef4444'
   return (
     <div className="flex items-center gap-2">
       <div className="flex-1 h-2 rounded-full bg-muted overflow-hidden">
@@ -143,7 +143,7 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
             <p className="text-xs text-muted-foreground mt-1">{alunosEngajamento.length} alunos avaliados</p>
           </div>
           <div className="flex flex-col items-center">
-            <GaugeMeter value={taxaAvaliacao} label="Alunos com avaliação física" color="#22c55e" />
+            <GaugeMeter value={taxaAvaliacao} label="Alunos com avaliação física" color="#3f7a52" />
             <p className="text-xs text-muted-foreground mt-1">{totalRegistros} registros de carga</p>
           </div>
         </div>
@@ -157,13 +157,13 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
         <ResponsiveContainer width="100%" height={220}>
           <BarChart data={atividadeMensal} barGap={4}>
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" vertical={false} />
-            <XAxis dataKey="mes" tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
-            <YAxis tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} width={24} />
+            <XAxis dataKey="mes" tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} />
+            <YAxis tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }} axisLine={false} tickLine={false} width={24} />
             <Tooltip content={<CustomTooltip />} />
-            <Legend wrapperStyle={{ fontSize: 12, paddingTop: 12 }} />
+            <Legend wrapperStyle={{ fontSize: 13, paddingTop: 12 }} />
             <Bar dataKey="anamneses" name="Anamneses" fill="#e8799f" radius={[4,4,0,0]} />
             <Bar dataKey="avaliacoes" name="Avaliações" fill="#3a68a8" radius={[4,4,0,0]} />
-            <Bar dataKey="registros" name="Registros de carga" fill="#3b82f6" radius={[4,4,0,0]} />
+            <Bar dataKey="registros" name="Registros de carga" fill="#3a68a8" radius={[4,4,0,0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
@@ -289,20 +289,20 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
             <ResponsiveContainer width="100%" height={240}>
               <RadarChart data={radarData}>
                 <PolarGrid stroke="hsl(var(--border))" />
-                <PolarAngleAxis dataKey="subject" tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }} />
+                <PolarAngleAxis dataKey="subject" tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }} />
                 <PolarRadiusAxis domain={[0, 100]} tick={false} axisLine={false} />
                 <Radar name={topAluno.nome} dataKey="value" stroke="#e8799f" fill="#e8799f" fillOpacity={0.25} strokeWidth={2} />
-                <Tooltip contentStyle={{ fontSize: 12 }} formatter={(v: any) => [`${v}`, 'Score']} />
+                <Tooltip contentStyle={{ fontSize: 13 }} formatter={(v: any) => [`${v}`, 'Score']} />
               </RadarChart>
             </ResponsiveContainer>
             <div className="grid grid-cols-2 gap-3 w-full lg:w-64 flex-shrink-0">
               {[
                 { label: 'Score total', value: `${topAluno.score}/100`, color: '#e8799f' },
-                { label: 'Anamneses', value: topAluno.anamneses, color: '#3b82f6' },
+                { label: 'Anamneses', value: topAluno.anamneses, color: '#3a68a8' },
                 { label: 'Treinos', value: topAluno.treinos, color: '#3a68a8' },
-                { label: 'Avaliações', value: topAluno.avaliacoes, color: '#22c55e' },
-                { label: 'Reg. de carga', value: topAluno.registrosCarga, color: '#f59e0b' },
-                { label: 'Evolução força', value: topAluno.evolucaoCargaMedia !== null ? `${topAluno.evolucaoCargaMedia > 0 ? '+' : ''}${topAluno.evolucaoCargaMedia.toFixed(0)}%` : '—', color: '#22c55e' },
+                { label: 'Avaliações', value: topAluno.avaliacoes, color: '#3f7a52' },
+                { label: 'Reg. de carga', value: topAluno.registrosCarga, color: '#c98a1b' },
+                { label: 'Evolução força', value: topAluno.evolucaoCargaMedia !== null ? `${topAluno.evolucaoCargaMedia > 0 ? '+' : ''}${topAluno.evolucaoCargaMedia.toFixed(0)}%` : '—', color: '#3f7a52' },
               ].map(item => (
                 <div key={item.label} className="p-3 rounded-lg bg-muted/40 text-center">
                   <p className="text-lg font-medium" style={{ color: item.color }}>{item.value}</p>

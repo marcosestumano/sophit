@@ -101,7 +101,7 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
   return (
     <div className="space-y-6">
       {(saving || saveError) && (
-        <div className="flex items-center gap-2 text-xs" style={{ color: saveError ? '#dc2626' : '#d45f88' }}>
+        <div className="flex items-center gap-2 text-xs" style={{ color: saveError ? '#b3261e' : '#d45f88' }}>
           {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
           {saveError ?? 'Salvando nova ordem...'}
         </div>

@@ -53,13 +53,13 @@ export function EvolutionCharts({ avaliacoes }: EvolutionChartsProps) {
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               domain={['auto', 'auto']}
-              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
               tickLine={false}
               width={40}
@@ -68,9 +68,9 @@ export function EvolutionCharts({ avaliacoes }: EvolutionChartsProps) {
             <Line
               type="monotone"
               dataKey="Peso"
-              stroke="#0d9178"
+              stroke="#3f7a52"
               strokeWidth={2.5}
-              dot={{ fill: '#0d9178', r: 4 }}
+              dot={{ fill: '#3f7a52', r: 4 }}
               activeDot={{ r: 6 }}
               connectNulls
             />
@@ -86,37 +86,37 @@ export function EvolutionCharts({ avaliacoes }: EvolutionChartsProps) {
             <CartesianGrid strokeDasharray="3 3" className="stroke-border" />
             <XAxis
               dataKey="date"
-              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
               tickLine={false}
             />
             <YAxis
               domain={['auto', 'auto']}
-              tick={{ fontSize: 12, fill: 'hsl(var(--muted-foreground))' }}
+              tick={{ fontSize: 13, fill: 'hsl(var(--muted-foreground))' }}
               axisLine={false}
               tickLine={false}
               width={40}
             />
             <Tooltip content={<CustomTooltip />} />
             <Legend
-              wrapperStyle={{ fontSize: '12px' }}
+              wrapperStyle={{ fontSize: '13px' }}
             />
             <Line
               type="monotone"
               dataKey="Gordura"
-              stroke="#f59e0b"
+              stroke="#c98a1b"
               strokeWidth={2.5}
-              dot={{ fill: '#f59e0b', r: 4 }}
+              dot={{ fill: '#c98a1b', r: 4 }}
               activeDot={{ r: 6 }}
               connectNulls
             />
             <Line
               type="monotone"
               dataKey="Massa Magra"
-              stroke="#3b82f6"
+              stroke="#3a68a8"
               strokeWidth={2.5}
               strokeDasharray="5 5"
-              dot={{ fill: '#3b82f6', r: 4 }}
+              dot={{ fill: '#3a68a8', r: 4 }}
               activeDot={{ r: 6 }}
               connectNulls
             />

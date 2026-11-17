@@ -85,11 +85,11 @@ export function AvaliacaoResumo({ avaliacoes }: Props) {
   const compPrev = prev ? (prev.composicao ?? {}) : {}
 
   const imcLabel = (v: number) => {
-    if (v < 18.5) return { txt:'Abaixo do peso', cor:'#3b82f6' }
+    if (v < 18.5) return { txt:'Abaixo do peso', cor:'#3a68a8' }
     if (v < 25)   return { txt:'Normal',          cor:'#16a34a' }
-    if (v < 30)   return { txt:'Sobrepeso',        cor:'#f59e0b' }
+    if (v < 30)   return { txt:'Sobrepeso',        cor:'#c98a1b' }
     if (v < 35)   return { txt:'Obesidade I',      cor:'#e8799f' }
-    return             { txt:'Obesidade II+',    cor:'#dc2626' }
+    return             { txt:'Obesidade II+',    cor:'#b3261e' }
   }
   const imcVal = latest.imc ?? (comp.imc ? parseFloat(comp.imc) : null)
   const imcInfo = imcVal ? imcLabel(imcVal) : null

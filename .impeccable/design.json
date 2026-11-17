@@ -1,0 +1,90 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-17T02:20:00Z",
+  "title": "Design System: Sophit",
+  "extensions": {
+    "colorMeta": {
+      "ground": { "role": "neutral", "displayName": "Off-white quente", "tonalRamp": ["#2c2325", "#4a4042", "#6d6566", "#9c9393", "#c9c0bf", "#e6dddc", "#f1e7e6", "#f8f3f2"] },
+      "ink": { "role": "neutral", "displayName": "Tinta", "tonalRamp": ["#1a1415", "#2c2325", "#3a3032", "#4a4042", "#6d6566", "#9c9393", "#c9c0bf", "#f8f3f2"] },
+      "rose": { "role": "primary", "displayName": "Rosa Sophit", "tonalRamp": ["#5e1f35", "#7e2c47", "#a3405f", "#c75a80", "#e8799f", "#f294b5", "#f8b4cc", "#fce7ef"] },
+      "dieta": { "role": "accent", "displayName": "Verde dieta", "tonalRamp": ["#173322", "#22472f", "#2f5f3e", "#3f7a52", "#5a9a6d", "#7fb894", "#b3d6bf", "#e3f0e7"] },
+      "cardio": { "role": "accent", "displayName": "Azul cardio", "tonalRamp": ["#14284a", "#1e3a66", "#2a5087", "#3a68a8", "#5a86c2", "#8fb2e3", "#bfd3f0", "#e6eefa"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Número", "purpose": "kcal, minutos, peso no resumo do dia." },
+      "title": { "displayName": "Título", "purpose": "Título de tela." },
+      "section": { "displayName": "Seção", "purpose": "Títulos de seção dentro de uma tela." },
+      "label": { "displayName": "Rótulo", "purpose": "Metadados, contagens, datas." }
+    },
+    "shadows": [],
+    "motion": [
+      { "name": "ease", "value": "cubic-bezier(.2,.8,.2,1)", "purpose": "Hover, press e transições de estado (150 ms entrada, 90 ms press)." },
+      { "name": "ease-enter", "value": "cubic-bezier(.22,1,.36,1)", "purpose": "Entrada única do título da tela (700 ms)." }
+    ],
+    "breakpoints": [
+      { "name": "lg", "value": "1024px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Botão principal",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "A ação principal da tela; um por tela.",
+      "html": "<button class=\"ds-btn-primary\">Iniciar treino</button>",
+      "css": ".ds-btn-primary{background:#e8799f;color:#2c2325;height:48px;padding:0 20px;border:1px solid transparent;border-radius:12px;font:500 16px Outfit,system-ui,sans-serif;cursor:pointer;transition:transform 150ms cubic-bezier(.2,.8,.2,1),background-color 150ms}.ds-btn-primary:hover{background:#e0688f;transform:translateY(-1px)}.ds-btn-primary:active{transform:translateY(1px) scale(.985)}.ds-btn-primary:focus-visible{outline:2px solid #d45f88;outline-offset:2px}"
+    },
+    {
+      "name": "Botão secundário",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Ações de apoio.",
+      "html": "<button class=\"ds-btn-secondary\">Adicionar refeição</button>",
+      "css": ".ds-btn-secondary{background:#fffdfc;color:#2c2325;height:48px;padding:0 20px;border:1px solid #dcd5d4;border-radius:12px;font:500 16px Outfit,system-ui,sans-serif;cursor:pointer;transition:transform 150ms cubic-bezier(.2,.8,.2,1),background-color 150ms}.ds-btn-secondary:hover{background:#f1e7e6;transform:translateY(-1px)}.ds-btn-secondary:focus-visible{outline:2px solid #d45f88;outline-offset:2px}"
+    },
+    {
+      "name": "Cartão",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Contêiner padrão; sobe 2 px quando é clicável.",
+      "html": "<a class=\"ds-card\" href=\"#\"><span class=\"ds-card-t\">59 kg</span><span class=\"ds-card-m\">Avaliação de 12 de out</span></a>",
+      "css": ".ds-card{display:flex;flex-direction:column;gap:2px;background:#fffdfc;border:1px solid #dcd5d4;border-radius:24px;padding:16px;color:#2c2325;text-decoration:none;font-family:Outfit,system-ui,sans-serif;transition:transform 150ms cubic-bezier(.2,.8,.2,1)}.ds-card:hover{transform:translateY(-2px)}.ds-card-t{font-size:28px;letter-spacing:-.03em;line-height:1.1}.ds-card-m{font-size:13px;font-weight:500;color:#6d6566}"
+    },
+    {
+      "name": "Resumo do dia",
+      "kind": "custom",
+      "refersTo": "summary-panel",
+      "description": "O único painel escuro da tela inicial.",
+      "html": "<section class=\"ds-panel\"><p class=\"ds-panel-l\">Hoje · dieta</p><p class=\"ds-panel-n\">1.081 <span>de 1.437 kcal</span></p><div class=\"ds-panel-bar\"><i></i></div></section>",
+      "css": ".ds-panel{background:#2c2325;color:#f8f3f2;border-radius:24px;padding:20px;font-family:Outfit,system-ui,sans-serif}.ds-panel-l{margin:0;font-size:13px;font-weight:500;opacity:.7}.ds-panel-n{margin:8px 0 0;font-size:44px;line-height:1;letter-spacing:-.04em}.ds-panel-n span{font-size:18px;opacity:.7;letter-spacing:0}.ds-panel-bar{margin-top:16px;height:6px;border-radius:999px;background:rgba(128,118,120,.35)}.ds-panel-bar i{display:block;width:75%;height:100%;border-radius:999px;background:#e8799f}"
+    },
+    {
+      "name": "Chip de dia",
+      "kind": "chip",
+      "refersTo": "day-chip",
+      "description": "Dia da semana no calendário seg–dom.",
+      "html": "<button class=\"ds-day\"><span>Seg</span><b>16</b></button><button class=\"ds-day ds-day-on\"><span>Ter</span><b>17</b></button>",
+      "css": ".ds-day{width:42px;height:72px;border-radius:16px;border:1px solid #dcd5d4;background:#fffdfc;color:#2c2325;display:inline-flex;flex-direction:column;align-items:center;justify-content:center;margin-right:6px;font-family:Outfit,system-ui,sans-serif;cursor:pointer}.ds-day span{font-size:13px;font-weight:500;color:#6d6566}.ds-day b{font-weight:400;font-size:18px}.ds-day-on{background:#2c2325;border-color:#2c2325;color:#f8f3f2}.ds-day-on span{color:#b9b0b0}"
+    },
+    {
+      "name": "Campo de texto",
+      "kind": "input",
+      "refersTo": "input",
+      "description": "Campos de formulário (16 px para evitar zoom no iPhone).",
+      "html": "<input class=\"ds-input\" placeholder=\"Ex: Supino reto\">",
+      "css": ".ds-input{height:44px;width:240px;padding:0 14px;border:1px solid #d1c9c8;border-radius:12px;background:#fffdfc;color:#2c2325;font:400 16px Outfit,system-ui,sans-serif;outline:none}.ds-input:focus{border-color:#d45f88}"
+    }
+  ],
+  "narrative": {
+    "northStar": "Neutro para quem está com pressa",
+    "overview": "Interface quase toda neutra; o rosa pastel marca a próxima ação e o que já foi feito. Um bloco escuro por tela concentra o resumo do dia.",
+    "keyCharacteristics": ["Outfit 400/500", "Rosa só como acento", "Fio de 1 px em vez de sombra", "Toques de 44 px", "Um botão cheio por tela"],
+    "rules": [
+      { "name": "Rosa é acento", "body": "Rosa pastel só no botão principal, no item ativo e em conquistas; texto em rosa usa rose-text.", "section": "colors" },
+      { "name": "Peso não é hierarquia", "body": "Títulos em 400; tamanho e espaço criam a hierarquia.", "section": "typography" },
+      { "name": "Plano", "body": "Profundidade por fio e contraste de superfície, não por sombra.", "section": "elevation" }
+    ],
+    "dos": ["Um botão cheio por tela", "Texto de leitura em 16 px", "Foco visível em rosa"],
+    "donts": ["Degradês e texto em degradê", "Violeta ou lilás", "Peso 600/700", "Caixa alta espaçada", "Emoji como ícone"]
+  }
+}

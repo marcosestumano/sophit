@@ -90,7 +90,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
   return (
     <div
       className="fixed inset-0 z-50 flex items-start justify-center p-4 overflow-y-auto"
-      style={{ background: 'rgba(0,0,0,0.7)' }}
+      style={{ background: 'rgba(44,35,37,0.45)' }}
       onClick={(e) => { if (e.target === e.currentTarget) onClose() }}
     >
       <div className="card w-full max-w-2xl my-4 shadow-2xl animate-slide-up">

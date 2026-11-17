@@ -45,7 +45,7 @@ export function SplashScreen() {
               key={i}
               className="font-normal select-none"
               style={{
-                fontSize: 'clamp(2.5rem, 8vw, 4rem)',
+                fontSize: 'clamp(2.75rem, 8vw, 4rem)',
                 opacity: phase === 'enter' ? 0 : 1,
                 transform: phase === 'enter' ? 'translateY(20px)' : 'translateY(0)',
                 transition: `opacity 0.4s ease-out ${0.1 + i * 0.07}s, transform 0.4s cubic-bezier(0.22,1,0.36,1) ${0.1 + i * 0.07}s`,

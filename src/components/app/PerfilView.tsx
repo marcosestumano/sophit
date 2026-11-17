@@ -57,7 +57,7 @@ export function PerfilView({ profile }: { profile: Profile }) {
             </button>
           </div>
         ) : (
-          <h1 className="enter mt-4 text-[30px] leading-tight font-normal tracking-[-0.03em] text-foreground">{nome || 'Sem nome'}</h1>
+          <h1 className="enter mt-4 text-[28px] leading-tight font-normal tracking-[-0.03em] text-foreground">{nome || 'Sem nome'}</h1>
         )}
         <p className="enter-2 text-muted-foreground">{profile.email}</p>
         <p className="text-xs font-medium text-muted-foreground mt-1">

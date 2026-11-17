@@ -44,7 +44,7 @@ export function DeleteUserButton({ userId, userName, userEmail, redirectAfter = 
     return (
       <div
         className="fixed inset-0 z-50 flex items-center justify-center p-4"
-        style={{ background: 'rgba(0,0,0,0.6)' }}
+        style={{ background: 'rgba(44,35,37,0.45)' }}
         onClick={(e) => { if (e.target === e.currentTarget) setConfirming(false) }}
       >
         <div className="card p-6 max-w-sm w-full shadow-2xl animate-slide-up">
@@ -88,7 +88,7 @@ export function DeleteUserButton({ userId, userName, userEmail, redirectAfter = 
               onClick={handleDelete}
               disabled={loading}
               className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2 text-sm font-medium text-white transition-all disabled:opacity-50"
-              style={{ background: '#dc2626' }}
+              style={{ background: '#b3261e' }}
             >
               {loading
                 ? <Loader2 className="h-4 w-4 animate-spin" />
