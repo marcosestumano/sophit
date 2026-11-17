@@ -4,18 +4,20 @@ import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
 import { Dumbbell, Calendar, Target, TrendingUp } from 'lucide-react'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
+import { sortTreinos } from '@/lib/utils'
 
 export default async function TreinosPage() {
   const supabase = createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
-  const { data: treinos } = await supabase
+  const { data: treinosRaw } = await supabase
     .from('treinos')
     .select('*')
     .eq('user_id', user.id)
     .order('data_atribuicao', { ascending: true })
     .order('titulo', { ascending: true })
+  const treinos = treinosRaw ? sortTreinos(treinosRaw) : null
 
   const ativos = treinos?.filter(t => t.ativo) ?? []
   const inativos = treinos?.filter(t => !t.ativo) ?? []

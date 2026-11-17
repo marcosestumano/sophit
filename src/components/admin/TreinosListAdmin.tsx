@@ -1,8 +1,10 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { GripVertical } from 'lucide-react'
+import { useState, useRef, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
+import { GripVertical, ChevronUp, ChevronDown, Loader2 } from 'lucide-react'
 import { TreinoCardAdmin } from '@/components/admin/TreinoCardAdmin'
+import { createClient } from '@/lib/supabase/client'
 
 interface Exercicio {
   nome: string; series: number; reps: string; carga?: string; observacoes?: string
@@ -10,49 +12,109 @@ interface Exercicio {
 interface Treino {
   id: string; titulo: string; descricao: string | null
   lista_exercicios: Exercicio[]; data_atribuicao: string; ativo: boolean; user_id: string
+  ordem?: number | null
 }
 interface Props { treinos: Treino[]; userId: string }
 
 export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
+  const supabase = createClient()
+  const router = useRouter()
   const [items, setItems] = useState<Treino[]>(initialTreinos)
+  const [saving, setSaving] = useState(false)
+  const [saveError, setSaveError] = useState<string | null>(null)
   const dragIndex = useRef<number | null>(null)
+  const dragOverRef = useRef<number | null>(null)
   const [dragActive, setDragActive] = useState<number | null>(null)
   const [dragOver, setDragOver] = useState<number | null>(null)
 
-  function onDragStart(i: number) {
+  // Mantém a lista em sincronia quando o servidor manda dados novos (novo treino, edição, exclusão)
+  useEffect(() => { setItems(initialTreinos) }, [initialTreinos])
+
+  async function persistOrder(next: Treino[], previous: Treino[]) {
+    setItems(next)
+    setSaving(true)
+    setSaveError(null)
+    const results = await Promise.all(
+      next.map((t, i) => supabase.from('treinos').update({ ordem: i }).eq('id', t.id))
+    )
+    setSaving(false)
+    const failed = results.find(r => r.error)
+    if (failed?.error) {
+      console.error('Erro ao salvar ordem dos treinos:', failed.error)
+      setItems(previous)
+      setSaveError(
+        failed.error.message?.includes('ordem')
+          ? 'Coluna "ordem" não existe no banco. Rode a migration 002_treinos_ordem.sql no Supabase.'
+          : 'Não foi possível salvar a nova ordem. Tente novamente.'
+      )
+      return
+    }
+    router.refresh()
+  }
+
+  function reorder(from: number, to: number) {
+    if (from === to || to < 0 || to >= items.length || saving) return
+    const previous = items
+    const next = [...items]
+    const [moved] = next.splice(from, 1)
+    next.splice(to, 0, moved)
+    persistOrder(next, previous)
+  }
+
+  function onDragStart(e: React.DragEvent, i: number) {
     dragIndex.current = i
-    setDragActive(i)
+    e.dataTransfer.effectAllowed = 'move'
+    // Firefox exige dados no dataTransfer para iniciar o drag
+    try { e.dataTransfer.setData('text/plain', String(i)) } catch {}
+    // Adia o re-render para não cancelar o drag em alguns navegadores
+    requestAnimationFrame(() => setDragActive(i))
   }
 
   function onDragEnter(i: number) {
-    if (dragIndex.current === null || dragIndex.current === i) return
+    if (dragIndex.current === null) return
+    dragOverRef.current = i
     setDragOver(i)
   }
 
-  function onDragEnd() {
-    if (dragIndex.current !== null && dragOver !== null && dragIndex.current !== dragOver) {
-      const next = [...items]
-      const [moved] = next.splice(dragIndex.current, 1)
-      next.splice(dragOver, 0, moved)
-      setItems(next)
-    }
+  function finishDrag() {
+    const from = dragIndex.current
+    const to = dragOverRef.current
     dragIndex.current = null
+    dragOverRef.current = null
     setDragActive(null)
     setDragOver(null)
+    if (from !== null && to !== null) reorder(from, to)
+  }
+
+  function onDrop(e: React.DragEvent) {
+    e.preventDefault()
+    finishDrag()
+  }
+
+  function onDragEnd() {
+    // Se o drop já tratou, dragIndex é null e nada acontece
+    if (dragIndex.current !== null) finishDrag()
   }
 
   if (items.length === 0) return null
 
   return (
     <div className="space-y-6">
+      {(saving || saveError) && (
+        <div className="flex items-center gap-2 text-xs" style={{ color: saveError ? '#dc2626' : '#ea580c' }}>
+          {saving && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+          {saveError ?? 'Salvando nova ordem...'}
+        </div>
+      )}
       {items.map((t, i) => (
         <div
           key={t.id}
-          draggable
-          onDragStart={() => onDragStart(i)}
+          draggable={!saving}
+          onDragStart={e => onDragStart(e, i)}
           onDragEnter={() => onDragEnter(i)}
           onDragEnd={onDragEnd}
-          onDragOver={e => e.preventDefault()}
+          onDragOver={e => { e.preventDefault(); e.dataTransfer.dropEffect = 'move' }}
+          onDrop={onDrop}
           className="transition-all duration-150"
           style={{
             opacity: dragActive === i ? 0.35 : 1,
@@ -74,9 +136,27 @@ export function TreinosListAdmin({ treinos: initialTreinos, userId }: Props) {
             title="Arraste para reordenar"
           >
             <GripVertical className="h-4 w-4" style={{ color: '#ea580c' }} />
-            <span className="text-xs font-medium" style={{ color: '#ea580c' }}>
+            <span className="flex-1 text-xs font-medium" style={{ color: '#ea580c' }}>
               {i + 1}º treino — arraste para reordenar
             </span>
+            <button
+              type="button"
+              onClick={() => reorder(i, i - 1)}
+              disabled={i === 0 || saving}
+              className="p-1 rounded hover:bg-orange-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Mover para cima"
+            >
+              <ChevronUp className="h-4 w-4" style={{ color: '#ea580c' }} />
+            </button>
+            <button
+              type="button"
+              onClick={() => reorder(i, i + 1)}
+              disabled={i === items.length - 1 || saving}
+              className="p-1 rounded hover:bg-orange-500/10 disabled:opacity-30 disabled:cursor-not-allowed"
+              title="Mover para baixo"
+            >
+              <ChevronDown className="h-4 w-4" style={{ color: '#ea580c' }} />
+            </button>
           </div>
 
           {/* Card wrapper */}

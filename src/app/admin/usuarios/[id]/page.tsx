@@ -10,6 +10,7 @@ import { DeleteUserButton } from '@/components/admin/DeleteUserButton'
 import { FotosProgresso } from '@/components/FotosProgresso'
 import { TreinoCardAdmin } from '@/components/admin/TreinoCardAdmin'
 import { TreinosListAdmin } from '@/components/admin/TreinosListAdmin'
+import { sortTreinos } from '@/lib/utils'
 
 export default async function UserProfilePage({ params }: { params: { id: string } }) {
   const supabase = createClient()
@@ -78,7 +79,7 @@ export default async function UserProfilePage({ params }: { params: { id: string
               + Novo treino
             </Link>
           </div>
-          <TreinosListAdmin treinos={treinos} userId={params.id} />
+          <TreinosListAdmin treinos={sortTreinos(treinos)} userId={params.id} />
         </div>
       )}
 
