@@ -25,6 +25,7 @@ export default async function DashboardPage() {
   const plano = planoRes.data?.[0] ?? null
   let refeicoes: any[] = []
   let checks: any[] = []
+  let dietaErro = !!planoRes.error
   if (plano) {
     const [r, c] = await Promise.all([
       supabase.from('dieta_refeicoes').select('*').eq('plano_id', plano.id),
@@ -32,6 +33,18 @@ export default async function DashboardPage() {
     ])
     refeicoes = r.data ?? []
     checks = c.data ?? []
+    dietaErro = dietaErro || !!r.error || !!c.error
+  }
+
+  // Áreas que não carregaram: a Home mostra erro em vez de "vazio"
+  const falhas = [
+    (treinosRes.error || progRes.error) && 'treino',
+    dietaErro && 'dieta',
+    (cardioPRes.error || cardioRRes.error) && 'cardio',
+    avalRes.error && 'progresso',
+  ].filter(Boolean) as ('treino' | 'dieta' | 'cardio' | 'progresso')[]
+  for (const [nome, r] of Object.entries({ treinosRes, progRes, planoRes, cardioPRes, cardioRRes, avalRes })) {
+    if (r.error) console.error(`[home] ${nome}:`, r.error.message)
   }
 
   const nome = (profileRes.data?.full_name ?? profileRes.data?.email ?? 'Aluno').split(' ')[0]
@@ -47,6 +60,7 @@ export default async function DashboardPage() {
       cardioPrescricoes={cardioPRes.data ?? []}
       cardioRegistros={cardioRRes.data ?? []}
       avaliacoes={avalRes.data ?? []}
+      falhas={falhas}
     />
   )
 }

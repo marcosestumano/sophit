@@ -1,10 +1,12 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { useMemo, useState, useTransition } from 'react'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Flame, Dumbbell, Utensils, HeartPulse, ArrowRight, Play, Check, Scale, ChevronRight, Droplets } from 'lucide-react'
+import { Flame, Dumbbell, Utensils, HeartPulse, ArrowRight, Play, Check, Scale, Droplets, Info, RotateCw, Loader2 } from 'lucide-react'
+import { Sheet } from '@/components/app/Sheet'
 import { AppScreen, SectionTitle, ProgressBar, IconChip, CORES } from '@/components/app/AppShell'
 import { dateKey, weekDays, DIAS_CURTOS, currentStreak, bestStreak, letraTreino, parseKey } from '@/lib/dates'
 import { somaMacros, round, ordenarRefeicoes } from '@/lib/dieta'
@@ -23,6 +25,7 @@ interface Props {
   cardioPrescricoes: CardioPrescricao[]
   cardioRegistros: { id: string; data: string; tipo: string; duracao_min: number | null }[]
   avaliacoes: { peso: number | null; percentual_gordura: number | null; created_at: string }[]
+  falhas?: ('treino' | 'dieta' | 'cardio' | 'progresso')[]
 }
 
 /** Próximo treino da rotação A → B → C, considerando o que foi feito antes de `key`. */
@@ -43,6 +46,10 @@ export function HomeView(p: Props) {
   const [tab, setTab] = useState<Tab>(p.treinos.length ? 'treino' : p.plano ? 'dieta' : 'cardio')
 
   const refeicoes = useMemo(() => ordenarRefeicoes(p.refeicoes), [p.refeicoes])
+  const falhas = new Set(p.falhas ?? [])
+  const router = useRouter()
+  const [recarregando, startRecarregar] = useTransition()
+  const [regrasOpen, setRegrasOpen] = useState(false)
 
   const dados = useMemo(() => {
     const treinoDays = new Set(p.progressoes.map(x => x.data_registro))
@@ -93,13 +100,28 @@ export function HomeView(p: Props) {
         </div>
       </header>
 
-      {/* Sequência */}
-      <div className="app-card p-4 mt-5 flex items-center gap-4">
+      {falhas.size > 0 && (
+        <div role="alert" className="app-card mt-5 p-4 flex items-start gap-3 border-destructive/40">
+          <div className="flex-1">
+            <p className="font-medium text-foreground">Não conseguimos carregar tudo</p>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {Array.from(falhas).map(f => ({ treino: 'treinos', dieta: 'dieta', cardio: 'cardio', progresso: 'avaliações' }[f])).join(', ')} ficaram de fora.
+              Confira a conexão e tente de novo.
+            </p>
+          </div>
+          <button onClick={() => startRecarregar(() => router.refresh())} disabled={recarregando} className="btn-secondary flex-shrink-0">
+            {recarregando ? <Loader2 className="h-4 w-4 animate-spin" /> : <RotateCw className="h-4 w-4" strokeWidth={1.75} />} Tentar de novo
+          </button>
+        </div>
+      )}
+
+      {/* Sequência: toque para ver como cada uma é contada */}
+      <button onClick={() => setRegrasOpen(true)} aria-haspopup="dialog" className="lift app-card w-full text-left p-4 mt-5 flex items-center gap-4">
         <div className="flex items-center gap-3 flex-1 min-w-0">
           <IconChip icon={Flame} color="var(--rose-text)" tint={CORES.treinoTint} size={48} />
           <div className="min-w-0">
-            <p className="text-[28px] leading-[1.1] tracking-[-0.03em] text-foreground">{dias(streak)}</p>
-            <p className="text-xs font-medium text-muted-foreground">Sequência atual · recorde {recorde}</p>
+            <p className="text-[28px] leading-[1.1] tracking-[-0.03em] text-foreground">{dias(streak)} <span className="text-base text-muted-foreground tracking-normal">seguidos</span></p>
+            <p className="text-xs font-medium text-muted-foreground flex items-center gap-1">Com alguma atividade · recorde {recorde} <Info className="h-3.5 w-3.5" strokeWidth={1.75} /></p>
           </div>
         </div>
         <div className="w-px self-stretch bg-border" />
@@ -108,7 +130,18 @@ export function HomeView(p: Props) {
           <StreakRow icon={Dumbbell} label="Treino" v={sTreino} />
           <StreakRow icon={HeartPulse} label="Cardio" v={sCardio} />
         </div>
-      </div>
+      </button>
+
+      <Sheet open={regrasOpen} onClose={() => setRegrasOpen(false)} title="Como as sequências contam">
+        <dl className="space-y-4">
+          <Regra t="Sequência geral" d="Dias seguidos em que você fez pelo menos uma coisa: registrou carga no treino, marcou todas as refeições ou registrou um cardio." />
+          <Regra t="Treino" d="Dias seguidos com pelo menos uma carga registrada." />
+          <Regra t="Dieta" d="Dias seguidos com todas as refeições do plano marcadas como feitas." />
+          <Regra t="Cardio" d="Dias seguidos com pelo menos um cardio registrado." />
+          <Regra t="Recorde" d="A maior sequência geral dos últimos 120 dias." />
+        </dl>
+        <p className="text-sm text-muted-foreground mt-5">Se hoje ainda não teve atividade, a sequência conta até ontem. Ela só zera quando um dia inteiro passa em branco.</p>
+      </Sheet>
 
       {/* Semana */}
       <div className="flex justify-between mt-4">
@@ -144,9 +177,11 @@ export function HomeView(p: Props) {
       <section aria-label={`Resumo de ${selLabel}`} className="app-panel mt-4 p-5">
         <p className="text-xs font-medium opacity-70">{selLabel} · {TABS[tab].titulo.toLowerCase()}</p>
         <div className="mt-2">
+          {falhas.has(TAB_FALHA[tab]) ? <Vazio texto={`Não foi possível carregar ${TAB_FALHA_TXT[tab]}. Toque em "Tentar de novo" acima.`} /> : <>
           {tab === 'treino' && <TreinoResumo {...p} selected={selected} todayKey={todayKey} treinoDays={dados.treinoDays} />}
           {tab === 'dieta' && <DietaResumo plano={p.plano} refeicoes={refeicoes} checados={dados.checksPorDia.get(selected)} />}
           {tab === 'cardio' && <CardioResumo prescricoes={p.cardioPrescricoes} registros={p.cardioRegistros} selected={selected} />}
+          </>}
         </div>
         <div className="mt-4 flex items-center justify-between">
           <Link href={TABS[tab].href} className="flex items-center gap-1.5 font-medium min-h-[44px] hover:underline underline-offset-4">
@@ -170,7 +205,9 @@ export function HomeView(p: Props) {
 
       {/* Progresso */}
       <SectionTitle right={<Link href="/dashboard/progresso" className="link-rose min-h-[44px] flex items-center">Ver fotos</Link>}>Progresso</SectionTitle>
-      <ProgressoCard avaliacoes={p.avaliacoes} />
+      {falhas.has('progresso')
+        ? <div className="app-card p-4 text-muted-foreground">Não foi possível carregar sua avaliação física.</div>
+        : <ProgressoCard avaliacoes={p.avaliacoes} />}
       {p.plano?.agua_litros ? (
         <div className="app-card mt-3 p-4 flex items-center gap-4">
           <IconChip icon={Droplets} color={CORES.cardio} tint={CORES.cardioTint} size={48} />
@@ -191,6 +228,15 @@ export function HomeView(p: Props) {
         </>
       )}
     </AppScreen>
+  )
+}
+
+function Regra({ t, d }: { t: string; d: string }) {
+  return (
+    <div>
+      <dt className="font-medium text-foreground">{t}</dt>
+      <dd className="text-muted-foreground">{d}</dd>
+    </div>
   )
 }
 
@@ -217,6 +263,9 @@ const TABS: Record<Tab, { titulo: string; icon: any; href: string; link: string 
   dieta: { titulo: 'Dieta', icon: Utensils, href: '/dashboard/dieta', link: 'Ver dieta' },
   cardio: { titulo: 'Cardio', icon: HeartPulse, href: '/dashboard/cardio', link: 'Ver cardio' },
 }
+
+const TAB_FALHA = { treino: 'treino', dieta: 'dieta', cardio: 'cardio' } as const
+const TAB_FALHA_TXT = { treino: 'seus treinos', dieta: 'sua dieta', cardio: 'seu cardio' } as const
 
 const PANEL_TRACK = 'rgba(128,118,120,0.35)'
 
@@ -371,7 +420,7 @@ function ProgressoCard({ avaliacoes }: { avaliacoes: Props['avaliacoes'] }) {
   }
   const diff = ant?.peso ? Number(ult.peso) - Number(ant.peso) : null
   return (
-    <Link href="/dashboard/progresso" className="lift app-card p-4 flex items-center gap-4">
+    <div className="app-card p-4 flex items-center gap-4">
       <IconChip icon={Scale} color="hsl(var(--foreground))" tint="hsl(var(--muted))" size={48} />
       <div className="flex-1 min-w-0">
         <p className="text-[28px] leading-[1.1] tracking-[-0.03em] text-foreground">{String(ult.peso).replace('.', ',')} kg</p>
@@ -381,7 +430,6 @@ function ProgressoCard({ avaliacoes }: { avaliacoes: Props['avaliacoes'] }) {
           {ult.percentual_gordura != null && ` · ${String(ult.percentual_gordura).replace('.', ',')}% de gordura`}
         </p>
       </div>
-      <ChevronRight className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
-    </Link>
+    </div>
   )
 }
