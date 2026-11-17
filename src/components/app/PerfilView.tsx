@@ -5,7 +5,9 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Shield } from 'lucide-react'
+import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Shield, Smartphone, Share, SquarePlus } from 'lucide-react'
+import { Sheet } from '@/components/app/Sheet'
+import { useInstall, limparCachePwa } from '@/lib/pwa'
 import { createClient } from '@/lib/supabase/client'
 import { AppScreen, IconChip } from '@/components/app/AppShell'
 import type { Profile } from '@/types'
@@ -17,6 +19,8 @@ export function PerfilView({ profile }: { profile: Profile }) {
   const [editando, setEditando] = useState(false)
   const [salvando, setSalvando] = useState(false)
   const [dark, setDark] = useState(false)
+  const { state: instalacao, install } = useInstall()
+  const [iosOpen, setIosOpen] = useState(false)
 
   useEffect(() => { setDark(document.documentElement.classList.contains('dark')) }, [])
 
@@ -37,6 +41,7 @@ export function PerfilView({ profile }: { profile: Profile }) {
   }
 
   async function sair() {
+    await limparCachePwa()
     await supabase.auth.signOut()
     router.push('/login')
   }
@@ -73,6 +78,29 @@ export function PerfilView({ profile }: { profile: Profile }) {
         <Row href="/dashboard/progresso" icon={Camera} t="Fotos de evolução" d="Antes e depois" />
         {profile.role === 'admin' && <Row href="/admin" icon={Shield} t="Painel do administrador" d="Gerenciar alunos" />}
       </div>
+
+      {(instalacao === 'prompt' || instalacao === 'ios') && (
+        <div className="app-card overflow-hidden mt-3">
+          <button onClick={() => (instalacao === 'prompt' ? install() : setIosOpen(true))}
+            className="w-full flex items-center gap-4 px-4 py-3 min-h-[72px] text-left hover:bg-muted/50 transition-colors duration-150">
+            <IconChip icon={Smartphone} color="hsl(var(--foreground))" tint="hsl(var(--muted))" />
+            <span className="flex-1">
+              <span className="block font-medium text-foreground">Instalar o app</span>
+              <span className="block text-sm text-muted-foreground">Abra o Sophit direto da tela inicial, em tela cheia</span>
+            </span>
+            <ChevronRight className="h-5 w-5 text-muted-foreground" strokeWidth={1.75} />
+          </button>
+        </div>
+      )}
+
+      <Sheet open={iosOpen} onClose={() => setIosOpen(false)} title="Instalar no iPhone">
+        <ol className="space-y-4">
+          <li className="flex gap-3"><Share className="h-5 w-5 flex-shrink-0 mt-0.5" strokeWidth={1.75} /><span>No Safari, toque em <b className="font-medium">Compartilhar</b>, na barra de baixo.</span></li>
+          <li className="flex gap-3"><SquarePlus className="h-5 w-5 flex-shrink-0 mt-0.5" strokeWidth={1.75} /><span>Role e toque em <b className="font-medium">Adicionar à Tela de Início</b>.</span></li>
+          <li className="flex gap-3"><Check className="h-5 w-5 flex-shrink-0 mt-0.5" strokeWidth={1.75} /><span>Toque em <b className="font-medium">Adicionar</b>. O Sophit aparece na sua tela inicial.</span></li>
+        </ol>
+        <p className="text-sm text-muted-foreground mt-5">Precisa ser pelo Safari; outros navegadores no iPhone não instalam apps.</p>
+      </Sheet>
 
       <div className="app-card overflow-hidden mt-3">
         <div className="flex items-center gap-4 px-4 py-3 min-h-[72px]">

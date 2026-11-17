@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f8f3f2">
+<title>Sem conexão — Sophit</title>
+<link rel="icon" href="/icons/favicon.svg" type="image/svg+xml">
+<style>
+  *{box-sizing:border-box}
+  html,body{margin:0;height:100%}
+  body{display:flex;align-items:center;justify-content:center;padding:24px;background:#f8f3f2;color:#2c2325;font:400 16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+  main{max-width:360px;text-align:center}
+  img{width:64px;height:64px}
+  h1{margin:20px 0 8px;font-size:28px;font-weight:400;letter-spacing:-.03em;line-height:1.15}
+  p{margin:0;color:#6d6566}
+  button{margin-top:24px;min-height:48px;padding:0 24px;border:1px solid transparent;border-radius:12px;background:#e8799f;color:#2c2325;font:500 16px system-ui,sans-serif;cursor:pointer}
+  button:active{transform:translateY(1px) scale(.985)}
+  button:focus-visible{outline:2px solid #d45f88;outline-offset:2px}
+  @media (prefers-color-scheme: dark){body{background:#201a1b;color:#f8f3f2}p{color:#b9b0b0}}
+</style>
+</head>
+<body>
+<main>
+  <img src="/icons/favicon.svg" alt="">
+  <h1>Você está sem conexão</h1>
+  <p>Seus treinos e registros voltam assim que a internet voltar. Nada do que você salvou foi perdido.</p>
+  <button type="button" onclick="location.reload()">Tentar de novo</button>
+</main>
+</body>
+</html>

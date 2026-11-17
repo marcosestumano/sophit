@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { Sun, Moon, Bell, LogOut, ChevronDown } from 'lucide-react'
 import type { Profile } from '@/types'
+import { limparCachePwa } from '@/lib/pwa'
 
 interface HeaderProps { profile: Profile }
 
@@ -27,6 +28,7 @@ export function Header({ profile }: HeaderProps) {
   }
 
   async function handleLogout() {
+    await limparCachePwa()
     await supabase.auth.signOut()
     router.push('/login')
   }

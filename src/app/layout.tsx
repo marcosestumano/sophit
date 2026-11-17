@@ -4,10 +4,21 @@ import { Outfit } from 'next/font/google'
 
 const outfit = Outfit({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-outfit', display: 'swap' })
 import { SplashProvider } from '@/components/SplashProvider'
+import { PwaRegister } from '@/components/app/PwaRegister'
 
 export const metadata: Metadata = {
   title: 'Sophit — Saúde & Performance',
   description: 'Plataforma SaaS para profissionais de saúde e fitness',
+  applicationName: 'Sophit',
+  appleWebApp: { capable: true, title: 'Sophit', statusBarStyle: 'default' },
+  formatDetection: { telephone: false },
+  icons: {
+    icon: [
+      { url: '/icons/favicon.svg', type: 'image/svg+xml' },
+      { url: '/icons/favicon-32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [{ url: '/icons/apple-touch-icon.png', sizes: '180x180' }],
+  },
 }
 
 export const viewport: Viewport = {
@@ -34,6 +45,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             `,
           }}
         />
+        <PwaRegister />
         <SplashProvider>
           {children}
         </SplashProvider>

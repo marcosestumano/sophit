@@ -7,6 +7,8 @@ colors:
   surface-muted: "#f1e7e6"
   ink: "#2c2325"
   ink-muted: "#6d6566"
+  ground-dark: "#201a1b"
+  ink-muted-dark: "#b9b0b0"
   hairline: "#dcd5d4"
   rose: "#e8799f"
   rose-hover: "#e0688f"
