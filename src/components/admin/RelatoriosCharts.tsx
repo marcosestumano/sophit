@@ -29,54 +29,30 @@ interface Props {
   atividadeMensal: { mes: string; anamneses: number; avaliacoes: number; registros: number }[]
 }
 
-function GaugeMeter({ value, label, color }: { value: number; label: string; color: string }) {
-  const r = 54
-  const circ = 2 * Math.PI * r
-  const half = circ / 2
-  const progress = (value / 100) * half
-  const angle = -180 + (value / 100) * 180
-
-  const getColor = (v: number) => {
-    if (v >= 70) return '#3f7a52'
-    if (v >= 40) return '#e8799f'
-    return '#ef4444'
-  }
-
-  const barColor = getColor(value)
+/**
+ * Medidor semicircular: o traço preenchido é o percentual do comprimento do arco;
+ * o número fica dentro do arco, sem sobrepor nada.
+ */
+function GaugeMeter({ value, label }: { value: number; label: string; color?: string }) {
+  const v = Math.max(0, Math.min(100, Math.round(value)))
+  const cor = v >= 70 ? '#3f7a52' : v >= 40 ? '#e8799f' : '#b3261e'
+  const arco = 'M 16 104 A 84 84 0 0 1 184 104'
+  const L = Math.PI * 84 // comprimento do semicírculo
 
   return (
-    <div className="flex flex-col items-center gap-2">
-      <div className="relative" style={{ width: 130, height: 75 }}>
-        <svg width="130" height="75" viewBox="0 0 130 75">
-          {/* Track */}
-          <path
-            d="M 10 70 A 55 55 0 0 1 120 70"
-            fill="none"
-            stroke="hsl(var(--muted))"
-            strokeWidth="10"
-            strokeLinecap="round"
-          />
-          {/* Progress */}
-          <path
-            d="M 10 70 A 55 55 0 0 1 120 70"
-            fill="none"
-            stroke={barColor}
-            strokeWidth="10"
-            strokeLinecap="round"
-            strokeDasharray={`${(value / 100) * 172} 172`}
-          />
-          {/* Needle */}
-          <g transform={`rotate(${angle}, 65, 70)`}>
-            <line x1="65" y1="70" x2="65" y2="22" stroke={barColor} strokeWidth="2.5" strokeLinecap="round" />
-            <circle cx="65" cy="70" r="5" fill={barColor} />
-          </g>
-          {/* Value */}
-          <text x="65" y="68" textAnchor="middle" fontSize="16" fontWeight="700" fill="hsl(var(--foreground))">
-            {value}%
-          </text>
-        </svg>
-      </div>
-      <p className="text-xs font-medium text-muted-foreground text-center">{label}</p>
+    <div className="flex flex-col items-center gap-2 w-full">
+      <svg viewBox="0 0 200 116" className="w-full max-w-[220px] h-auto" role="img" aria-label={`${label}: ${v}%`}>
+        <path d={arco} fill="none" stroke="hsl(var(--muted))" strokeWidth="14" strokeLinecap="round" />
+        {v > 0 && (
+          <path d={arco} fill="none" stroke={cor} strokeWidth="14" strokeLinecap="round"
+            strokeDasharray={`${(v / 100) * L} ${L}`} className="transition-[stroke-dasharray] duration-700" />
+        )}
+        <text x="100" y="96" textAnchor="middle" fontSize="34" fontWeight="400" letterSpacing="-1"
+          fill="hsl(var(--foreground))" style={{ fontFamily: 'var(--font-outfit), system-ui, sans-serif' }}>
+          {v}%
+        </text>
+      </svg>
+      <p className="text-sm font-medium text-foreground text-center">{label}</p>
     </div>
   )
 }
@@ -107,10 +83,10 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 }
 
 export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, alunosEngajamento, atividadeMensal }: Props) {
-  const totalRegistros = alunosEngajamento.reduce((acc, a) => acc + a.registrosCarga, 0)
   const mediaScore = alunosEngajamento.length
     ? Math.round(alunosEngajamento.reduce((acc, a) => acc + a.score, 0) / alunosEngajamento.length)
     : 0
+  const alunosComAvaliacao = alunosEngajamento.filter(a => a.avaliacoes > 0).length
   const taxaAvaliacao = alunosEngajamento.length
     ? Math.round((alunosEngajamento.filter(a => a.avaliacoes > 0).length / alunosEngajamento.length) * 100)
     : 0
@@ -134,17 +110,17 @@ export function RelatoriosCharts({ taxaResposta, respondidas, totalAnamneses, al
           Medidores de desempenho geral
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center px-2">
             <GaugeMeter value={taxaResposta} label="Taxa de resposta de anamneses" color="#e8799f" />
             <p className="text-xs text-muted-foreground mt-1">{respondidas} de {totalAnamneses} respondidas</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center px-2">
             <GaugeMeter value={mediaScore} label="Score médio de engajamento" color="#3a68a8" />
             <p className="text-xs text-muted-foreground mt-1">{alunosEngajamento.length} alunos avaliados</p>
           </div>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center px-2">
             <GaugeMeter value={taxaAvaliacao} label="Alunos com avaliação física" color="#3f7a52" />
-            <p className="text-xs text-muted-foreground mt-1">{totalRegistros} registros de carga</p>
+            <p className="text-xs text-muted-foreground mt-1">{alunosComAvaliacao} de {alunosEngajamento.length} alunos</p>
           </div>
         </div>
       </div>
