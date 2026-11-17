@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Sun, Moon, Bell, LogOut, ChevronDown } from 'lucide-react'
 import type { Profile } from '@/types'
 import { limparCachePwa } from '@/lib/pwa'
+import { AlternarPainel } from '@/components/app/AlternarPainel'
 
 interface HeaderProps { profile: Profile }
 
@@ -72,11 +73,17 @@ export function Header({ profile }: HeaderProps) {
           {menuOpen && (
             <>
               <div className="fixed inset-0 z-10" onClick={() => setMenuOpen(false)} />
-              <div className="absolute right-0 top-full mt-1 z-20 w-52 card p-1 shadow-lg animate-slide-up">
+              <div className="absolute right-0 top-full mt-1 z-20 w-60 card p-1 shadow-lg animate-slide-up">
                 <div className="px-3 py-2 border-b border-border mb-1">
                   <p className="text-xs text-muted-foreground">Conectado como</p>
                   <p className="text-sm font-medium text-foreground truncate">{profile.email}</p>
                 </div>
+                {profile.role === 'admin' && (
+                  <div className="px-2 pt-1 pb-2 mb-1 border-b border-border" onClick={() => setMenuOpen(false)}>
+                    <p className="px-1 pb-1.5 text-xs text-muted-foreground">Painel</p>
+                    <AlternarPainel profile={profile} compacto />
+                  </div>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 px-3 py-2 text-sm text-destructive hover:bg-muted rounded-md transition-colors"

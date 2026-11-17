@@ -38,7 +38,8 @@ export function Sidebar({ profile }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false)
   const [mobileOpen, setMobileOpen] = useState(false)
   const isAdmin = profile.role === 'admin'
-  const navItems = isAdmin ? adminNavItems : userNavItems
+  // Admin vê o menu de admin só dentro de /admin; em /dashboard ele navega como aluno
+  const navItems = isAdmin && pathname.startsWith('/admin') ? adminNavItems : userNavItems
 
   // ── Swipe gesture ──────────────────────────────────────────
   const touchStartX = useRef<number | null>(null)

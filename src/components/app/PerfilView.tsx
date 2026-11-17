@@ -5,11 +5,12 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Shield, Smartphone, Share, SquarePlus } from 'lucide-react'
+import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Smartphone, Share, SquarePlus } from 'lucide-react'
 import { Sheet } from '@/components/app/Sheet'
 import { useInstall, limparCachePwa } from '@/lib/pwa'
 import { createClient } from '@/lib/supabase/client'
 import { AppScreen, IconChip } from '@/components/app/AppShell'
+import { AlternarPainel } from '@/components/app/AlternarPainel'
 import type { Profile } from '@/types'
 
 export function PerfilView({ profile }: { profile: Profile }) {
@@ -73,10 +74,17 @@ export function PerfilView({ profile }: { profile: Profile }) {
         )}
       </header>
 
+      {profile.role === 'admin' && (
+        <div className="app-card p-4 mt-6">
+          <p className="font-medium text-foreground">Painel</p>
+          <p className="text-sm text-muted-foreground mb-3">Alterne entre a visão de aluno e a gestão dos alunos.</p>
+          <AlternarPainel profile={profile} />
+        </div>
+      )}
+
       <div className="app-card overflow-hidden mt-6">
         <Row href="/dashboard/anamnese" icon={ClipboardList} t="Minhas anamneses" d="Questionários e respostas" />
         <Row href="/dashboard/progresso" icon={Camera} t="Fotos de evolução" d="Antes e depois" />
-        {profile.role === 'admin' && <Row href="/admin" icon={Shield} t="Painel do administrador" d="Gerenciar alunos" />}
       </div>
 
       {(instalacao === 'prompt' || instalacao === 'ios') && (
