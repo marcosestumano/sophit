@@ -6,6 +6,7 @@ import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
+import { useRouter } from 'next/navigation'
 import {
   Plus, Trash2, Dumbbell, Loader2, CheckCircle2,
   GripVertical, ChevronDown, ChevronUp, BookOpen,
@@ -23,6 +24,8 @@ interface Template {
 
 export default function GestorTreinosPage() {
   const supabase = createClient()
+  const router = useRouter()
+  const [erro, setErro] = useState<string | null>(null)
   const [users, setUsers] = useState<Profile[]>([])
   const [templates, setTemplates] = useState<Template[]>([])
   const [loading, setLoading] = useState(false)
@@ -71,12 +74,18 @@ export default function GestorTreinosPage() {
 
   async function onSubmit(data: TreinoFormData) {
     setLoading(true)
+    setErro(null)
     const { data: { user } } = await supabase.auth.getUser()
+    if (!user) {
+      setLoading(false)
+      setErro('Sua sessão expirou. Entre de novo para salvar o treino.')
+      return
+    }
 
     // Salva o treino
     const { error } = await supabase.from('treinos').insert({
       ...data,
-      admin_id: user!.id,
+      admin_id: user.id,
     })
 
     // Salva como template se marcado
@@ -92,7 +101,13 @@ export default function GestorTreinosPage() {
     }
 
     setLoading(false)
-    if (!error) {
+    if (error) {
+      console.error('Erro ao atribuir treino:', error)
+      setErro(`Não foi possível salvar o treino: ${error.message}`)
+      return
+    }
+    {
+      router.refresh()
       setSaved(true)
       reset({
         lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
@@ -328,8 +343,11 @@ export default function GestorTreinosPage() {
               : <Save className="h-4 w-4" />}
             {saved ? 'Treino criado!' : 'Criar e Atribuir Treino'}
           </button>
+          {erro && (
+            <p role="alert" className="text-sm text-destructive">{erro}</p>
+          )}
           {saved && (
-            <span className="text-sm text-green-600 flex items-center gap-1.5">
+            <span className="text-sm text-dieta flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4" />
               {saveAsTemplate ? 'Salvo na biblioteca!' : ''}
             </span>

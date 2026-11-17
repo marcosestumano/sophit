@@ -1,5 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  experimental: {
+    // Sem cache de navegação para páginas dinâmicas: ao voltar para uma tela,
+    // ela sempre mostra o que acabou de ser salvo no Supabase.
+    staleTimes: { dynamic: 0 },
+  },
   eslint: {
     ignoreDuringBuilds: true,
   },

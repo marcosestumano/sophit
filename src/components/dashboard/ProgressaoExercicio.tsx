@@ -54,6 +54,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
   const [loading, setLoading] = useState(false)
   const [saving, setSaving] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [erroSave, setErroSave] = useState<string | null>(null)
   const [form, setForm] = useState({
     carga: exercicio.carga?.replace(/[^0-9.]/g, '') ?? '',
     series: String(exercicio.series),
@@ -82,7 +83,8 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
   async function handleSave() {
     if (!form.carga) return
     setSaving(true)
-    await supabase.from('progressao_exercicios').insert({
+    setErroSave(null)
+    const { error } = await supabase.from('progressao_exercicios').insert({
       user_id: userId,
       treino_id: treinoId,
       exercicio_nome: exercicio.nome,
@@ -93,6 +95,11 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
       data_registro: dateKey(),
     })
     setSaving(false)
+    if (error) {
+      console.error('Erro ao salvar execução:', error)
+      setErroSave('Não foi possível salvar. Confira a conexão e tente de novo.')
+      return
+    }
     setSaved(true)
     fetchHistorico()
     setTimeout(() => setSaved(false), 2500)
@@ -208,6 +215,7 @@ export function ProgressaoExercicio({ exercicio, treinoId, userId, index }: Prop
               {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : saved ? <CheckCircle2 className="h-4 w-4" /> : <Save className="h-4 w-4" />}
               {saved ? 'Salvo!' : 'Salvar execução'}
             </button>
+            {erroSave && <p role="alert" className="form-error">{erroSave}</p>}
           </div>
 
           {/* Gráfico */}
