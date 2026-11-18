@@ -3,10 +3,10 @@
  * - Arquivos estáticos do Next (/_next/static) e ícones: cache primeiro (têm hash no nome)
  * - Supabase, APIs e qualquer requisição que não seja GET: nunca passam pelo cache
  */
-const VERSION = 'sophit-v2'
+const VERSION = 'sophit-v3'
 const STATIC_CACHE = `${VERSION}-static`
 const PAGES_CACHE = `${VERSION}-pages`
-const PRECACHE = ['/offline.html', '/icons/icon-192.png', '/icons/icon-512.png', '/icons/favicon.svg']
+const PRECACHE = ['/offline.html', '/icons/icon-192.png?v=2', '/icons/icon-512.png?v=2', '/icons/favicon.svg?v=2']
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(STATIC_CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting()))
