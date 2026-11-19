@@ -10,7 +10,7 @@ import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
 import { cn } from '@/lib/utils'
-import { agruparBlocos, chaveCheck, infoBloco } from '@/lib/secoes'
+import { agruparBlocos, chaveCheck, infoBloco, numeroBloco } from '@/lib/secoes'
 import { createClient } from '@/lib/supabase/client'
 import { planoDoAluno, mesDoTreino, nomeMes, nomeMesAno } from '@/lib/periodizacao'
 
@@ -245,12 +245,18 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
               estaAberto ? 'border-primary' : 'border-border')}>
             <button type="button" onClick={() => abrir(estaAberto ? null : b.id)} aria-expanded={estaAberto}
               className="w-full flex items-center gap-3 p-4 min-h-[64px] text-left hover:bg-muted/40 transition-colors">
-              <span className={cn('h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 text-base font-medium transition-colors',
-                completo ? 'bg-dieta text-white' : estaAberto ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>
-                {completo ? <Check className="h-5 w-5" strokeWidth={2.25} /> : bi + 1}
+              <span aria-label={`Bloco ${bi + 1}`}
+                className={cn('h-12 w-12 rounded-xl flex items-center justify-center flex-shrink-0 transition-colors tabular-nums',
+                  completo ? 'bg-dieta text-white' : estaAberto ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>
+                {completo
+                  ? <Check className="h-5 w-5" strokeWidth={2.25} />
+                  : <span className="leading-none whitespace-nowrap">
+                      <span className="text-[11px] font-medium opacity-60 align-top">#</span>
+                      <span className="text-lg font-semibold tracking-[-0.02em]">{numeroBloco(bi).slice(1)}</span>
+                    </span>}
               </span>
               <span className="flex-1 min-w-0">
-                <span className="block text-xs font-medium text-muted-foreground">Bloco {bi + 1}</span>
+                <span className="block text-xs font-medium text-muted-foreground">{preparo ? 'Marcar feito' : 'Registrar carga'}</span>
                 <span className="block text-lg leading-tight tracking-[-0.01em] text-foreground truncate">{b.titulo}</span>
               </span>
               <span className="text-xs text-muted-foreground flex-shrink-0">
@@ -272,7 +278,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
                 {proximo && (
                   <button type="button" onClick={() => abrir(proximo.id)}
                     className={cn('w-full h-12 mt-1', completo ? 'btn-primary' : 'btn-secondary')}>
-                    Ir para o Bloco {bi + 2} · {proximo.titulo} <ChevronRight className="h-4 w-4" />
+                    Próximo: <span className="tabular-nums">{numeroBloco(bi + 1)}</span> {proximo.titulo} <ChevronRight className="h-4 w-4" />
                   </button>
                 )}
               </div>

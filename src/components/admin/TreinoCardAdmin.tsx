@@ -9,7 +9,7 @@ import { EditTreinoModal } from '@/components/admin/EditTreinoModal'
 import { ProgressaoAdmin } from '@/components/admin/ProgressaoAdmin'
 import { PreparoAdmin } from '@/components/admin/PreparoAdmin'
 import type { Exercicio } from '@/types'
-import { agruparBlocos, registraCarga } from '@/lib/secoes'
+import { agruparBlocos, numeroBloco, registraCarga } from '@/lib/secoes'
 
 interface Treino {
   id: string
@@ -75,7 +75,8 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
           {agruparBlocos(exercicios).map((g, gi) => (
             <div key={g.id}>
               <p className="text-xs font-medium text-muted-foreground mb-1.5">
-                Bloco {gi + 1} · <span className="text-foreground">{g.titulo}</span>
+                <span className="font-semibold tabular-nums" style={{ color: 'var(--rose-text)' }}>{numeroBloco(gi)}</span>{' '}
+                <span className="text-foreground">{g.titulo}</span>
                 {g.tipo === 'preparo' && <span className="font-normal"> · só marcar feito</span>}
               </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">

@@ -125,3 +125,8 @@ export function juntarAtividade(
   return [...progressoes, ...checks.map(c => ({ treino_id: c.treino_id, data_registro: c.data }))]
     .sort((a, b) => b.data_registro.localeCompare(a.data_registro))
 }
+
+/** Número do bloco no estilo "#01", "#02"... (índice começando em 0). */
+export function numeroBloco(i: number): string {
+  return `#${String(i + 1).padStart(2, '0')}`
+}

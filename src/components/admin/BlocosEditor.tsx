@@ -7,7 +7,7 @@ import {
 } from 'react-hook-form'
 import { Plus, Trash2, GripVertical, ChevronDown, ChevronUp, ArrowUp, ArrowDown, Dumbbell, CheckSquare } from 'lucide-react'
 import type { TreinoFormData } from '@/lib/validations'
-import { novoBloco, novoExercicio, SUGESTOES_BLOCO, type TipoBloco } from '@/lib/secoes'
+import { novoBloco, novoExercicio, numeroBloco, SUGESTOES_BLOCO, type TipoBloco } from '@/lib/secoes'
 import { cn } from '@/lib/utils'
 
 interface Props {
@@ -119,7 +119,8 @@ function BlocoEditor({ control, register, errors, bi, total, onRemove, onMove }:
     <section className="rounded-xl border border-border overflow-hidden">
       <header className="px-3 py-3 bg-muted/40 border-b border-border space-y-2">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-medium text-muted-foreground flex-shrink-0 w-14">Bloco {bi + 1}</span>
+          <span className="flex-shrink-0 w-10 text-sm font-semibold tabular-nums tracking-[-0.02em]" style={{ color: 'var(--rose-text)' }}
+            aria-label={`Bloco ${bi + 1}`}>{numeroBloco(bi)}</span>
           <input {...register(`blocos.${bi}.titulo`)} maxLength={40} aria-label={`Título do bloco ${bi + 1}`}
             placeholder="Título do bloco"
             className="flex-1 min-w-0 bg-transparent text-sm font-medium text-foreground rounded-md px-2 py-1.5 border border-transparent hover:border-border focus:border-brand-500 focus:bg-card outline-none" />
@@ -131,7 +132,7 @@ function BlocoEditor({ control, register, errors, bi, total, onRemove, onMove }:
             className="p-1.5 rounded text-muted-foreground hover:text-destructive hover:bg-red-50 dark:hover:bg-red-900/20"><Trash2 className="h-3.5 w-3.5" /></button>
         </div>
         {errBloco?.titulo && <p className="form-error">{errBloco.titulo.message}</p>}
-        <div className="flex flex-wrap items-center gap-2 pl-0 sm:pl-16">
+        <div className="flex flex-wrap items-center gap-2 pl-0 sm:pl-12">
           <div className="inline-flex rounded-lg border border-border p-0.5 bg-card" role="radiogroup" aria-label="Tipo do bloco">
             {([['carga', 'Registra carga', Dumbbell], ['preparo', 'Só marcar feito', CheckSquare]] as const).map(([v, label, Icon]) => (
               <button key={v} type="button" role="radio" aria-checked={tipo === v} onClick={() => tipoField.onChange(v)}
