@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { subDays, format } from 'date-fns'
 import { HomeView } from '@/components/home/HomeView'
 import { sortTreinos } from '@/lib/utils'
+import { juntarAtividade } from '@/lib/secoes'
 import { planoDoAluno } from '@/lib/periodizacao'
 
 export default async function DashboardPage() {
@@ -23,6 +24,9 @@ export default async function DashboardPage() {
     supabase.from('cardio_registros').select('id, data, tipo, duracao_min').eq('user_id', user.id).gte('data', desde),
     supabase.from('avaliacoes_fisicas').select('peso, percentual_gordura, created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(2),
   ])
+  // Mobilidade/ativação marcadas também contam como dia de treino (tabela opcional: sem ela, ignora)
+  const checksRes = await supabase.from('treino_checks').select('treino_id, data').eq('user_id', user.id).gte('data', desde)
+  const progressoes = juntarAtividade(progRes.data ?? [], checksRes.data ?? [])
 
   const plano = planoRes.data?.[0] ?? null
   let refeicoes: any[] = []
@@ -55,7 +59,7 @@ export default async function DashboardPage() {
     <HomeView
       nome={nome}
       treinos={sortTreinos(planoDoAluno((treinosRes.data ?? []) as any[]).atuais)}
-      progressoes={progRes.data ?? []}
+      progressoes={progressoes}
       plano={plano}
       refeicoes={refeicoes}
       checks={checks}

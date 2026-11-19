@@ -10,7 +10,8 @@ import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
 import { cn } from '@/lib/utils'
-import { agruparPorSecao } from '@/lib/secoes'
+import { agruparPorSecao, secaoDe } from '@/lib/secoes'
+import { createClient } from '@/lib/supabase/client'
 import { planoDoAluno, mesDoTreino, nomeMes, nomeMesAno } from '@/lib/periodizacao'
 
 interface Treino {
@@ -162,38 +163,130 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
         <div className="border-t border-border p-3 space-y-3">
           {treino.descricao && <p className="text-muted-foreground px-1">{treino.descricao}</p>}
           <div className="flex items-center gap-3 px-1">
-            <p className="flex-1 text-sm text-muted-foreground">Toque em cada exercício para registrar a carga.</p>
+            <p className="flex-1 text-sm text-muted-foreground">Toque no bloco que vai fazer para ver os exercícios.</p>
             <button onClick={() => descanso.abrir(treino.titulo)}
               className="press flex-shrink-0 h-11 px-4 rounded-full border border-border flex items-center gap-2 text-sm font-medium text-foreground hover:bg-muted">
               <Timer className="h-4 w-4" strokeWidth={1.75} /> Descanso
             </button>
           </div>
-          {agruparPorSecao(ex).filter(g => g.itens.length > 0).map(g => (
-            <div key={g.id} className="space-y-2">
-              <div className="flex items-baseline justify-between px-1 pt-1">
-                <p className="text-sm font-medium text-foreground">{g.nome}</p>
-                <p className="text-xs text-muted-foreground">{g.itens.length} exercício{g.itens.length !== 1 ? 's' : ''}</p>
-              </div>
-              {g.id === 'treino'
-                ? g.itens.map(({ item, index }, pos) => (
-                    <ProgressaoExercicio key={index} exercicio={item} treinoId={treino.id} userId={userId} index={pos} />
-                  ))
-                : g.itens.map(({ item, index }, pos) => (
-                    <ExercicioPreparo key={index} exercicio={item} numero={pos + 1} />
-                  ))}
-            </div>
-          ))}
+          <BlocosTreino exercicios={ex} treinoId={treino.id} userId={userId} />
         </div>
       )}
     </div>
   )
 }
 
-/** Mobilidade e ativação: só a prescrição, sem registro de carga. Toque para marcar como feito. */
-function ExercicioPreparo({ exercicio, numero }: { exercicio: any; numero: number }) {
-  const [feito, setFeito] = useState(false)
+/**
+ * Treino em blocos: Bloco 1 (Mobilidade), Bloco 2 (Ativação, se tiver), Bloco 3 (Treino).
+ * Só um bloco aberto por vez; toque no bloco para ver os exercícios dele.
+ */
+function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; treinoId: string; userId: string }) {
+  const blocos = agruparPorSecao(exercicios).filter(g => g.itens.length > 0)
+  const [aberto, setAberto] = useState<string | null>(blocos[0]?.id ?? null)
+  // Marcações de mobilidade/ativação de hoje, salvas em treino_checks (chave: secao|nome)
+  const [feitos, setFeitos] = useState<Set<string>>(new Set())
+  const [erroCheck, setErroCheck] = useState<string | null>(null)
+  const refs = useRef<Record<string, HTMLDivElement | null>>({})
+  const chave = (ex: any) => `${secaoDe(ex)}|${ex.nome}`
+
+  useEffect(() => {
+    let vivo = true
+    createClient().from('treino_checks').select('secao, exercicio_nome')
+      .eq('user_id', userId).eq('treino_id', treinoId).eq('data', dateKey())
+      .then(({ data, error }) => {
+        if (!vivo) return
+        if (error) { console.error('treino_checks:', error.message); return }
+        setFeitos(new Set((data ?? []).map(c => `${c.secao}|${c.exercicio_nome}`)))
+      })
+    return () => { vivo = false }
+  }, [userId, treinoId])
+
+  async function alternarFeito(ex: any) {
+    const k = chave(ex)
+    const marcar = !feitos.has(k)
+    const aplicar = (on: boolean) => setFeitos(prev => {
+      const n = new Set(prev)
+      if (on) n.add(k); else n.delete(k)
+      return n
+    })
+    aplicar(marcar) // otimista: o aluno não espera a rede
+    setErroCheck(null)
+    const supabase = createClient()
+    const linha = { user_id: userId, treino_id: treinoId, secao: secaoDe(ex), exercicio_nome: ex.nome, data: dateKey() }
+    const { error } = marcar
+      ? await supabase.from('treino_checks').upsert(linha, { onConflict: 'treino_id,secao,exercicio_nome,data', ignoreDuplicates: true })
+      : await supabase.from('treino_checks').delete()
+          .eq('treino_id', treinoId).eq('secao', linha.secao).eq('exercicio_nome', ex.nome).eq('data', linha.data)
+    if (error) {
+      aplicar(!marcar)
+      setErroCheck(error.message.includes('treino_checks')
+        ? 'Falta criar a tabela treino_checks no banco (migration 005).'
+        : 'Não foi possível salvar. Confira a conexão e tente de novo.')
+    }
+  }
+
+  function abrir(id: string | null) {
+    setAberto(id)
+    if (id) requestAnimationFrame(() => refs.current[id]?.scrollIntoView({ behavior: 'smooth', block: 'start' }))
+  }
+
   return (
-    <button type="button" onClick={() => setFeito(f => !f)} aria-pressed={feito}
+    <div className="space-y-2">
+      {blocos.map((b, bi) => {
+        const estaAberto = aberto === b.id
+        const preparo = b.id !== 'treino'
+        const qtdFeitos = preparo ? b.itens.filter(({ item }) => feitos.has(chave(item))).length : 0
+        const completo = preparo && qtdFeitos === b.itens.length
+        const proximo = blocos[bi + 1]
+        return (
+          <div key={b.id} ref={el => { refs.current[b.id] = el }}
+            className={cn('rounded-2xl border overflow-hidden scroll-mt-4 transition-colors',
+              estaAberto ? 'border-primary' : 'border-border')}>
+            <button type="button" onClick={() => abrir(estaAberto ? null : b.id)} aria-expanded={estaAberto}
+              className="w-full flex items-center gap-3 p-4 min-h-[64px] text-left hover:bg-muted/40 transition-colors">
+              <span className={cn('h-10 w-10 rounded-xl flex items-center justify-center flex-shrink-0 text-base font-medium transition-colors',
+                completo ? 'bg-dieta text-white' : estaAberto ? 'bg-primary text-primary-foreground' : 'bg-muted text-foreground')}>
+                {completo ? <Check className="h-5 w-5" strokeWidth={2.25} /> : bi + 1}
+              </span>
+              <span className="flex-1 min-w-0">
+                <span className="block text-xs font-medium text-muted-foreground">Bloco {bi + 1}</span>
+                <span className="block text-lg leading-tight tracking-[-0.01em] text-foreground">{b.nome}</span>
+              </span>
+              <span className="text-xs text-muted-foreground flex-shrink-0">
+                {preparo ? `${qtdFeitos}/${b.itens.length}` : `${b.itens.length} exercício${b.itens.length !== 1 ? 's' : ''}`}
+              </span>
+              <ChevronDown className={cn('h-5 w-5 text-muted-foreground transition-transform duration-150 flex-shrink-0', estaAberto && 'rotate-180')} strokeWidth={1.75} />
+            </button>
+
+            {estaAberto && (
+              <div className="border-t border-border p-3 space-y-2">
+                {b.id === 'treino'
+                  ? <p className="text-sm text-muted-foreground px-1">Toque em cada exercício para registrar a carga.</p>
+                  : <p className="text-sm text-muted-foreground px-1">Toque no exercício quando terminar.</p>}
+                {preparo && erroCheck && <p role="alert" className="form-error px-1">{erroCheck}</p>}
+                {b.itens.map(({ item, index }, pos) => preparo
+                  ? <ExercicioPreparo key={index} exercicio={item} numero={pos + 1} feito={feitos.has(chave(item))} onToggle={() => alternarFeito(item)} />
+                  : <ProgressaoExercicio key={index} exercicio={item} treinoId={treinoId} userId={userId} index={pos} />
+                )}
+                {proximo && (
+                  <button type="button" onClick={() => abrir(proximo.id)}
+                    className={cn('w-full h-12 mt-1', completo ? 'btn-primary' : 'btn-secondary')}>
+                    Ir para o Bloco {bi + 2} · {proximo.nome} <ChevronRight className="h-4 w-4" />
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+        )
+      })}
+    </div>
+  )
+}
+
+/** Mobilidade e ativação: só a prescrição, sem registro de carga. Toque para marcar como feito. */
+function ExercicioPreparo({ exercicio, numero, feito, onToggle }: { exercicio: any; numero: number; feito: boolean; onToggle: () => void }) {
+  return (
+    <button type="button" onClick={onToggle} aria-pressed={feito}
       className="w-full border border-border rounded-xl p-4 flex items-center gap-3 text-left min-h-[56px] hover:bg-muted/40 transition-colors">
       <span className={cn('h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium transition-colors',
         feito ? 'bg-dieta text-white' : 'bg-muted text-foreground')}>

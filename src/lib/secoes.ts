@@ -36,3 +36,15 @@ export function novoExercicio(secao: Secao) {
     ? { nome: '', series: 3, reps: '10-12', carga: '', observacoes: '', secao }
     : { nome: '', series: 2, reps: secao === 'mobilidade' ? '30s' : '15', carga: '', observacoes: '', secao }
 }
+
+/**
+ * Junta registros de carga e checks de mobilidade/ativação numa lista única
+ * { treino_id, data_registro }, mais recente primeiro (formato usado na Home e em Meus treinos).
+ */
+export function juntarAtividade(
+  progressoes: { treino_id: string; data_registro: string }[],
+  checks: { treino_id: string; data: string }[],
+) {
+  return [...progressoes, ...checks.map(c => ({ treino_id: c.treino_id, data_registro: c.data }))]
+    .sort((a, b) => b.data_registro.localeCompare(a.data_registro))
+}

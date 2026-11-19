@@ -19,6 +19,14 @@ interface Props {
 const PAGINA = 1000
 
 /** Busca todos os registros do ano (o Supabase devolve no máximo 1000 por vez). */
+/** Dias com mobilidade/ativação marcada (tabela treino_checks; se não existir, ignora). */
+async function buscarDiasPreparo(userId: string, ano: number): Promise<string[]> {
+  const { data, error } = await createClient().from('treino_checks').select('data')
+    .eq('user_id', userId).gte('data', `${ano}-01-01`).lte('data', `${ano}-12-31`).limit(5000)
+  if (error) return []
+  return Array.from(new Set((data ?? []).map(d => d.data as string)))
+}
+
 async function buscarRegistros(userId: string, ano: number): Promise<{ data: RegistroCarga[]; erro: string | null }> {
   const supabase = createClient()
   const todos: RegistroCarga[] = []
@@ -45,6 +53,7 @@ export function EvolucaoAnual({ userId, treinos, ano: anoControlado, variante = 
   const ano = anoControlado ?? anoInterno
 
   const [registros, setRegistros] = useState<RegistroCarga[]>([])
+  const [diasPreparo, setDiasPreparo] = useState<string[]>([])
   const [carregando, setCarregando] = useState(true)
   const [erro, setErro] = useState<string | null>(null)
 
@@ -52,16 +61,17 @@ export function EvolucaoAnual({ userId, treinos, ano: anoControlado, variante = 
     let vivo = true
     setCarregando(true)
     setErro(null)
-    buscarRegistros(userId, ano).then(({ data, erro }) => {
+    Promise.all([buscarRegistros(userId, ano), buscarDiasPreparo(userId, ano)]).then(([{ data, erro }, preparo]) => {
       if (!vivo) return
       setRegistros(data)
+      setDiasPreparo(preparo)
       setErro(erro)
       setCarregando(false)
     })
     return () => { vivo = false }
   }, [userId, ano])
 
-  const ev = useMemo(() => evolucaoAnual(registros, treinos, ano), [registros, treinos, ano])
+  const ev = useMemo(() => evolucaoAnual(registros, treinos, ano, diasPreparo), [registros, treinos, ano, diasPreparo])
   const card = variante === 'aluno' ? 'app-card' : 'rounded-xl border border-border'
   const chartData = ev.meses.map(m => ({
     mes: MESES_CURTOS[m.mes - 1], nome: MESES[m.mes - 1], dias: m.diasTreinados,
@@ -101,7 +111,7 @@ export function EvolucaoAnual({ userId, treinos, ano: anoControlado, variante = 
       {/* Dias treinados por mês */}
       <div className={cn(card, 'p-4')}>
         <p className="text-sm font-medium text-foreground">Dias treinados por mês</p>
-        <p className="text-xs text-muted-foreground mb-3">Dias com pelo menos uma carga registrada</p>
+        <p className="text-xs text-muted-foreground mb-3">Dias com carga registrada ou mobilidade/ativação feita</p>
         {carregando ? (
           <div className="h-[180px] flex items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
         ) : (

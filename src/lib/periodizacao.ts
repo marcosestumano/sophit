@@ -93,8 +93,13 @@ export interface ExercicioEvolucao {
 
 const normNome = (s: string) => s.trim().toLowerCase().replace(/\s+/g, ' ')
 
-export function evolucaoAnual(registros: RegistroCarga[], treinos: TreinoMensal[], ano: number) {
+/**
+ * @param diasPreparo datas ('yyyy-MM-dd') em que o aluno marcou mobilidade/ativação;
+ *                    contam como dia treinado mesmo sem carga registrada.
+ */
+export function evolucaoAnual(registros: RegistroCarga[], treinos: TreinoMensal[], ano: number, diasPreparo: string[] = []) {
   const doAno = registros.filter(r => r.data_registro?.startsWith(`${ano}-`))
+  const preparoDoAno = diasPreparo.filter(d => d.startsWith(`${ano}-`))
 
   const meses: MesResumo[] = Array.from({ length: 12 }, (_, i) => {
     const key = mesKeyDe(ano, i + 1)
@@ -104,7 +109,7 @@ export function evolucaoAnual(registros: RegistroCarga[], treinos: TreinoMensal[
       key,
       mes: i + 1,
       treinosNoPlano: treinos.filter(t => mesDoTreino(t) === key).length,
-      diasTreinados: new Set(regs.map(r => r.data_registro)).size,
+      diasTreinados: new Set([...regs.map(r => r.data_registro), ...preparoDoAno.filter(d => d.startsWith(prefixo))]).size,
       registros: regs.length,
     }
   })
@@ -141,7 +146,7 @@ export function evolucaoAnual(registros: RegistroCarga[], treinos: TreinoMensal[
     meses,
     exercicios,
     resumo: {
-      diasTreinados: new Set(doAno.map(r => r.data_registro)).size,
+      diasTreinados: new Set([...doAno.map(r => r.data_registro), ...preparoDoAno]).size,
       mesesComPlano: meses.filter(m => m.treinosNoPlano > 0).length,
       mesesTreinados: meses.filter(m => m.diasTreinados > 0).length,
       exerciciosEvoluindo: comparaveis.filter(e => e.ganho > 0).length,

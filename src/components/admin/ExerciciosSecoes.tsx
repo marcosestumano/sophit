@@ -43,12 +43,16 @@ export function ExerciciosSecoes({ control, register, errors }: Props) {
 
   const erroLista = (errors.lista_exercicios as any)?.root?.message ?? (errors.lista_exercicios as any)?.message
   const grupos = agruparPorSecao(fields)
+  // Numeração igual à que o aluno vê: blocos vazios não contam (exceto Treino, sempre presente)
+  const numeros: Record<string, number> = {}
+  let n = 0
+  for (const g of grupos) if (g.itens.length > 0 || g.id === 'treino') numeros[g.id] = ++n
 
   return (
     <div className="space-y-4">
       {erroLista && <p role="alert" className="form-error">{erroLista}</p>}
 
-      {grupos.map((g, gi) => {
+      {grupos.map(g => {
         if (g.id === 'ativacao' && !ativacaoVisivel && g.itens.length === 0) {
           return (
             <button key={g.id} type="button" onClick={() => { setAtivacaoVisivel(true); adicionar('ativacao') }}
@@ -62,11 +66,9 @@ export function ExerciciosSecoes({ control, register, errors }: Props) {
           <section key={g.id} className="rounded-xl border border-border overflow-hidden">
             <header className="flex items-center justify-between gap-3 px-4 py-3 bg-muted/40 border-b border-border">
               <div className="flex items-center gap-2.5 min-w-0">
-                <span className="h-6 w-6 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0 bg-foreground text-background">
-                  {gi + 1}
-                </span>
                 <div className="min-w-0">
                   <p className="text-sm font-medium text-foreground">
+                    {numeros[g.id] ? <span className="text-muted-foreground font-normal">Bloco {numeros[g.id]} · </span> : null}
                     {g.nome}
                     {g.opcional && <span className="ml-1.5 text-xs font-normal text-muted-foreground">opcional</span>}
                     <span className="ml-1.5 text-xs font-normal text-muted-foreground">({g.itens.length})</span>

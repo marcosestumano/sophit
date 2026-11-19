@@ -7,6 +7,7 @@ import { Calendar, Target, Pencil } from 'lucide-react'
 import { DeleteTreinoButton } from '@/components/admin/DeleteTreinoButton'
 import { EditTreinoModal } from '@/components/admin/EditTreinoModal'
 import { ProgressaoAdmin } from '@/components/admin/ProgressaoAdmin'
+import { PreparoAdmin } from '@/components/admin/PreparoAdmin'
 import type { Exercicio } from '@/types'
 import { agruparPorSecao, secaoDe } from '@/lib/secoes'
 
@@ -92,6 +93,9 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
             </div>
           ))}
         </div>
+
+        {/* Mobilidade/ativação marcadas pelo aluno */}
+        <PreparoAdmin userId={userId} treinoId={treino.id} temPreparo={exercicios.some(e => secaoDe(e) !== 'treino')} />
 
         {/* Progressão de cargas */}
         <ProgressaoAdmin
