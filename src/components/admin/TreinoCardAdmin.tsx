@@ -9,7 +9,7 @@ import { EditTreinoModal } from '@/components/admin/EditTreinoModal'
 import { ProgressaoAdmin } from '@/components/admin/ProgressaoAdmin'
 import { PreparoAdmin } from '@/components/admin/PreparoAdmin'
 import type { Exercicio } from '@/types'
-import { agruparPorSecao, secaoDe } from '@/lib/secoes'
+import { agruparBlocos, registraCarga } from '@/lib/secoes'
 
 interface Treino {
   id: string
@@ -72,9 +72,12 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
 
         {/* Lista resumida de exercícios, por bloco */}
         <div className="space-y-3 mb-2">
-          {agruparPorSecao(exercicios).filter(g => g.itens.length > 0).map(g => (
+          {agruparBlocos(exercicios).map((g, gi) => (
             <div key={g.id}>
-              <p className="text-xs font-medium text-muted-foreground mb-1.5">{g.nome}</p>
+              <p className="text-xs font-medium text-muted-foreground mb-1.5">
+                Bloco {gi + 1} · <span className="text-foreground">{g.titulo}</span>
+                {g.tipo === 'preparo' && <span className="font-normal"> · só marcar feito</span>}
+              </p>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                 {g.itens.map(({ item: ex }, i) => (
                   <div key={i} className="flex items-center gap-2 text-xs p-2 rounded-lg bg-muted/30">
@@ -95,14 +98,14 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
         </div>
 
         {/* Mobilidade/ativação marcadas pelo aluno */}
-        <PreparoAdmin userId={userId} treinoId={treino.id} temPreparo={exercicios.some(e => secaoDe(e) !== 'treino')} />
+        <PreparoAdmin userId={userId} treinoId={treino.id} exercicios={exercicios} />
 
         {/* Progressão de cargas */}
         <ProgressaoAdmin
           userId={userId}
           treinoId={treino.id}
           treinoTitulo={treino.titulo}
-          exercicios={exercicios.filter(e => secaoDe(e) === 'treino')}
+          exercicios={exercicios.filter(registraCarga)}
         />
       </div>
     </>

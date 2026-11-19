@@ -5,8 +5,8 @@ import { dateKey } from '@/lib/dates'
 import Link from 'next/link'
 import { mesKey, normalizaMes, nomeMesAno } from '@/lib/periodizacao'
 import { useForm } from 'react-hook-form'
-import { ExerciciosSecoes } from '@/components/admin/ExerciciosSecoes'
-import { novoExercicio, ordenarPorSecao } from '@/lib/secoes'
+import { BlocosEditor } from '@/components/admin/BlocosEditor'
+import { blocosPadrao, blocosParaLista, listaParaBlocos } from '@/lib/secoes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
@@ -38,6 +38,7 @@ export default function GestorTreinosPage() {
   const [showTemplates, setShowTemplates] = useState(false)
   const [templateCategoria, setTemplateCategoria] = useState('')
   const [alunoOrigem, setAlunoOrigem] = useState<string | null>(null)
+  const [editorKey, setEditorKey] = useState(0)
 
   useEffect(() => {
     // Vindo do plano anual do aluno: /admin/treinos?aluno=<id>&mes=2026-12
@@ -68,7 +69,7 @@ export default function GestorTreinosPage() {
   const { register, handleSubmit, control, reset, setValue, getValues, formState: { errors } } = useForm<TreinoFormData>({
     resolver: zodResolver(treinoSchema),
     defaultValues: {
-      lista_exercicios: [novoExercicio('mobilidade'), novoExercicio('treino')],
+      blocos: blocosPadrao(),
       data_atribuicao: dateKey(),
       mes_referencia: mesKey().slice(0, 7),
     },
@@ -78,7 +79,8 @@ export default function GestorTreinosPage() {
   function loadTemplate(template: Template) {
     setValue('titulo', template.titulo)
     setValue('descricao', template.descricao ?? '')
-    setValue('lista_exercicios', ordenarPorSecao(template.lista_exercicios))
+    setValue('blocos', listaParaBlocos(template.lista_exercicios))
+    setEditorKey(k => k + 1)
     setShowTemplates(false)
   }
 
@@ -103,9 +105,13 @@ export default function GestorTreinosPage() {
     const { count } = await supabase.from('treinos').select('id', { count: 'exact', head: true })
       .eq('user_id', data.user_id).eq('mes_referencia', mesRef)
 
-    data = { ...data, lista_exercicios: ordenarPorSecao(data.lista_exercicios) }
+    const lista = blocosParaLista(data.blocos)
     const { error } = await supabase.from('treinos').insert({
-      ...data,
+      user_id: data.user_id,
+      titulo: data.titulo,
+      descricao: data.descricao,
+      data_atribuicao: data.data_atribuicao,
+      lista_exercicios: lista,
       mes_referencia: mesRef,
       ordem: count ?? null,
       admin_id: user.id,
@@ -117,7 +123,7 @@ export default function GestorTreinosPage() {
         admin_id: user!.id,
         titulo: data.titulo,
         descricao: data.descricao,
-        lista_exercicios: data.lista_exercicios,
+        lista_exercicios: lista,
         categoria: templateCategoria || null,
       })
       fetchTemplates()
@@ -138,9 +144,10 @@ export default function GestorTreinosPage() {
       reset({
         user_id: data.user_id,
         mes_referencia: data.mes_referencia,
-        lista_exercicios: [novoExercicio('mobilidade'), novoExercicio('treino')],
+        blocos: blocosPadrao(),
         data_atribuicao: dateKey(),
       })
+      setEditorKey(k => k + 1)
       setTimeout(() => setSaved(false), 3000)
     }
   }
@@ -197,7 +204,7 @@ export default function GestorTreinosPage() {
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground mt-0.5">
-                        {t.lista_exercicios.length} exercícios
+                        {t.lista_exercicios.length} exercícios · {listaParaBlocos(t.lista_exercicios).length} bloco{listaParaBlocos(t.lista_exercicios).length !== 1 ? 's' : ''}
                         {t.descricao && ` · ${t.descricao}`}
                       </p>
                     </div>
@@ -296,8 +303,8 @@ export default function GestorTreinosPage() {
         {/* Exercícios em blocos: Mobilidade → Ativação → Treino */}
         <div className="card p-6">
           <h2 className="font-normal text-foreground mb-1">Montagem do treino</h2>
-          <p className="text-sm text-muted-foreground mb-4">Separe em mobilidade, ativação (se tiver) e o treino principal.</p>
-          <ExerciciosSecoes control={control} register={register} errors={errors} />
+          <p className="text-sm text-muted-foreground mb-4">Organize em blocos (ex: Mobilidade, Ativação, Superiores, Core). Renomeie, reordene e crie quantos precisar.</p>
+          <BlocosEditor key={editorKey} control={control} register={register} errors={errors} />
         </div>
 
         <div className="flex items-center gap-3">

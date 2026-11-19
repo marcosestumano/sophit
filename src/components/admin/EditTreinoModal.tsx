@@ -2,8 +2,8 @@
 
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
-import { ExerciciosSecoes } from '@/components/admin/ExerciciosSecoes'
-import { novoExercicio, ordenarPorSecao } from '@/lib/secoes'
+import { BlocosEditor } from '@/components/admin/BlocosEditor'
+import { blocosPadrao, blocosParaLista, listaParaBlocos, type ExercicioSalvo } from '@/lib/secoes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
@@ -14,13 +14,9 @@ import {
   Loader2, CheckCircle2, Save,
 } from 'lucide-react'
 
-interface Exercicio {
-  nome: string; series: number; reps: string; carga?: string; observacoes?: string
-  secao?: 'mobilidade' | 'ativacao' | 'treino'
-}
 interface Treino {
   id: string; titulo: string; descricao: string | null
-  lista_exercicios: Exercicio[]; data_atribuicao: string; ativo: boolean; user_id: string
+  lista_exercicios: ExercicioSalvo[]; data_atribuicao: string; ativo: boolean; user_id: string
   mes_referencia?: string | null
 }
 interface Props { treino: Treino; onClose: () => void }
@@ -37,9 +33,9 @@ export function EditTreinoModal({ treino, onClose }: Props) {
       user_id: treino.user_id,
       titulo: treino.titulo,
       descricao: treino.descricao ?? '',
-      lista_exercicios: treino.lista_exercicios.length > 0
-        ? ordenarPorSecao(treino.lista_exercicios)
-        : [novoExercicio('treino')],
+      blocos: treino.lista_exercicios?.length
+        ? listaParaBlocos(treino.lista_exercicios)
+        : blocosPadrao(),
       data_atribuicao: treino.data_atribuicao,
       mes_referencia: mesDoTreino(treino).slice(0, 7),
     },
@@ -51,7 +47,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
     const { error } = await supabase.from('treinos').update({
       titulo: data.titulo,
       descricao: data.descricao,
-      lista_exercicios: ordenarPorSecao(data.lista_exercicios),
+      lista_exercicios: blocosParaLista(data.blocos),
       data_atribuicao: data.data_atribuicao,
       mes_referencia: normalizaMes(data.mes_referencia),
     }).eq('id', treino.id)
@@ -108,7 +104,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
             {/* Exercícios em blocos: Mobilidade → Ativação → Treino */}
             <div>
               <label className="form-label">Montagem do treino</label>
-              <ExerciciosSecoes control={control} register={register} errors={errors} />
+              <BlocosEditor control={control} register={register} errors={errors} />
             </div>
           </div>
 

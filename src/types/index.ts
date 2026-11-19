@@ -83,8 +83,12 @@ export interface Exercicio {
   reps: string
   carga?: string
   observacoes?: string
-  /** Bloco do treino; sem valor = 'treino' */
-  secao?: 'mobilidade' | 'ativacao' | 'treino'
+  /** Bloco do treino (livre): id, título e se registra carga */
+  bloco_id?: string
+  bloco?: string
+  bloco_tipo?: 'preparo' | 'carga'
+  /** legado: mobilidade / ativacao / treino */
+  secao?: string
 }
 
 export interface Treino {

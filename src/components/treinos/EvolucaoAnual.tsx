@@ -111,7 +111,7 @@ export function EvolucaoAnual({ userId, treinos, ano: anoControlado, variante = 
       {/* Dias treinados por mês */}
       <div className={cn(card, 'p-4')}>
         <p className="text-sm font-medium text-foreground">Dias treinados por mês</p>
-        <p className="text-xs text-muted-foreground mb-3">Dias com carga registrada ou mobilidade/ativação feita</p>
+        <p className="text-xs text-muted-foreground mb-3">Dias com carga registrada ou bloco marcado como feito</p>
         {carregando ? (
           <div className="h-[180px] flex items-center justify-center"><Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /></div>
         ) : (

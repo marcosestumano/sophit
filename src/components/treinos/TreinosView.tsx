@@ -10,7 +10,7 @@ import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
 import { cn } from '@/lib/utils'
-import { agruparPorSecao, secaoDe } from '@/lib/secoes'
+import { agruparBlocos, chaveCheck, infoBloco } from '@/lib/secoes'
 import { createClient } from '@/lib/supabase/client'
 import { planoDoAluno, mesDoTreino, nomeMes, nomeMesAno } from '@/lib/periodizacao'
 
@@ -181,13 +181,13 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
  * Só um bloco aberto por vez; toque no bloco para ver os exercícios dele.
  */
 function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; treinoId: string; userId: string }) {
-  const blocos = agruparPorSecao(exercicios).filter(g => g.itens.length > 0)
+  const blocos = agruparBlocos(exercicios)
   const [aberto, setAberto] = useState<string | null>(blocos[0]?.id ?? null)
   // Marcações de mobilidade/ativação de hoje, salvas em treino_checks (chave: secao|nome)
   const [feitos, setFeitos] = useState<Set<string>>(new Set())
   const [erroCheck, setErroCheck] = useState<string | null>(null)
   const refs = useRef<Record<string, HTMLDivElement | null>>({})
-  const chave = (ex: any) => `${secaoDe(ex)}|${ex.nome}`
+  const chave = chaveCheck
 
   useEffect(() => {
     let vivo = true
@@ -212,7 +212,8 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
     aplicar(marcar) // otimista: o aluno não espera a rede
     setErroCheck(null)
     const supabase = createClient()
-    const linha = { user_id: userId, treino_id: treinoId, secao: secaoDe(ex), exercicio_nome: ex.nome, data: dateKey() }
+    // treino_checks.secao guarda o id do bloco
+    const linha = { user_id: userId, treino_id: treinoId, secao: infoBloco(ex).id, exercicio_nome: ex.nome, data: dateKey() }
     const { error } = marcar
       ? await supabase.from('treino_checks').upsert(linha, { onConflict: 'treino_id,secao,exercicio_nome,data', ignoreDuplicates: true })
       : await supabase.from('treino_checks').delete()
@@ -220,7 +221,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
     if (error) {
       aplicar(!marcar)
       setErroCheck(error.message.includes('treino_checks')
-        ? 'Falta criar a tabela treino_checks no banco (migration 005).'
+        ? 'Falta atualizar o banco (migrations 005 e 006).'
         : 'Não foi possível salvar. Confira a conexão e tente de novo.')
     }
   }
@@ -234,7 +235,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
     <div className="space-y-2">
       {blocos.map((b, bi) => {
         const estaAberto = aberto === b.id
-        const preparo = b.id !== 'treino'
+        const preparo = b.tipo === 'preparo'
         const qtdFeitos = preparo ? b.itens.filter(({ item }) => feitos.has(chave(item))).length : 0
         const completo = preparo && qtdFeitos === b.itens.length
         const proximo = blocos[bi + 1]
@@ -250,7 +251,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
               </span>
               <span className="flex-1 min-w-0">
                 <span className="block text-xs font-medium text-muted-foreground">Bloco {bi + 1}</span>
-                <span className="block text-lg leading-tight tracking-[-0.01em] text-foreground">{b.nome}</span>
+                <span className="block text-lg leading-tight tracking-[-0.01em] text-foreground truncate">{b.titulo}</span>
               </span>
               <span className="text-xs text-muted-foreground flex-shrink-0">
                 {preparo ? `${qtdFeitos}/${b.itens.length}` : `${b.itens.length} exercício${b.itens.length !== 1 ? 's' : ''}`}
@@ -260,7 +261,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
 
             {estaAberto && (
               <div className="border-t border-border p-3 space-y-2">
-                {b.id === 'treino'
+                {!preparo
                   ? <p className="text-sm text-muted-foreground px-1">Toque em cada exercício para registrar a carga.</p>
                   : <p className="text-sm text-muted-foreground px-1">Toque no exercício quando terminar.</p>}
                 {preparo && erroCheck && <p role="alert" className="form-error px-1">{erroCheck}</p>}
@@ -271,7 +272,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
                 {proximo && (
                   <button type="button" onClick={() => abrir(proximo.id)}
                     className={cn('w-full h-12 mt-1', completo ? 'btn-primary' : 'btn-secondary')}>
-                    Ir para o Bloco {bi + 2} · {proximo.nome} <ChevronRight className="h-4 w-4" />
+                    Ir para o Bloco {bi + 2} · {proximo.titulo} <ChevronRight className="h-4 w-4" />
                   </button>
                 )}
               </div>
@@ -283,7 +284,7 @@ function BlocosTreino({ exercicios, treinoId, userId }: { exercicios: any[]; tre
   )
 }
 
-/** Mobilidade e ativação: só a prescrição, sem registro de carga. Toque para marcar como feito. */
+/** Exercício de bloco "só marcar feito": sem registro de carga, toque para marcar. */
 function ExercicioPreparo({ exercicio, numero, feito, onToggle }: { exercicio: any; numero: number; feito: boolean; onToggle: () => void }) {
   return (
     <button type="button" onClick={onToggle} aria-pressed={feito}

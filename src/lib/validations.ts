@@ -88,19 +88,25 @@ export const avaliacaoSchema = z.object({
 
 export const exercicioSchema = z.object({
   nome: z.string().min(2, 'Nome do exercício é obrigatório'),
-  series: z.number().min(1).max(20),
+  series: z.number({ invalid_type_error: 'Informe as séries' }).min(1).max(20),
   reps: z.string().min(1, 'Informe as repetições'),
   carga: z.string().optional(),
   observacoes: z.string().optional(),
-  secao: z.enum(['mobilidade', 'ativacao', 'treino']).optional(),
+})
+
+export const blocoSchema = z.object({
+  id: z.string(),
+  titulo: z.string().trim().min(1, 'Dê um título ao bloco').max(40),
+  tipo: z.enum(['preparo', 'carga']),
+  exercicios: z.array(exercicioSchema),
 })
 
 export const treinoSchema = z.object({
   user_id: z.string().uuid('Selecione um usuário'),
   titulo: z.string().min(3, 'Título deve ter pelo menos 3 caracteres'),
   descricao: z.string().optional(),
-  lista_exercicios: z.array(exercicioSchema)
-    .refine(l => l.some(e => (e.secao ?? 'treino') === 'treino'), 'Adicione pelo menos 1 exercício no bloco Treino'),
+  blocos: z.array(blocoSchema)
+    .refine(bs => bs.some(b => b.exercicios.length > 0), 'Adicione pelo menos 1 exercício'),
   data_atribuicao: z.string().min(1, 'Selecione a data'),
   mes_referencia: z.string().regex(/^\d{4}-\d{2}$/, 'Selecione o mês do plano'),
 })

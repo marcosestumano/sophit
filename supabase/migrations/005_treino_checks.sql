@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS public.treino_checks (
   id              UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
   user_id         UUID NOT NULL REFERENCES public.profiles(id) ON DELETE CASCADE,
   treino_id       UUID NOT NULL REFERENCES public.treinos(id) ON DELETE CASCADE,
-  secao           TEXT NOT NULL CHECK (secao IN ('mobilidade', 'ativacao')),
+  secao           TEXT NOT NULL,          -- id do bloco do treino
   exercicio_nome  TEXT NOT NULL,
   data            DATE NOT NULL DEFAULT CURRENT_DATE,
   created_at      TIMESTAMPTZ NOT NULL DEFAULT NOW(),
