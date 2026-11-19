@@ -8,6 +8,7 @@ import { DeleteTreinoButton } from '@/components/admin/DeleteTreinoButton'
 import { EditTreinoModal } from '@/components/admin/EditTreinoModal'
 import { ProgressaoAdmin } from '@/components/admin/ProgressaoAdmin'
 import type { Exercicio } from '@/types'
+import { agruparPorSecao, secaoDe } from '@/lib/secoes'
 
 interface Treino {
   id: string
@@ -68,19 +69,26 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
           </div>
         </div>
 
-        {/* Lista resumida de exercícios */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
-          {exercicios.map((ex, i) => (
-            <div key={i} className="flex items-center gap-2 text-xs p-2 rounded-lg bg-muted/30">
-              <span className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-                style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
-                {i + 1}
-              </span>
-              <span className="font-medium text-foreground truncate">{ex.nome}</span>
-              <span className="text-muted-foreground ml-auto flex-shrink-0">
-                {ex.series}×{ex.reps}
-                {ex.carga ? ` · ${ex.carga}` : ''}
-              </span>
+        {/* Lista resumida de exercícios, por bloco */}
+        <div className="space-y-3 mb-2">
+          {agruparPorSecao(exercicios).filter(g => g.itens.length > 0).map(g => (
+            <div key={g.id}>
+              <p className="text-xs font-medium text-muted-foreground mb-1.5">{g.nome}</p>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                {g.itens.map(({ item: ex }, i) => (
+                  <div key={i} className="flex items-center gap-2 text-xs p-2 rounded-lg bg-muted/30">
+                    <span className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
+                      style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
+                      {i + 1}
+                    </span>
+                    <span className="font-medium text-foreground truncate">{ex.nome}</span>
+                    <span className="text-muted-foreground ml-auto flex-shrink-0">
+                      {ex.series}×{ex.reps}
+                      {ex.carga ? ` · ${ex.carga}` : ''}
+                    </span>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>
@@ -90,7 +98,7 @@ export function TreinoCardAdmin({ treino, userId }: { treino: Treino; userId: st
           userId={userId}
           treinoId={treino.id}
           treinoTitulo={treino.titulo}
-          exercicios={exercicios}
+          exercicios={exercicios.filter(e => secaoDe(e) === 'treino')}
         />
       </div>
     </>

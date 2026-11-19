@@ -10,6 +10,7 @@ import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
 import { cn } from '@/lib/utils'
+import { agruparPorSecao } from '@/lib/secoes'
 import { planoDoAluno, mesDoTreino, nomeMes, nomeMesAno } from '@/lib/periodizacao'
 
 interface Treino {
@@ -167,11 +168,43 @@ function TreinoItem({ treino, letra, userId, destaque, feitoHoje, ultima, aberto
               <Timer className="h-4 w-4" strokeWidth={1.75} /> Descanso
             </button>
           </div>
-          {ex.map((e: any, i: number) => (
-            <ProgressaoExercicio key={i} exercicio={e} treinoId={treino.id} userId={userId} index={i} />
+          {agruparPorSecao(ex).filter(g => g.itens.length > 0).map(g => (
+            <div key={g.id} className="space-y-2">
+              <div className="flex items-baseline justify-between px-1 pt-1">
+                <p className="text-sm font-medium text-foreground">{g.nome}</p>
+                <p className="text-xs text-muted-foreground">{g.itens.length} exercício{g.itens.length !== 1 ? 's' : ''}</p>
+              </div>
+              {g.id === 'treino'
+                ? g.itens.map(({ item, index }, pos) => (
+                    <ProgressaoExercicio key={index} exercicio={item} treinoId={treino.id} userId={userId} index={pos} />
+                  ))
+                : g.itens.map(({ item, index }, pos) => (
+                    <ExercicioPreparo key={index} exercicio={item} numero={pos + 1} />
+                  ))}
+            </div>
           ))}
         </div>
       )}
     </div>
+  )
+}
+
+/** Mobilidade e ativação: só a prescrição, sem registro de carga. Toque para marcar como feito. */
+function ExercicioPreparo({ exercicio, numero }: { exercicio: any; numero: number }) {
+  const [feito, setFeito] = useState(false)
+  return (
+    <button type="button" onClick={() => setFeito(f => !f)} aria-pressed={feito}
+      className="w-full border border-border rounded-xl p-4 flex items-center gap-3 text-left min-h-[56px] hover:bg-muted/40 transition-colors">
+      <span className={cn('h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-xs font-medium transition-colors',
+        feito ? 'bg-dieta text-white' : 'bg-muted text-foreground')}>
+        {feito ? <Check className="h-4 w-4" strokeWidth={2.25} /> : numero}
+      </span>
+      <span className="flex-1 min-w-0">
+        <span className={cn('block text-sm font-medium text-foreground', feito && 'line-through opacity-60')}>{exercicio.nome}</span>
+        <span className="block text-xs text-muted-foreground">
+          {exercicio.series} × {exercicio.reps}{exercicio.observacoes ? ` · ${exercicio.observacoes}` : ''}
+        </span>
+      </span>
+    </button>
   )
 }

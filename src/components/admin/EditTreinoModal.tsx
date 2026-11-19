@@ -1,19 +1,22 @@
 'use client'
 
-import { useState, useRef } from 'react'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { ExerciciosSecoes } from '@/components/admin/ExerciciosSecoes'
+import { novoExercicio, ordenarPorSecao } from '@/lib/secoes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
 import { mesDoTreino, normalizaMes } from '@/lib/periodizacao'
 import {
-  X, Plus, Trash2, GripVertical, ChevronDown, ChevronUp,
+  X,
   Loader2, CheckCircle2, Save,
 } from 'lucide-react'
 
 interface Exercicio {
   nome: string; series: number; reps: string; carga?: string; observacoes?: string
+  secao?: 'mobilidade' | 'ativacao' | 'treino'
 }
 interface Treino {
   id: string; titulo: string; descricao: string | null
@@ -28,14 +31,6 @@ export function EditTreinoModal({ treino, onClose }: Props) {
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
   const [erro, setErro] = useState<string | null>(null)
-  const [expandedEx, setExpandedEx] = useState<number | null>(null)
-
-  // Drag state
-  const dragIndex = useRef<number | null>(null)
-  const dragOverIndex = useRef<number | null>(null)
-  const [dragActive, setDragActive] = useState<number | null>(null)
-  const [dragOver, setDragOver] = useState<number | null>(null)
-
   const { register, handleSubmit, control, getValues, setValue, formState: { errors } } = useForm<TreinoFormData>({
     resolver: zodResolver(treinoSchema),
     defaultValues: {
@@ -43,40 +38,12 @@ export function EditTreinoModal({ treino, onClose }: Props) {
       titulo: treino.titulo,
       descricao: treino.descricao ?? '',
       lista_exercicios: treino.lista_exercicios.length > 0
-        ? treino.lista_exercicios
-        : [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
+        ? ordenarPorSecao(treino.lista_exercicios)
+        : [novoExercicio('treino')],
       data_atribuicao: treino.data_atribuicao,
       mes_referencia: mesDoTreino(treino).slice(0, 7),
     },
   })
-
-  const { fields, append, remove, move } = useFieldArray({ control, name: 'lista_exercicios' })
-
-  // ── Drag handlers ─────────────────────────────────────────
-  function onDragStart(index: number) {
-    dragIndex.current = index
-    setDragActive(index)
-    if (expandedEx === index) setExpandedEx(null)
-  }
-
-  function onDragEnter(index: number) {
-    dragOverIndex.current = index
-    setDragOver(index)
-  }
-
-  function onDragEnd() {
-    if (dragIndex.current !== null && dragOverIndex.current !== null && dragIndex.current !== dragOverIndex.current) {
-      move(dragIndex.current, dragOverIndex.current)
-      // Reajusta expanded se necessário
-      if (expandedEx === dragIndex.current) setExpandedEx(dragOverIndex.current)
-    }
-    dragIndex.current = null
-    dragOverIndex.current = null
-    setDragActive(null)
-    setDragOver(null)
-  }
-
-  function onDragOver(e: React.DragEvent) { e.preventDefault() }
 
   // ── Submit ────────────────────────────────────────────────
   async function onSubmit(data: TreinoFormData) {
@@ -84,7 +51,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
     const { error } = await supabase.from('treinos').update({
       titulo: data.titulo,
       descricao: data.descricao,
-      lista_exercicios: data.lista_exercicios,
+      lista_exercicios: ordenarPorSecao(data.lista_exercicios),
       data_atribuicao: data.data_atribuicao,
       mes_referencia: normalizaMes(data.mes_referencia),
     }).eq('id', treino.id)
@@ -138,142 +105,10 @@ export function EditTreinoModal({ treino, onClose }: Props) {
               <textarea {...register('descricao')} rows={2} className="input-base resize-none" placeholder="Orientações gerais..." />
             </div>
 
-            {/* Exercícios com drag and drop */}
+            {/* Exercícios em blocos: Mobilidade → Ativação → Treino */}
             <div>
-              <div className="flex items-center justify-between mb-2">
-                <label className="form-label !mb-0">
-                  Exercícios
-                  <span className="ml-2 text-xs font-normal text-muted-foreground">({fields.length})</span>
-                </label>
-                <div className="flex items-center gap-2">
-                  <span className="text-xs text-muted-foreground hidden sm:flex items-center gap-1">
-                    <GripVertical className="h-3 w-3" />
-                    Arraste para reordenar
-                  </span>
-                  <button
-                    type="button"
-                    onClick={() => { append({ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }); setExpandedEx(fields.length) }}
-                    className="btn-secondary text-xs gap-1"
-                  >
-                    <Plus className="h-3.5 w-3.5" />
-                    Adicionar
-                  </button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                {fields.map((field, index) => {
-                  const isDragging = dragActive === index
-                  const isOver = dragOver === index && dragActive !== index
-
-                  return (
-                    <div
-                      key={field.id}
-                      draggable
-                      onDragStart={() => onDragStart(index)}
-                      onDragEnter={() => onDragEnter(index)}
-                      onDragEnd={onDragEnd}
-                      onDragOver={onDragOver}
-                      className="border rounded-lg overflow-hidden transition-all duration-150 select-none"
-                      style={{
-                        borderColor: isOver ? '#e8799f' : isDragging ? 'transparent' : 'hsl(var(--border))',
-                        opacity: isDragging ? 0.4 : 1,
-                        background: isOver ? 'rgba(232,121,159,0.06)' : undefined,
-                        transform: isOver ? 'scale(1.01)' : 'scale(1)',
-                        cursor: 'grab',
-                      }}
-                    >
-                      {/* Row header */}
-                      <div
-                        className="flex items-center gap-2 p-3 transition-colors"
-                        style={{ background: isDragging ? 'transparent' : 'hsl(var(--muted)/0.3)' }}
-                      >
-                        {/* Grip handle */}
-                        <div
-                          className="flex-shrink-0 p-1 rounded cursor-grab active:cursor-grabbing hover:bg-muted transition-colors"
-                          title="Arraste para reordenar"
-                        >
-                          <GripVertical className="h-4 w-4 text-muted-foreground" />
-                        </div>
-
-                        <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-                          style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
-                          {index + 1}
-                        </div>
-
-                        <span
-                          className="flex-1 text-sm font-medium text-foreground truncate cursor-pointer"
-                          onClick={() => setExpandedEx(expandedEx === index ? null : index)}
-                        >
-                          {field.nome || `Exercício ${index + 1}`}
-                        </span>
-
-                        <button
-                          type="button"
-                          onClick={() => remove(index)}
-                          className="text-muted-foreground hover:text-destructive transition-colors p-1 flex-shrink-0"
-                        >
-                          <Trash2 className="h-3.5 w-3.5" />
-                        </button>
-
-                        <button
-                          type="button"
-                          onClick={() => setExpandedEx(expandedEx === index ? null : index)}
-                          className="text-muted-foreground p-1 flex-shrink-0"
-                        >
-                          {expandedEx === index
-                            ? <ChevronUp className="h-4 w-4" />
-                            : <ChevronDown className="h-4 w-4" />}
-                        </button>
-                      </div>
-
-                      {/* Expanded fields */}
-                      {expandedEx === index && (
-                        <div
-                          className="p-4 grid grid-cols-2 gap-3 animate-slide-up"
-                          onDragStart={(e) => e.preventDefault()}
-                          draggable={false}
-                        >
-                          <div className="col-span-2">
-                            <label className="form-label text-xs">Nome do exercício</label>
-                            <input {...register(`lista_exercicios.${index}.nome`)}
-                              placeholder="Ex: Supino reto com barra" className="input-base" />
-                            {errors.lista_exercicios?.[index]?.nome && (
-                              <p className="form-error">{errors.lista_exercicios[index]?.nome?.message}</p>
-                            )}
-                          </div>
-                          <div>
-                            <label className="form-label text-xs">Séries</label>
-                            <input {...register(`lista_exercicios.${index}.series`, { valueAsNumber: true })}
-                              type="number" min={1} max={20} className="input-base" />
-                          </div>
-                          <div>
-                            <label className="form-label text-xs">Repetições</label>
-                            <input {...register(`lista_exercicios.${index}.reps`)}
-                              placeholder="Ex: 10-12" className="input-base" />
-                          </div>
-                          <div>
-                            <label className="form-label text-xs">Carga sugerida</label>
-                            <input {...register(`lista_exercicios.${index}.carga`)}
-                              placeholder="Ex: 60kg" className="input-base" />
-                          </div>
-                          <div>
-                            <label className="form-label text-xs">Observações</label>
-                            <input {...register(`lista_exercicios.${index}.observacoes`)}
-                              placeholder="Ex: Pausa 90s" className="input-base" />
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  )
-                })}
-
-                {/* Drop zone indicador quando arrastando */}
-                {dragActive !== null && (
-                  <div className="h-1 rounded-full transition-all duration-150"
-                    style={{ background: 'rgba(232,121,159,0.3)' }} />
-                )}
-              </div>
+              <label className="form-label">Montagem do treino</label>
+              <ExerciciosSecoes control={control} register={register} errors={errors} />
             </div>
           </div>
 

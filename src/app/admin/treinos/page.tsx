@@ -4,7 +4,9 @@ import { useState, useEffect } from 'react'
 import { dateKey } from '@/lib/dates'
 import Link from 'next/link'
 import { mesKey, normalizaMes, nomeMesAno } from '@/lib/periodizacao'
-import { useForm, useFieldArray } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
+import { ExerciciosSecoes } from '@/components/admin/ExerciciosSecoes'
+import { novoExercicio, ordenarPorSecao } from '@/lib/secoes'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
@@ -32,7 +34,6 @@ export default function GestorTreinosPage() {
   const [templates, setTemplates] = useState<Template[]>([])
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
-  const [expandedEx, setExpandedEx] = useState<number | null>(null)
   const [saveAsTemplate, setSaveAsTemplate] = useState(true)
   const [showTemplates, setShowTemplates] = useState(false)
   const [templateCategoria, setTemplateCategoria] = useState('')
@@ -67,20 +68,18 @@ export default function GestorTreinosPage() {
   const { register, handleSubmit, control, reset, setValue, getValues, formState: { errors } } = useForm<TreinoFormData>({
     resolver: zodResolver(treinoSchema),
     defaultValues: {
-      lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
+      lista_exercicios: [novoExercicio('mobilidade'), novoExercicio('treino')],
       data_atribuicao: dateKey(),
       mes_referencia: mesKey().slice(0, 7),
     },
   })
 
-  const { fields, append, remove } = useFieldArray({ control, name: 'lista_exercicios' })
 
   function loadTemplate(template: Template) {
     setValue('titulo', template.titulo)
     setValue('descricao', template.descricao ?? '')
-    setValue('lista_exercicios', template.lista_exercicios)
+    setValue('lista_exercicios', ordenarPorSecao(template.lista_exercicios))
     setShowTemplates(false)
-    setExpandedEx(null)
   }
 
   async function deleteTemplate(id: string) {
@@ -104,6 +103,7 @@ export default function GestorTreinosPage() {
     const { count } = await supabase.from('treinos').select('id', { count: 'exact', head: true })
       .eq('user_id', data.user_id).eq('mes_referencia', mesRef)
 
+    data = { ...data, lista_exercicios: ordenarPorSecao(data.lista_exercicios) }
     const { error } = await supabase.from('treinos').insert({
       ...data,
       mes_referencia: mesRef,
@@ -138,7 +138,7 @@ export default function GestorTreinosPage() {
       reset({
         user_id: data.user_id,
         mes_referencia: data.mes_referencia,
-        lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
+        lista_exercicios: [novoExercicio('mobilidade'), novoExercicio('treino')],
         data_atribuicao: dateKey(),
       })
       setTimeout(() => setSaved(false), 3000)
@@ -293,86 +293,11 @@ export default function GestorTreinosPage() {
           </div>
         </div>
 
-        {/* Exercícios */}
+        {/* Exercícios em blocos: Mobilidade → Ativação → Treino */}
         <div className="card p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="font-normal text-foreground">
-              Exercícios
-              <span className="ml-2 text-xs font-normal text-muted-foreground">({fields.length})</span>
-            </h2>
-            <button
-              type="button"
-              onClick={() => { append({ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }); setExpandedEx(fields.length) }}
-              className="btn-secondary text-xs gap-1"
-            >
-              <Plus className="h-3.5 w-3.5" />
-              Adicionar exercício
-            </button>
-          </div>
-
-          {errors.lista_exercicios?.root && (
-            <p className="form-error mb-3">{errors.lista_exercicios.root.message}</p>
-          )}
-
-          <div className="space-y-2">
-            {fields.map((field, index) => (
-              <div key={field.id} className="border border-border rounded-lg overflow-hidden">
-                <div
-                  className="flex items-center gap-2 p-3 bg-muted/30 cursor-pointer"
-                  onClick={() => setExpandedEx(expandedEx === index ? null : index)}
-                >
-                  <GripVertical className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                  <div className="h-5 w-5 rounded-full flex items-center justify-center text-xs font-medium flex-shrink-0"
-                    style={{ background: 'rgba(232,121,159,0.15)', color: 'var(--rose-text)' }}>
-                    {index + 1}
-                  </div>
-                  <span className="flex-1 text-sm font-medium text-foreground truncate">
-                    {field.nome || `Exercício ${index + 1}`}
-                  </span>
-                  <button type="button" onClick={(e) => { e.stopPropagation(); remove(index) }}
-                    className="text-muted-foreground hover:text-destructive transition-colors p-1">
-                    <Trash2 className="h-3.5 w-3.5" />
-                  </button>
-                  {expandedEx === index
-                    ? <ChevronUp className="h-4 w-4 text-muted-foreground" />
-                    : <ChevronDown className="h-4 w-4 text-muted-foreground" />}
-                </div>
-
-                {expandedEx === index && (
-                  <div className="p-4 grid grid-cols-2 gap-3 animate-slide-up">
-                    <div className="col-span-2">
-                      <label className="form-label text-xs">Nome do exercício</label>
-                      <input {...register(`lista_exercicios.${index}.nome`)}
-                        placeholder="Ex: Supino reto com barra" className="input-base" />
-                      {errors.lista_exercicios?.[index]?.nome && (
-                        <p className="form-error">{errors.lista_exercicios[index]?.nome?.message}</p>
-                      )}
-                    </div>
-                    <div>
-                      <label className="form-label text-xs">Séries</label>
-                      <input {...register(`lista_exercicios.${index}.series`, { valueAsNumber: true })}
-                        type="number" min={1} max={20} className="input-base" />
-                    </div>
-                    <div>
-                      <label className="form-label text-xs">Repetições</label>
-                      <input {...register(`lista_exercicios.${index}.reps`)}
-                        placeholder="Ex: 10-12" className="input-base" />
-                    </div>
-                    <div>
-                      <label className="form-label text-xs">Carga sugerida</label>
-                      <input {...register(`lista_exercicios.${index}.carga`)}
-                        placeholder="Ex: 60kg" className="input-base" />
-                    </div>
-                    <div>
-                      <label className="form-label text-xs">Observações</label>
-                      <input {...register(`lista_exercicios.${index}.observacoes`)}
-                        placeholder="Pausa, técnica especial..." className="input-base" />
-                    </div>
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+          <h2 className="font-normal text-foreground mb-1">Montagem do treino</h2>
+          <p className="text-sm text-muted-foreground mb-4">Separe em mobilidade, ativação (se tiver) e o treino principal.</p>
+          <ExerciciosSecoes control={control} register={register} errors={errors} />
         </div>
 
         <div className="flex items-center gap-3">

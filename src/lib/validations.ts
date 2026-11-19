@@ -92,13 +92,15 @@ export const exercicioSchema = z.object({
   reps: z.string().min(1, 'Informe as repetições'),
   carga: z.string().optional(),
   observacoes: z.string().optional(),
+  secao: z.enum(['mobilidade', 'ativacao', 'treino']).optional(),
 })
 
 export const treinoSchema = z.object({
   user_id: z.string().uuid('Selecione um usuário'),
   titulo: z.string().min(3, 'Título deve ter pelo menos 3 caracteres'),
   descricao: z.string().optional(),
-  lista_exercicios: z.array(exercicioSchema).min(1, 'Adicione pelo menos 1 exercício'),
+  lista_exercicios: z.array(exercicioSchema)
+    .refine(l => l.some(e => (e.secao ?? 'treino') === 'treino'), 'Adicione pelo menos 1 exercício no bloco Treino'),
   data_atribuicao: z.string().min(1, 'Selecione a data'),
   mes_referencia: z.string().regex(/^\d{4}-\d{2}$/, 'Selecione o mês do plano'),
 })
