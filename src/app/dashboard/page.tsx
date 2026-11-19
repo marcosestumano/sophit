@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation'
 import { subDays, format } from 'date-fns'
 import { HomeView } from '@/components/home/HomeView'
 import { sortTreinos } from '@/lib/utils'
+import { planoDoAluno } from '@/lib/periodizacao'
 
 export default async function DashboardPage() {
   const supabase = createClient()
@@ -15,7 +16,7 @@ export default async function DashboardPage() {
 
   const [profileRes, treinosRes, progRes, planoRes, cardioPRes, cardioRRes, avalRes] = await Promise.all([
     supabase.from('profiles').select('full_name, email').eq('id', user.id).single(),
-    supabase.from('treinos').select('id, titulo, lista_exercicios, data_atribuicao, ordem, ativo').eq('user_id', user.id).eq('ativo', true),
+    supabase.from('treinos').select('*').eq('user_id', user.id).eq('ativo', true),
     supabase.from('progressao_exercicios').select('treino_id, data_registro').eq('user_id', user.id).gte('data_registro', desde),
     supabase.from('dieta_planos').select('*').eq('user_id', user.id).eq('ativo', true).order('created_at', { ascending: false }).limit(1),
     supabase.from('cardio_prescricoes').select('*').eq('user_id', user.id).eq('ativo', true),
@@ -53,7 +54,7 @@ export default async function DashboardPage() {
   return (
     <HomeView
       nome={nome}
-      treinos={sortTreinos((treinosRes.data ?? []) as any[])}
+      treinos={sortTreinos(planoDoAluno((treinosRes.data ?? []) as any[]).atuais)}
       progressoes={progRes.data ?? []}
       plano={plano}
       refeicoes={refeicoes}

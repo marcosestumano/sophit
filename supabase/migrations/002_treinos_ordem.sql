@@ -13,3 +13,4 @@ FROM numerados n
 WHERE t.id = n.id AND t.ordem IS NULL;
 
 CREATE INDEX IF NOT EXISTS idx_treinos_user_ordem ON public.treinos(user_id, ordem);
+ 

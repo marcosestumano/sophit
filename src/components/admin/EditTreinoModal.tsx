@@ -6,6 +6,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
+import { mesDoTreino, normalizaMes } from '@/lib/periodizacao'
 import {
   X, Plus, Trash2, GripVertical, ChevronDown, ChevronUp,
   Loader2, CheckCircle2, Save,
@@ -17,6 +18,7 @@ interface Exercicio {
 interface Treino {
   id: string; titulo: string; descricao: string | null
   lista_exercicios: Exercicio[]; data_atribuicao: string; ativo: boolean; user_id: string
+  mes_referencia?: string | null
 }
 interface Props { treino: Treino; onClose: () => void }
 
@@ -25,6 +27,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [saved, setSaved] = useState(false)
+  const [erro, setErro] = useState<string | null>(null)
   const [expandedEx, setExpandedEx] = useState<number | null>(null)
 
   // Drag state
@@ -43,6 +46,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
         ? treino.lista_exercicios
         : [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
       data_atribuicao: treino.data_atribuicao,
+      mes_referencia: mesDoTreino(treino).slice(0, 7),
     },
   })
 
@@ -82,9 +86,16 @@ export function EditTreinoModal({ treino, onClose }: Props) {
       descricao: data.descricao,
       lista_exercicios: data.lista_exercicios,
       data_atribuicao: data.data_atribuicao,
+      mes_referencia: normalizaMes(data.mes_referencia),
     }).eq('id', treino.id)
     setLoading(false)
-    if (!error) { setSaved(true); router.refresh(); setTimeout(() => { setSaved(false); onClose() }, 1500) }
+    if (error) {
+      setErro(error.message.includes('mes_referencia')
+        ? 'A coluna "mes_referencia" não existe no banco. Rode a migration 004_treinos_mensais.sql no Supabase.'
+        : `Não foi possível salvar: ${error.message}`)
+      return
+    }
+    setErro(null); setSaved(true); router.refresh(); setTimeout(() => { setSaved(false); onClose() }, 1500)
   }
 
   return (
@@ -114,6 +125,12 @@ export function EditTreinoModal({ treino, onClose }: Props) {
                 <label className="form-label">Data de atribuição</label>
                 <input {...register('data_atribuicao')} type="date" className="input-base" />
               </div>
+            </div>
+
+            <div>
+              <label className="form-label">Mês do plano</label>
+              <input {...register('mes_referencia')} type="month" className="input-base" />
+              {errors.mes_referencia && <p className="form-error">{errors.mes_referencia.message}</p>}
             </div>
 
             <div>
@@ -263,6 +280,7 @@ export function EditTreinoModal({ treino, onClose }: Props) {
           {/* Footer */}
           <div className="flex items-center justify-between gap-3 p-5 border-t border-border">
             <button type="button" onClick={onClose} className="btn-secondary">Cancelar</button>
+            {erro && <p role="alert" className="flex-1 text-sm text-destructive">{erro}</p>}
             <button type="submit" disabled={loading} className="btn-primary gap-2">
               {loading ? <Loader2 className="h-4 w-4 animate-spin" />
                 : saved ? <CheckCircle2 className="h-4 w-4" />

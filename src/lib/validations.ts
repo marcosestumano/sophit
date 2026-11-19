@@ -100,6 +100,7 @@ export const treinoSchema = z.object({
   descricao: z.string().optional(),
   lista_exercicios: z.array(exercicioSchema).min(1, 'Adicione pelo menos 1 exercício'),
   data_atribuicao: z.string().min(1, 'Selecione a data'),
+  mes_referencia: z.string().regex(/^\d{4}-\d{2}$/, 'Selecione o mês do plano'),
 })
 
 export const feedbackSchema = z.object({

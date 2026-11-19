@@ -9,8 +9,7 @@ import { AvaliacaoSection } from '@/components/admin/AvaliacaoSection'
 import { AvaliacaoResumo } from '@/components/admin/AvaliacaoResumo'
 import { DeleteUserButton } from '@/components/admin/DeleteUserButton'
 import { FotosProgresso } from '@/components/FotosProgresso'
-import { TreinoCardAdmin } from '@/components/admin/TreinoCardAdmin'
-import { TreinosListAdmin } from '@/components/admin/TreinosListAdmin'
+import { PlanoAnualAdmin } from '@/components/admin/PlanoAnualAdmin'
 import { sortTreinos } from '@/lib/utils'
 import { DietaAdmin } from '@/components/dieta/DietaAdmin'
 import { CardioAdmin } from '@/components/cardio/CardioAdmin'
@@ -69,20 +68,8 @@ export default async function UserProfilePage({ params }: { params: { id: string
         </div>
       )}
 
-      {/* Treinos */}
-      {treinos && treinos.length > 0 && (
-        <div className="card p-5 sm:p-6">
-          <div className="flex items-center justify-between mb-5">
-            <h2 className="text-xl tracking-[-0.02em] font-normal text-foreground">
-              Treinos e Progressão de Cargas
-            </h2>
-            <Link href="/admin/treinos" className="text-xs font-medium" style={{ color: 'var(--rose-text)' }}>
-              + Novo treino
-            </Link>
-          </div>
-          <TreinosListAdmin treinos={sortTreinos(treinos)} userId={params.id} />
-        </div>
-      )}
+      {/* Treinos — planejamento mês a mês + evolução anual */}
+      <PlanoAnualAdmin userId={params.id} treinos={sortTreinos((treinos ?? []) as any[])} />
 
       {/* Dieta e Cardio */}
       <DietaAdmin userId={params.id} />

@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { dateKey } from '@/lib/dates'
+import Link from 'next/link'
+import { mesKey, normalizaMes, nomeMesAno } from '@/lib/periodizacao'
 import { useForm, useFieldArray } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
@@ -34,10 +36,23 @@ export default function GestorTreinosPage() {
   const [saveAsTemplate, setSaveAsTemplate] = useState(true)
   const [showTemplates, setShowTemplates] = useState(false)
   const [templateCategoria, setTemplateCategoria] = useState('')
+  const [alunoOrigem, setAlunoOrigem] = useState<string | null>(null)
 
   useEffect(() => {
+    // Vindo do plano anual do aluno: /admin/treinos?aluno=<id>&mes=2026-12
+    const params = new URLSearchParams(window.location.search)
+    const aluno = params.get('aluno')
+    const mes = params.get('mes')
+    if (mes && /^\d{4}-\d{2}$/.test(mes)) setValue('mes_referencia', mes)
     supabase.from('profiles').select('*').eq('role', 'user').order('full_name')
-      .then(({ data }) => setUsers(data ?? []))
+      .then(({ data }) => {
+        setUsers(data ?? [])
+        if (aluno && data?.some(u => u.id === aluno)) {
+          setAlunoOrigem(aluno)
+          // espera o <select> renderizar as opções antes de marcar o aluno
+          requestAnimationFrame(() => setValue('user_id', aluno))
+        }
+      })
     fetchTemplates()
   }, [])
 
@@ -54,6 +69,7 @@ export default function GestorTreinosPage() {
     defaultValues: {
       lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
       data_atribuicao: dateKey(),
+      mes_referencia: mesKey().slice(0, 7),
     },
   })
 
@@ -83,8 +99,15 @@ export default function GestorTreinosPage() {
     }
 
     // Salva o treino
+    // Ordem: entra no fim dos treinos daquele mês
+    const mesRef = normalizaMes(data.mes_referencia)!
+    const { count } = await supabase.from('treinos').select('id', { count: 'exact', head: true })
+      .eq('user_id', data.user_id).eq('mes_referencia', mesRef)
+
     const { error } = await supabase.from('treinos').insert({
       ...data,
+      mes_referencia: mesRef,
+      ordem: count ?? null,
       admin_id: user.id,
     })
 
@@ -103,13 +126,18 @@ export default function GestorTreinosPage() {
     setLoading(false)
     if (error) {
       console.error('Erro ao atribuir treino:', error)
-      setErro(`Não foi possível salvar o treino: ${error.message}`)
+      setErro(error.message.includes('mes_referencia')
+        ? 'A coluna "mes_referencia" não existe no banco. Rode a migration 004_treinos_mensais.sql no Supabase.'
+        : `Não foi possível salvar o treino: ${error.message}`)
       return
     }
     {
       router.refresh()
       setSaved(true)
+      // Mantém aluno e mês para montar o próximo treino (A, B, C...) do mesmo plano
       reset({
+        user_id: data.user_id,
+        mes_referencia: data.mes_referencia,
         lista_exercicios: [{ nome: '', series: 3, reps: '10-12', carga: '', observacoes: '' }],
         data_atribuicao: dateKey(),
       })
@@ -124,6 +152,11 @@ export default function GestorTreinosPage() {
           Gestor de Treinos
         </h1>
         <p className="text-muted-foreground mt-1">Crie, reutilize e atribua treinos personalizados</p>
+        {alunoOrigem && (
+          <Link href={`/admin/usuarios/${alunoOrigem}`} className="inline-flex items-center gap-1 text-sm font-medium mt-2" style={{ color: 'var(--rose-text)' }}>
+            ← Voltar para o plano anual do aluno
+          </Link>
+        )}
       </div>
 
       {/* Biblioteca de Templates */}
@@ -207,11 +240,19 @@ export default function GestorTreinosPage() {
             {errors.user_id && <p className="form-error">{errors.user_id.message}</p>}
           </div>
 
+          <div>
+            <label className="form-label">Título do Treino</label>
+            <input {...register('titulo')} placeholder="Ex: Treino A — Peito e Tríceps" className="input-base" />
+            {errors.titulo && <p className="form-error">{errors.titulo.message}</p>}
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="form-label">Título do Treino</label>
-              <input {...register('titulo')} placeholder="Ex: Treino A — Peito e Tríceps" className="input-base" />
-              {errors.titulo && <p className="form-error">{errors.titulo.message}</p>}
+              <label className="form-label">Mês do plano</label>
+              <input {...register('mes_referencia')} type="month" className="input-base" />
+              {errors.mes_referencia
+                ? <p className="form-error">{errors.mes_referencia.message}</p>
+                : <p className="text-xs text-muted-foreground mt-1">O aluno vê este treino durante o mês escolhido.</p>}
             </div>
             <div>
               <label className="form-label">Data de atribuição</label>

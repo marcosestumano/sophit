@@ -3,16 +3,18 @@
 import { useEffect, useRef, useState } from 'react'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { Dumbbell, Play, ChevronDown, ChevronRight, Check, Timer } from 'lucide-react'
+import Link from 'next/link'
+import { Dumbbell, Play, ChevronDown, ChevronRight, Check, Timer, BarChart3 } from 'lucide-react'
 import { useDescanso } from '@/components/treinos/Descanso'
 import { AppScreen, ScreenHeader } from '@/components/app/AppShell'
 import { ProgressaoExercicio } from '@/components/dashboard/ProgressaoExercicio'
 import { dateKey, letraTreino, parseKey } from '@/lib/dates'
 import { cn } from '@/lib/utils'
+import { planoDoAluno, mesDoTreino, nomeMes, nomeMesAno } from '@/lib/periodizacao'
 
 interface Treino {
   id: string; titulo: string; descricao: string | null; lista_exercicios: any[]
-  data_atribuicao: string; ativo: boolean
+  data_atribuicao: string; ativo: boolean; mes_referencia?: string | null
 }
 
 interface Props {
@@ -23,8 +25,17 @@ interface Props {
 }
 
 export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
-  const ativos = treinos.filter(t => t.ativo)
-  const inativos = treinos.filter(t => !t.ativo)
+  // Plano do mês: treinos do mês atual (ou do último mês montado, se o atual ainda não foi)
+  const plano = planoDoAluno(treinos)
+  const ativos = plano.atuais.filter(t => t.ativo)
+  const inativos = [...plano.atuais.filter(t => !t.ativo), ...plano.anteriores]
+  // Agrupa os anteriores por mês, do mais recente para o mais antigo
+  const gruposAnteriores = Array.from(new Set(inativos.map(mesDoTreino))).sort().reverse()
+    .map(mes => ({ mes, treinos: inativos.filter(t => mesDoTreino(t) === mes) }))
+  const subtitulo = plano.mes
+    ? `Plano de ${nomeMes(plano.mes).toLowerCase()} · ${ativos.length} treino${ativos.length !== 1 ? 's' : ''}`
+      + (plano.doMesAtual ? '' : ' · o novo mês ainda não foi montado')
+    : 'Nenhum treino no plano'
   const today = dateKey()
 
   // Próximo da rotação: o seguinte ao último treinado
@@ -46,7 +57,12 @@ export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
 
   return (
     <AppScreen>
-      <ScreenHeader title="Meus treinos" sub={`${ativos.length} treino${ativos.length !== 1 ? 's' : ''} no plano`} />
+      <ScreenHeader title="Meus treinos" sub={subtitulo} right={
+        <Link href="/dashboard/treinos/evolucao"
+          className="press h-11 px-4 rounded-full border border-border flex items-center gap-2 text-sm font-medium text-foreground hover:bg-muted">
+          <BarChart3 className="h-4 w-4" strokeWidth={1.75} /> Evolução no ano
+        </Link>
+      } />
 
       {ativos.length === 0 && (
         <div className="app-card p-8 mt-4 text-center">
@@ -79,10 +95,15 @@ export function TreinosView({ userId, treinos, progressoes, abrirId }: Props) {
             <ChevronDown className={cn('h-[18px] w-[18px] transition-transform duration-150', verHistorico && 'rotate-180')} strokeWidth={1.75} />
           </button>
           {verHistorico && (
-            <div className="space-y-3 mt-2">
-              {inativos.map(t => (
-                <TreinoItem key={t.id} treino={t} letra="·" userId={userId} destaque={false} feitoHoje={false}
-                  ultima={ultimaData(t.id)} aberto={aberto === t.id} onToggle={() => setAberto(aberto === t.id ? null : t.id)} />
+            <div className="space-y-5 mt-2">
+              {gruposAnteriores.map(g => (
+                <div key={g.mes} className="space-y-3">
+                  <p className="text-xs font-medium text-muted-foreground px-1">{nomeMesAno(g.mes)}</p>
+                  {g.treinos.map(t => (
+                    <TreinoItem key={t.id} treino={t} letra="·" userId={userId} destaque={false} feitoHoje={false}
+                      ultima={ultimaData(t.id)} aberto={aberto === t.id} onToggle={() => setAberto(aberto === t.id ? null : t.id)} />
+                  ))}
+                </div>
               ))}
             </div>
           )}
