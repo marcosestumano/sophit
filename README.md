@@ -1,190 +1,136 @@
-# VitalSync — SaaS de Saúde, Anamnese e Performance
+# Sophit
 
-MVP completo de plataforma SaaS para profissionais de saúde e fitness.
+Plataforma para personal trainers e nutricionistas acompanharem seus alunos em um só lugar: anamnese, avaliação física, treinos com progressão de carga, dieta, cardio e fotos de evolução. O profissional prescreve no painel admin (desktop); o aluno segue tudo pelo celular, inclusive como PWA instalável.
+
+Contexto de produto em [`PRODUCT.md`](PRODUCT.md) e sistema visual em [`DESIGN.md`](DESIGN.md).
 
 ## Stack
 
 | Camada | Tecnologia |
 |--------|-----------|
-| Framework | Next.js 14 (App Router) |
-| Estilização | Tailwind CSS + CSS Variables |
+| Framework | Next.js 14 (App Router) + React 18 + TypeScript |
+| Backend / Auth / DB / Storage | Supabase (`@supabase/ssr`), com RLS em todas as tabelas |
+| Estilização | Tailwind CSS + CSS Variables, fonte Geist |
 | Ícones | Lucide React |
-| Backend / Auth / DB | Supabase |
 | Formulários | React Hook Form + Zod |
 | Gráficos | Recharts |
+| Datas | date-fns |
+| PWA | `src/app/manifest.ts`, `public/sw.js`, `public/offline.html` |
 
 ---
 
-## Configuração do Projeto
+## Configuração
 
-### 1. Clonar e instalar dependências
+### 1. Instalar dependências
 
 ```bash
-git clone <repo>
-cd saas-saude
 npm install
 ```
 
-### 2. Criar projeto no Supabase
-
-1. Acesse [supabase.com](https://supabase.com) e crie um novo projeto
-2. Copie as variáveis de ambiente:
+### 2. Variáveis de ambiente
 
 ```bash
-cp .env.local.example .env.local
+cp .env.example .env.local
 ```
 
-Preencha no `.env.local`:
-```
-NEXT_PUBLIC_SUPABASE_URL=https://xxx.supabase.co
-NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJ...
-```
+| Variável | Uso |
+|----------|-----|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL do projeto Supabase |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Chave pública (anon) |
+| `SUPABASE_SERVICE_ROLE_KEY` | **Só servidor.** Usada para excluir usuários (`/api/admin/delete-user`) |
 
-### 3. Executar migrations no Supabase
+### 3. Banco de dados
 
-No painel do Supabase → **SQL Editor**, cole e execute o conteúdo de:
+No painel do Supabase → **SQL Editor**, rode os arquivos de `supabase/migrations/` **nesta ordem**:
 
-```
-supabase/migrations/001_initial_schema.sql
-```
+| Arquivo | O que faz |
+|---------|-----------|
+| `001_initial_schema.sql` | `profiles`, `anamneses`, `avaliacoes_fisicas`, `treinos`, trigger de novo usuário, RLS, bucket `avatars` |
+| `002_treinos_ordem.sql` | Ordem manual dos treinos (drag & drop) |
+| `003_dieta_cardio.sql` | Dieta (planos, refeições, checks) e cardio (prescrições, registros) |
+| `003b_progressao_fotos_templates.sql` | `progressao_exercicios`, `fotos_progresso`, `treino_templates`, bucket `progress-photos` |
+| `004_treinos_mensais.sql` | Planejamento mensal (`mes_referencia`) |
+| `005_treino_checks.sql` | Check diário dos exercícios dos blocos |
+| `006_blocos_livres.sql` | Blocos de treino livres (título e quantidade definidos pelo profissional) |
 
-Isso irá criar:
-- Todas as tabelas (`profiles`, `anamneses`, `avaliacoes_fisicas`, `treinos`)
-- Triggers automáticos
-- Políticas de Row Level Security (RLS)
-- Bucket de storage para avatares
+Da 002 em diante, todas podem ser rodadas mais de uma vez com segurança. A 001 só roda em banco vazio.
 
-### 4. Configurar Google OAuth (opcional)
+### 4. Google OAuth (opcional)
 
-No painel Supabase → **Authentication → Providers → Google**:
-1. Ative o provider Google
-2. Crie credenciais OAuth no [Google Cloud Console](https://console.cloud.google.com)
-3. Adicione `https://seu-projeto.supabase.co/auth/v1/callback` como Redirect URI
+Supabase → **Authentication → Providers → Google**: ative o provider, crie as credenciais no [Google Cloud Console](https://console.cloud.google.com) e adicione `https://<seu-projeto>.supabase.co/auth/v1/callback` como Redirect URI.
 
-### 5. Criar usuário admin
+### 5. Criar o primeiro admin
 
-Após criar um usuário via cadastro normal, execute no SQL Editor:
+Cadastre-se normalmente pela tela `/register` e depois, no SQL Editor:
 
 ```sql
-UPDATE public.profiles
-SET role = 'admin'
-WHERE email = 'seu-email-admin@exemplo.com';
+UPDATE public.profiles SET role = 'admin' WHERE email = 'seu-email@exemplo.com';
 ```
 
-### 6. Rodar o projeto
+### 6. Rodar
 
 ```bash
-npm run dev
-```
-
-Acesse: http://localhost:3000
-
----
-
-## Arquitetura de Rotas
-
-```
-/                           → Redirect para /dashboard ou /login
-/login                      → Autenticação (Email/Senha + Google OAuth)
-/register                   → Cadastro de novos usuários
-/onboarding                 → Primeiro acesso: definir nome de perfil
-/auth/callback              → Callback OAuth
-
-/dashboard                  → Home do usuário (stats + treinos + feedbacks)
-/dashboard/anamnese         → Histórico de anamneses
-/dashboard/anamnese/nova    → Formulário multi-step de anamnese
-/dashboard/treinos          → Treinos atribuídos pelo admin
-/dashboard/perfil           → Perfil do usuário
-
-/admin                      → Dashboard admin (somente role: admin)
-/admin/anamneses            → Inbox estilo Gmail de anamneses
-/admin/anamneses/[id]       → Detalhes + formulário de feedback
-/admin/usuarios             → Lista de todos os alunos
-/admin/usuarios/[id]        → Perfil do aluno + gráficos + avaliação física
-/admin/treinos              → Gestor: criar e atribuir treinos
-/admin/avaliacoes           → Histórico de avaliações físicas
+npm run dev          # http://localhost:3000
+npm run type-check   # checagem de tipos
+npm run lint
+npm run build
 ```
 
 ---
 
-## Segurança (RLS)
+## Rotas
 
-| Tabela | User | Admin |
-|--------|------|-------|
-| `profiles` | Lê/edita apenas o próprio | Lê/edita todos |
-| `anamneses` | Cria e lê as próprias | CRUD completo |
-| `avaliacoes_fisicas` | **Sem acesso** | CRUD completo |
-| `treinos` | Lê os próprios | CRUD completo |
+```
+/login, /register              Autenticação (email/senha + Google)
+/onboarding                    Primeiro acesso
+/auth/callback                 Callback OAuth
 
----
+/dashboard                     Home do aluno (treino do dia, dieta, cardio, peso)
+/dashboard/treinos             Treinos do mês, registro de cargas, timer de descanso
+/dashboard/treinos/evolucao    Evolução anual das cargas
+/dashboard/dieta               Plano alimentar e check de refeições
+/dashboard/cardio              Cardio prescrito, cronômetro e registros
+/dashboard/progresso           Fotos de progresso (antes/depois)
+/dashboard/anamnese[/nova]     Histórico e formulário multi-step
+/dashboard/perfil              Perfil e avaliações físicas
 
-## Funcionalidades Implementadas
+/admin                         Painel do profissional (somente role = admin)
+/admin/usuarios[/id]           Alunos; perfil com treinos, plano anual, dieta, cardio, avaliação, fotos
+/admin/treinos                 Criar/atribuir treinos em blocos + biblioteca de templates
+/admin/anamneses[/id]          Inbox de anamneses + feedback
+/admin/avaliacoes              Histórico de avaliações físicas
+/admin/relatorios              Engajamento e evolução dos alunos
 
-### Usuário
-- [x] Login com Google OAuth e Email/Senha
-- [x] Onboarding (definição do nome no primeiro acesso)
-- [x] Dashboard com resumo de treinos e feedbacks
-- [x] Formulário de anamnese multi-step (4 etapas) com validação Zod
-- [x] Histórico de anamneses com feedbacks do profissional
-- [x] Visualização de treinos ativos com exercícios detalhados
-- [x] Dark mode com persistência via localStorage
+/api/admin/delete-user         Exclusão de usuário (service role)
+```
 
-### Administrador
-- [x] Dashboard com métricas gerais
-- [x] Inbox de anamneses estilo Gmail (pendentes/respondidas)
-- [x] Detalhamento de anamnese + envio/edição de feedback
-- [x] Lista de alunos com busca
-- [x] Perfil individual do aluno com:
-  - Métricas da última avaliação
-  - Gráficos de evolução de peso e composição corporal (Recharts)
-  - Formulário de avaliação física com cálculo automático de IMC
-- [x] Gestor de treinos com exercícios dinâmicos (adicionar/remover)
-- [x] Proteção de rotas via middleware Next.js
+O `middleware.ts` exige login nas rotas privadas; `admin/layout.tsx` exige `role = 'admin'`. As permissões sobre os dados ficam no RLS do Supabase.
 
----
+## Permissões (RLS)
 
-## Estrutura de Arquivos
+| Tabela | Aluno | Admin |
+|--------|-------|-------|
+| `profiles` | Lê/edita o próprio | Tudo |
+| `anamneses` | Cria e lê as próprias | Tudo |
+| `avaliacoes_fisicas` | Lê as próprias | Tudo |
+| `treinos`, `cardio_prescricoes` | Lê os próprios | Tudo |
+| `progressao_exercicios`, `treino_checks`, `cardio_registros`, `dieta_*`, `fotos_progresso` | Tudo nos próprios | Tudo |
+| `treino_templates` | Sem acesso | Tudo |
+
+## Estrutura
 
 ```
 src/
-├── app/
-│   ├── layout.tsx              # Root layout
-│   ├── globals.css             # Estilos globais + dark mode
-│   ├── login/page.tsx          # Página de login
-│   ├── onboarding/page.tsx     # Onboarding first-time
-│   ├── auth/callback/route.ts  # OAuth callback
-│   ├── dashboard/
-│   │   ├── layout.tsx          # Layout com sidebar
-│   │   ├── page.tsx            # Home do usuário
-│   │   ├── anamnese/
-│   │   │   ├── page.tsx        # Histórico
-│   │   │   └── nova/page.tsx   # Formulário multi-step
-│   │   └── treinos/page.tsx    # Treinos do usuário
-│   └── admin/
-│       ├── layout.tsx          # Layout admin (proteção de role)
-│       ├── page.tsx            # Dashboard admin
-│       ├── anamneses/
-│       │   ├── page.tsx        # Inbox
-│       │   └── [id]/page.tsx   # Detalhe + feedback
-│       ├── usuarios/
-│       │   ├── page.tsx        # Lista de alunos
-│       │   └── [id]/page.tsx   # Perfil + gráficos + avaliação
-│       ├── treinos/page.tsx    # Gestor de treinos
-│       └── avaliacoes/page.tsx # Lista de avaliações
+├── app/             Rotas (App Router): auth, dashboard (aluno), admin, api
 ├── components/
-│   ├── dashboard/
-│   │   ├── Sidebar.tsx         # Navegação lateral colapsável
-│   │   └── Header.tsx          # Header com dark mode + user menu
-│   └── admin/
-│       ├── FeedbackForm.tsx    # Formulário de feedback client-side
-│       ├── AvaliacaoForm.tsx   # Formulário de avaliação física
-│       └── EvolutionCharts.tsx # Gráficos Recharts
-├── lib/
-│   ├── supabase/
-│   │   ├── client.ts           # Supabase Browser Client
-│   │   └── server.ts           # Supabase Server Client
-│   ├── validations.ts          # Schemas Zod
-│   └── utils.ts                # cn() helper
-├── middleware.ts               # Proteção de rotas + onboarding check
-└── types/index.ts              # TypeScript types
+│   ├── admin/       Editor de blocos, plano anual, avaliação física, relatórios
+│   ├── treinos/     Visão de treinos, descanso, evolução anual
+│   ├── dieta/       Editor e visão do plano alimentar
+│   ├── cardio/      Prescrição, cronômetro, registros
+│   ├── home/        Home do aluno
+│   └── app/         Shell, navegação mobile, sheet, registro do PWA
+├── lib/             Supabase (client/server/auth), periodização, dieta, datas, validações Zod
+├── middleware.ts    Proteção de rotas
+└── types/           Tipos compartilhados
+supabase/migrations/ Schema do banco
 ```
