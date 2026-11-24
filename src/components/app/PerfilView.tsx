@@ -8,7 +8,7 @@ import { ptBR } from 'date-fns/locale'
 import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Smartphone, Share, SquarePlus, Bell, BellOff } from 'lucide-react'
 import { Sheet } from '@/components/app/Sheet'
 import { useInstall, limparCachePwa } from '@/lib/pwa'
-import { usePush, desinscreverPush } from '@/lib/push'
+import { usePush, desinscreverPush, enviarTeste } from '@/lib/push'
 import { createClient } from '@/lib/supabase/client'
 import { AppScreen, IconChip } from '@/components/app/AppShell'
 import { AlternarPainel } from '@/components/app/AlternarPainel'
@@ -24,6 +24,8 @@ export function PerfilView({ profile }: { profile: Profile }) {
   const { state: instalacao, install } = useInstall()
   const [iosOpen, setIosOpen] = useState(false)
   const push = usePush()
+  const [teste, setTeste] = useState<string | null>(null)
+  const [testando, setTestando] = useState(false)
 
   useEffect(() => { setDark(document.documentElement.classList.contains('dark')) }, [])
 
@@ -126,6 +128,14 @@ export function PerfilView({ profile }: { profile: Profile }) {
                 : 'Receba um aviso quando seu treino for criado ou ajustado'}
             </span>
             {push.erro && <span role="alert" className="block text-xs text-destructive mt-1 break-words">{push.erro}</span>}
+            {push.state === 'on' && (
+              <button type="button" disabled={testando}
+                onClick={async () => { setTestando(true); setTeste(null); setTeste(await enviarTeste()); setTestando(false) }}
+                className="mt-2 text-sm font-medium text-foreground underline underline-offset-4 disabled:opacity-50">
+                {testando ? 'Enviando…' : 'Enviar teste'}
+              </button>
+            )}
+            {teste && <span role="status" className="block text-xs text-muted-foreground mt-1 break-words">{teste}</span>}
           </span>
           {(push.state === 'on' || push.state === 'off') && (
             push.ocupado ? <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> : (

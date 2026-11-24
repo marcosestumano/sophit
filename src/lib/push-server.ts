@@ -38,6 +38,7 @@ export async function enviarPushParaUsuario(userId: string, payload: PushPayload
   const corpo = JSON.stringify(payload)
   const expirados: string[] = []
   let enviados = 0, falhas = 0
+  const erros: string[] = []
 
   await Promise.all(subs.map(async (s) => {
     try {
@@ -49,6 +50,7 @@ export async function enviarPushParaUsuario(userId: string, payload: PushPayload
       enviados++
     } catch (err: any) {
       falhas++
+      erros.push(`${err?.statusCode ?? '?'} ${String(err?.body || err?.message || '').slice(0, 120)}`)
       // 404/410: o aluno desinstalou, limpou os dados ou revogou a permissão
       if (err?.statusCode === 404 || err?.statusCode === 410) expirados.push(s.id)
       else console.error('[push] falha ao enviar:', err?.statusCode, err?.body || err?.message)
@@ -56,5 +58,5 @@ export async function enviarPushParaUsuario(userId: string, payload: PushPayload
   }))
 
   if (expirados.length) await db.from('push_subscriptions').delete().in('id', expirados)
-  return { enviados, falhas }
+  return { enviados, falhas, aparelhos: subs.length, erros }
 }

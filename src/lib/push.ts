@@ -96,9 +96,42 @@ export async function desinscreverPush() {
   }
 }
 
-/** Painel admin: avisa o aluno. Nunca trava o fluxo de salvar — se falhar, só registra no console. */
+/** Pede ao servidor um push de teste para este usuário e devolve um texto com o resultado. */
+export async function enviarTeste(): Promise<string> {
+  try {
+    const res = await fetch('/api/push/teste', { method: 'POST' })
+    const r = await res.json()
+    if (!res.ok) return `Erro ${res.status}: ${r?.error ?? 'desconhecido'}`
+    if (r.motivo) return `Não enviado: ${r.motivo}`
+    if (r.enviados) return `Enviado para ${r.enviados} de ${r.aparelhos} aparelho(s). Deve chegar em alguns segundos.`
+    return `Falhou em ${r.falhas} aparelho(s): ${(r.erros ?? []).join(' | ')}`
+  } catch (err) {
+    return `Erro de rede: ${err instanceof Error ? err.message : String(err)}`
+  }
+}
+
+/** Aviso flutuante simples (sem depender de React), some sozinho. */
+function aviso(texto: string, erro = false) {
+  if (typeof document === 'undefined') return
+  const el = document.createElement('div')
+  el.setAttribute('role', 'status')
+  el.textContent = texto
+  el.style.cssText = `position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:9999;max-width:min(92vw,480px);
+    padding:10px 16px;border-radius:12px;font-size:14px;line-height:1.4;box-shadow:0 8px 24px rgba(0,0,0,.18);
+    background:${erro ? 'hsl(0 70% 45%)' : 'hsl(var(--foreground))'};color:${erro ? '#fff' : 'hsl(var(--background))'}`
+  document.body.appendChild(el)
+  setTimeout(() => el.remove(), 6000)
+}
+
+/** Painel admin: avisa o aluno e mostra ao admin se o push saiu. Nunca trava o fluxo de salvar. */
 export function notificarTreino(body: { userId: string; tipo: 'novo' | 'editado' | 'plano'; titulo?: string; quantidade?: number; treinoId?: string }) {
   fetch('/api/push/treino', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) })
-    .then(r => r.json()).then(r => { if (r?.motivo) console.info('[push]', r.motivo) })
-    .catch(err => console.error('[push] falha ao notificar:', err))
+    .then(async res => {
+      const r = await res.json().catch(() => ({}))
+      if (!res.ok) return aviso(`Push: erro ${res.status} ${r?.error ?? ''}`, true)
+      if (r.motivo) return aviso(`Aluno não avisado: ${r.motivo}`, true)
+      if (r.enviados) return aviso(`Aluno avisado no celular (${r.enviados} aparelho${r.enviados > 1 ? 's' : ''})`)
+      aviso(`Push falhou: ${(r.erros ?? []).join(' | ')}`, true)
+    })
+    .catch(err => aviso(`Push: erro de rede (${err?.message ?? err})`, true))
 }
