@@ -128,7 +128,7 @@ export function PerfilView({ profile }: { profile: Profile }) {
                 : 'Receba um aviso quando seu treino for criado ou ajustado'}
             </span>
             {push.erro && <span role="alert" className="block text-xs text-destructive mt-1 break-words">{push.erro}</span>}
-            {push.state === 'on' && (
+            {push.state === 'on' && profile.role === 'admin' && (
               <button type="button" disabled={testando}
                 onClick={async () => { setTestando(true); setTeste(null); setTeste(await enviarTeste()); setTestando(false) }}
                 className="mt-2 text-sm font-medium text-foreground underline underline-offset-4 disabled:opacity-50">
