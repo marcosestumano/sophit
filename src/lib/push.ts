@@ -20,19 +20,26 @@ function base64UrlParaUint8(base64: string) {
 
 async function registro() {
   if (!('serviceWorker' in navigator)) return null
-  return (await navigator.serviceWorker.getRegistration('/')) ?? null
+  const atual = await navigator.serviceWorker.getRegistration('/')
+  if (atual) return atual
+  // Primeira abertura: o registro acontece no "load"; espera até 4s por ele
+  return Promise.race([
+    navigator.serviceWorker.ready,
+    new Promise<null>(r => setTimeout(() => r(null), 4000)),
+  ])
 }
 
 export function usePush() {
   const [state, setState] = useState<PushState>('loading')
   const [ocupado, setOcupado] = useState(false)
+  const [erro, setErro] = useState<string | null>(null)
 
   const atualizar = useCallback(async () => {
     const suporta = typeof window !== 'undefined' && 'serviceWorker' in navigator && 'PushManager' in window && 'Notification' in window
     if (!suporta) { setState(isIOS() && !isStandalone() ? 'ios-install' : 'unsupported'); return }
     if (Notification.permission === 'denied') { setState('denied'); return }
     const reg = await registro()
-    if (!reg) { setState('unsupported'); return }
+    if (!reg) { setErro('Service worker não registrado nesta página. Recarregue o app.'); setState('unsupported'); return }
     const sub = await reg.pushManager.getSubscription()
     setState(sub ? 'on' : 'off')
   }, [])
@@ -41,22 +48,24 @@ export function usePush() {
 
   async function ativar() {
     const chave = process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY
-    if (!chave) { console.error('[push] NEXT_PUBLIC_VAPID_PUBLIC_KEY não configurada'); return false }
+    setErro(null)
+    if (!chave) { setErro('Chave pública de push ausente no build (NEXT_PUBLIC_VAPID_PUBLIC_KEY). Faça um redeploy.'); return false }
     setOcupado(true)
     try {
       const permissao = await Notification.requestPermission()
-      if (permissao !== 'granted') { await atualizar(); return false }
+      if (permissao !== 'granted') { setErro(`Permissão de notificação: ${permissao}`); await atualizar(); return false }
       const reg = await navigator.serviceWorker.ready
       const sub = (await reg.pushManager.getSubscription())
         ?? await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: base64UrlParaUint8(chave) })
       const res = await fetch('/api/push/subscribe', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(sub),
       })
-      if (!res.ok) { await sub.unsubscribe(); throw new Error(await res.text()) }
+      if (!res.ok) { await sub.unsubscribe(); throw new Error(`Servidor respondeu ${res.status}: ${(await res.text()).slice(0, 200)}`) }
       setState('on')
       return true
     } catch (err) {
       console.error('[push] não foi possível ativar:', err)
+      setErro(err instanceof Error ? `${err.name}: ${err.message}` : String(err))
       await atualizar()
       return false
     } finally {
@@ -69,7 +78,7 @@ export function usePush() {
     try { await desinscreverPush() } finally { setOcupado(false); await atualizar() }
   }
 
-  return { state, ocupado, ativar, desativar }
+  return { state, ocupado, erro, ativar, desativar }
 }
 
 /** Remove a inscrição deste aparelho (no navegador e no servidor). Chamar também ao sair da conta. */

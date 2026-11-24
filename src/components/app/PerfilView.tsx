@@ -125,6 +125,7 @@ export function PerfilView({ profile }: { profile: Profile }) {
                 : push.state === 'unsupported' ? 'Este navegador não recebe avisos'
                 : 'Receba um aviso quando seu treino for criado ou ajustado'}
             </span>
+            {push.erro && <span role="alert" className="block text-xs text-destructive mt-1 break-words">{push.erro}</span>}
           </span>
           {(push.state === 'on' || push.state === 'off') && (
             push.ocupado ? <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> : (

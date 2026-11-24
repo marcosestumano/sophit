@@ -1,10 +1,19 @@
 import type { Metadata, Viewport } from 'next'
 import './globals.css'
-import { Outfit } from 'next/font/google'
+import localFont from 'next/font/local'
 
-const outfit = Outfit({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-outfit', display: 'swap' })
 import { SplashProvider } from '@/components/SplashProvider'
 import { PwaRegister } from '@/components/app/PwaRegister'
+
+// Outfit guardada no projeto: o build não depende de baixar fontes do Google
+const outfit = localFont({
+  src: [
+    { path: './fonts/outfit-latin-400-normal.woff2', weight: '400', style: 'normal' },
+    { path: './fonts/outfit-latin-500-normal.woff2', weight: '500', style: 'normal' },
+  ],
+  variable: '--font-outfit',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Sophit — Saúde & Performance',
