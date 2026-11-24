@@ -12,6 +12,7 @@ import { dateKey, weekDays, DIAS_CURTOS, currentStreak, bestStreak, letraTreino,
 import { somaMacros, round, ordenarRefeicoes } from '@/lib/dieta'
 import type { DietaPlano, DietaRefeicao, CardioPrescricao } from '@/types'
 import { cn } from '@/lib/utils'
+import { ConviteAvisos } from '@/components/home/ConviteAvisos'
 
 type Tab = 'treino' | 'dieta' | 'cardio'
 
@@ -114,6 +115,8 @@ export function HomeView(p: Props) {
           </button>
         </div>
       )}
+
+      <ConviteAvisos />
 
       {/* Sequência: toque para ver como cada uma é contada */}
       <button onClick={() => setRegrasOpen(true)} aria-haspopup="dialog" className="lift app-card w-full text-left p-4 mt-5 flex items-center gap-4">
