@@ -8,7 +8,8 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { treinoSchema, type TreinoFormData } from '@/lib/validations'
 import { createClient } from '@/lib/supabase/client'
 import { useRouter } from 'next/navigation'
-import { mesDoTreino, normalizaMes } from '@/lib/periodizacao'
+import { mesDoTreino, mesKey, normalizaMes } from '@/lib/periodizacao'
+import { notificarTreino } from '@/lib/push'
 import {
   X,
   Loader2, CheckCircle2, Save,
@@ -57,6 +58,10 @@ export function EditTreinoModal({ treino, onClose }: Props) {
         ? 'A coluna "mes_referencia" não existe no banco. Rode a migration 004_treinos_mensais.sql no Supabase.'
         : `Não foi possível salvar: ${error.message}`)
       return
+    }
+    const mesNovo = normalizaMes(data.mes_referencia)
+    if (treino.ativo && (!mesNovo || mesNovo <= mesKey())) {
+      notificarTreino({ userId: treino.user_id, tipo: 'editado', titulo: data.titulo, treinoId: treino.id })
     }
     setErro(null); setSaved(true); router.refresh(); setTimeout(() => { setSaved(false); onClose() }, 1500)
   }

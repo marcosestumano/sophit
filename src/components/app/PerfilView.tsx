@@ -5,9 +5,10 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { format } from 'date-fns'
 import { ptBR } from 'date-fns/locale'
-import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Smartphone, Share, SquarePlus } from 'lucide-react'
+import { ClipboardList, Camera, Moon, LogOut, ChevronRight, Pencil, Check, Loader2, Smartphone, Share, SquarePlus, Bell, BellOff } from 'lucide-react'
 import { Sheet } from '@/components/app/Sheet'
 import { useInstall, limparCachePwa } from '@/lib/pwa'
+import { usePush, desinscreverPush } from '@/lib/push'
 import { createClient } from '@/lib/supabase/client'
 import { AppScreen, IconChip } from '@/components/app/AppShell'
 import { AlternarPainel } from '@/components/app/AlternarPainel'
@@ -22,6 +23,7 @@ export function PerfilView({ profile }: { profile: Profile }) {
   const [dark, setDark] = useState(false)
   const { state: instalacao, install } = useInstall()
   const [iosOpen, setIosOpen] = useState(false)
+  const push = usePush()
 
   useEffect(() => { setDark(document.documentElement.classList.contains('dark')) }, [])
 
@@ -42,6 +44,7 @@ export function PerfilView({ profile }: { profile: Profile }) {
   }
 
   async function sair() {
+    await desinscreverPush() // este aparelho para de receber avisos desta conta
     await limparCachePwa()
     await supabase.auth.signOut()
     router.push('/login')
@@ -109,6 +112,31 @@ export function PerfilView({ profile }: { profile: Profile }) {
         </ol>
         <p className="text-sm text-muted-foreground mt-5">Precisa ser pelo Safari; outros navegadores no iPhone não instalam apps.</p>
       </Sheet>
+
+      <div className="app-card overflow-hidden mt-3">
+        <div className="flex items-center gap-4 px-4 py-3 min-h-[72px]">
+          <IconChip icon={push.state === 'denied' ? BellOff : Bell} color="hsl(var(--foreground))" tint="hsl(var(--muted))" />
+          <span className="flex-1">
+            <span className="block font-medium text-foreground" id="push-label">Avisos de treino</span>
+            <span className="block text-sm text-muted-foreground">
+              {push.state === 'on' ? 'Você recebe um aviso quando seu treino mudar'
+                : push.state === 'denied' ? 'Bloqueado. Libere as notificações do Sophit nas configurações do aparelho'
+                : push.state === 'ios-install' ? 'No iPhone, instale o app na tela inicial para receber avisos'
+                : push.state === 'unsupported' ? 'Este navegador não recebe avisos'
+                : 'Receba um aviso quando seu treino for criado ou ajustado'}
+            </span>
+          </span>
+          {(push.state === 'on' || push.state === 'off') && (
+            push.ocupado ? <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" /> : (
+              <button role="switch" aria-checked={push.state === 'on'} aria-labelledby="push-label"
+                onClick={() => (push.state === 'on' ? push.desativar() : push.ativar())}
+                className={`h-8 w-[52px] flex-shrink-0 rounded-full p-1 flex transition-colors duration-150 ${push.state === 'on' ? 'bg-primary' : 'bg-foreground/20'}`}>
+                <span className={`block h-6 w-6 rounded-full bg-white transition-transform duration-150 ${push.state === 'on' ? 'translate-x-5' : ''}`} />
+              </button>
+            )
+          )}
+        </div>
+      </div>
 
       <div className="app-card overflow-hidden mt-3">
         <div className="flex items-center gap-4 px-4 py-3 min-h-[72px]">

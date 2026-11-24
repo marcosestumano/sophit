@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { Sun, Moon, Bell, LogOut, ChevronDown } from 'lucide-react'
 import type { Profile } from '@/types'
 import { limparCachePwa } from '@/lib/pwa'
+import { desinscreverPush } from '@/lib/push'
 import { AlternarPainel } from '@/components/app/AlternarPainel'
 
 interface HeaderProps { profile: Profile }
@@ -29,6 +30,7 @@ export function Header({ profile }: HeaderProps) {
   }
 
   async function handleLogout() {
+    await desinscreverPush()
     await limparCachePwa()
     await supabase.auth.signOut()
     router.push('/login')

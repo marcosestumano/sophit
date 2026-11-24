@@ -17,6 +17,7 @@ import {
   Copy, Save, ChevronRight,
 } from 'lucide-react'
 import type { Profile } from '@/types'
+import { notificarTreino } from '@/lib/push'
 
 interface Template {
   id: string
@@ -137,6 +138,8 @@ export default function GestorTreinosPage() {
         : `Não foi possível salvar o treino: ${error.message}`)
       return
     }
+    // Só avisa se o aluno já enxerga esse mês (meses futuros ficam ocultos até chegar a vez deles)
+    if (mesRef <= mesKey()) notificarTreino({ userId: data.user_id, tipo: 'novo', titulo: data.titulo })
     {
       router.refresh()
       setSaved(true)

@@ -13,6 +13,7 @@ import {
 } from '@/lib/periodizacao'
 import { sortTreinos, cn } from '@/lib/utils'
 import type { Exercicio } from '@/types'
+import { notificarTreino } from '@/lib/push'
 
 interface Treino {
   id: string; titulo: string; descricao: string | null; lista_exercicios: Exercicio[]
@@ -76,6 +77,7 @@ export function PlanoAnualAdmin({ userId, treinos }: { userId: string; treinos: 
         : `Não foi possível copiar: ${error.message}`)
       return
     }
+    if (mesSel <= hoje) notificarTreino({ userId, tipo: 'plano', quantidade: base.length })
     router.refresh()
   }
 
